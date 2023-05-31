@@ -51,6 +51,9 @@ HRESULT CPlayer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXV
 		return E_FAIL;
 	}
 
+	//É^ÉCÉvÇÃê›íË
+	SetType(TYPE_PLAYER);
+
 	return S_OK;
 }
 

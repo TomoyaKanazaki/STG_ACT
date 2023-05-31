@@ -46,7 +46,7 @@ public:
 	~CKeyboard(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(HINSTANCE hInstance, HWND hWnd);
+	HRESULT Init(HINSTANCE hInstance, HWND hWnd) override;
 	void Uninit(void);
 	void Update(void);
 	D3DXVECTOR3 GetWASD(void); //WASD入力のベクトル取得

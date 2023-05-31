@@ -9,6 +9,8 @@
 #include "object.h"
 #include "manager.h"
 #include "debugproc.h"
+#include "bullet.h"
+#include "enemy.h"
 
 //==========================================
 //  コンストラクタ
@@ -172,8 +174,9 @@ void CRenderer::Draw(void)
 	{
 		CObject::DrawAll();
 
-
 		//デバッグ表示の描画処理
+		CManager::GetDebugProc()->Print("弾の数 : %d\n", CBullet::GetNum());
+		CManager::GetDebugProc()->Print("敵の数 : %d", CEnemy::GetNum());
 		if (CManager::GetDebugProc() != NULL)
 		{
 			CManager::GetDebugProc()->Draw();

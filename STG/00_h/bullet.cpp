@@ -51,6 +51,9 @@ HRESULT CBullet::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXV
 		return E_FAIL;
 	}
 
+	//タイプの設定
+	SetType(TYPE_BULLET);
+
 	m_move.x = -sinf(m_rot.z) * BULLET_SPEED;
 	m_move.y = -cosf(m_rot.z) * BULLET_SPEED;
 
@@ -95,8 +98,12 @@ void CBullet::Update(void)
 	//更新する
 	CObject2D::Update();
 
-	//移動制限
-	if (
+	//死亡条件
+	if (CollisionEnemy())
+	{
+		return;
+	}
+	else if (
 		m_pos.x - (m_size.x * 0.5f) > SCREEN_WIDTH ||
 		m_pos.x + (m_size.x * 0.5f) < 0.0f ||
 		m_pos.y - (m_size.y * 0.5f) > SCREEN_HEIGHT ||
@@ -104,11 +111,13 @@ void CBullet::Update(void)
 		)
 	{
 		this->Release();
+		return;
 	}
 	else if (m_nLife <= 0)
 	{
-		this->Release();
 		CObject2D_Anim::Create(m_pos, D3DXVECTOR3(m_size.x * 1.5f, m_size.y * 1.5f, 0.0f), 8, m_rot);
+		this->Release();
+		return;
 	}
 }
 
@@ -129,7 +138,7 @@ HRESULT CBullet::Load(void)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/explosion.png", &m_pTexture)))
+	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/bullet.png", &m_pTexture)))
 	{
 		return E_FAIL;
 	}
@@ -176,4 +185,48 @@ CBullet *CBullet::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 
 	//ポインタを返す
 	return pPlayer;
+}
+
+//==========================================
+//  敵との当たり判定
+//==========================================
+bool CBullet::CollisionEnemy(void)
+{
+	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+	{
+		//オブジェクトを取得
+		CObject *pObj = GetObject(nCntObj);
+
+		//NULLチェック
+		if (pObj == NULL)
+		{
+			continue;
+		}
+
+		if (pObj->GetTypre() != TYPE_ENEMY) //敵の場合
+		{
+			continue;
+		}
+
+		//敵の各情報を取得する
+		D3DXVECTOR3 pos = pObj->GetPos();
+		D3DXVECTOR3 size = pObj->GetSize();
+
+		//敵と弾の距離を取得
+		float fLength = (pos.x - m_pos.x) * (pos.x - m_pos.x) + (pos.y - m_pos.y) * (pos.y - m_pos.y);
+
+		//判定距離を取得
+		float fOutLine = (size.x - m_size.x * 0.3f) * (size.x - m_size.x * 0.3f) + (size.y - m_size.y * 0.3f) * (size.y - m_size.y * 0.3f);
+
+		if (fLength < fOutLine)
+		{
+			CObject2D_Anim::Create(m_pos, D3DXVECTOR3(m_size.x * 1.5f, m_size.y * 1.5f, 0.0f), 8, m_rot);
+			pObj->Uninit();
+			this->Release();
+			return true;
+		}
+	}
+
+	//当たっていない
+	return false;
 }

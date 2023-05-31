@@ -37,7 +37,7 @@ CInput::~CInput()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
+HRESULT CInput::Init(HINSTANCE hInstance, HWND /*hWnd*/)
 {
 	//DirectInputオブジェクトの生成
 	if (m_pInput == nullptr)
@@ -236,7 +236,7 @@ CMouse::~CMouse()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CMouse::Init(HINSTANCE hInstance, HWND hWnd)
+HRESULT CMouse::Init(HINSTANCE /*hInstance*/, HWND hWnd)
 {
 	//入力デバイスの設定
 	if (FAILED(m_pInput->CreateDevice(GUID_SysMouse, &m_pDevice, NULL)))
@@ -278,7 +278,7 @@ HRESULT CMouse::Init(HINSTANCE hInstance, HWND hWnd)
 	m_pDevice->Acquire();
 
 	//マウスカーソルの消去
-	//ShowCursor(false);
+	ShowCursor(false);
 
 	return S_OK;
 }

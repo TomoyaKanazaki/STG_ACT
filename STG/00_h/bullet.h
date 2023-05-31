@@ -23,13 +23,19 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
+	//静的メンバ関数
 	static HRESULT Load(void);
 	static void UnLoad(void);
+	static int GetNum(void) { return m_nNum; }
 
 	//静的メンバ変数
 	static CBullet *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
 
 private:
+
+	//メンバ関数
+	bool CollisionEnemy(void);
 
 	//メンバ変数
 	D3DXVECTOR3 m_move;

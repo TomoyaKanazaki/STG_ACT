@@ -12,6 +12,7 @@
 #include "bullet.h"
 #include "object2D_anim.h"
 #include "debugproc.h"
+#include "enemy.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -117,6 +118,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//テクスチャの読み込み
 	CPlayer::Load();
+	CEnemy::Load();
 	CBullet::Load();
 	CObject2D_Anim::Load();
 
@@ -168,6 +170,7 @@ void CManager::Uninit(void)
 
 	//テクスチャの破棄
 	CPlayer::UnLoad();
+	CEnemy::UnLoad();
 	CBullet::UnLoad();
 	CObject2D_Anim::UnLoad();
 }
@@ -199,6 +202,20 @@ void CManager::Update(void)
 	if (m_pMouse != NULL)
 	{
 		m_pMouse->Update();
+	}
+
+	//敵の生成
+	if (CEnemy::GetNum() == 0 || m_pKeyboard->GetTrigger(DIK_RETURN))
+	{
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.2f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.4f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.6f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.7f, SCREEN_HEIGHT * 0.7f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.8f, SCREEN_HEIGHT * 0.8f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.9f, SCREEN_HEIGHT * 0.9f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
 	}
 }
 

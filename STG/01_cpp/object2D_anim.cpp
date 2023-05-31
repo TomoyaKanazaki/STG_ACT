@@ -89,6 +89,12 @@ void CObject2D_Anim::Update(void)
 	{
 		//テクスチャ座標の切り替え
 		m_nPatternAnim++;
+
+		if (m_nPatternAnim >= m_nNumPattern)
+		{
+			this->Release();
+			return;
+		}
 	
 		//パターンの切り替え
 		m_nPatternAnim %= m_nNumPattern;

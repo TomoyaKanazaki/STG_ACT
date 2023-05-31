@@ -11,7 +11,7 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define MAX_OBJECT (1048576) //オブジェクトの最大数
+#define MAX_OBJECT (2048) //オブジェクトの最大数
 
 //==========================================
 //  オブジェクトクラス生成
@@ -19,6 +19,15 @@
 class CObject
 {
 public:
+	typedef enum
+	{
+		TYPE_NONE = 0, //不使用
+		TYPE_PLAYER, //プレイヤー
+		TYPE_ENEMY, //敵
+		TYPE_BULLET, //弾
+		TYPE_MAX
+	}TYPE;
+
 	CObject();
 	virtual ~CObject();
 
@@ -27,7 +36,13 @@ public:
 	virtual void Uninit(void) = 0;
 	virtual void Update(void) = 0;
 	virtual void Draw(void) = 0;
+	CObject *GetObject(int nID) { return m_apObject[nID]; }
 	int GetID(void) { return m_nID; }
+	D3DXVECTOR3 GetPos(void) { return m_pos; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXVECTOR3 GetSize(void) { return m_size; }
+	void SetType(TYPE type) { m_type = type; }
+	TYPE GetTypre(void) { return m_type; }
 
 	//静的メンバ関数
 	static void ReleaseAll(void);
@@ -52,6 +67,7 @@ private:
 
 	//メンバ変数
 	int m_nID; //自分自身のインデックス
+	TYPE m_type; //種類
 
 };
 
