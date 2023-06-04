@@ -23,11 +23,11 @@ public:
 	virtual void Uninit(void);
 	virtual void Update(void);
 	virtual void Draw(void);
-	LPDIRECT3DVERTEXBUFFER9 GetBuff(void) { return m_pVtxBuff; }
+	D3DXVECTOR3 GetPos(void) override { return m_pos; }
+	D3DXVECTOR3 GetRot(void) override { return m_rot; }
+	D3DXVECTOR3 GetSize(void) override { return m_size; }
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
-
-	//ê√ìIÉÅÉìÉoä÷êî
-	static CObject2D *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	void SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max);
 
 private:
 

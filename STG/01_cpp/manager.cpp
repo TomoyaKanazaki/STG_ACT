@@ -10,9 +10,10 @@
 #include "object2D.h"
 #include "player.h"
 #include "bullet.h"
-#include "object2D_anim.h"
 #include "debugproc.h"
 #include "enemy.h"
+#include "explosion.h"
+#include "bg.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -120,10 +121,14 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	CPlayer::Load();
 	CEnemy::Load();
 	CBullet::Load();
-	CObject2D_Anim::Load();
+	CExplosion::Load();
+	CBg::Load();
 
 	//プレイヤーの生成
 	CPlayer::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+
+	//背景の生成
+	CBg::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	return S_OK;
 }
@@ -172,7 +177,8 @@ void CManager::Uninit(void)
 	CPlayer::UnLoad();
 	CEnemy::UnLoad();
 	CBullet::UnLoad();
-	CObject2D_Anim::UnLoad();
+	CExplosion::UnLoad();
+	CBg::UnLoad();
 }
 
 //==========================================

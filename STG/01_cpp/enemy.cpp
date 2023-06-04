@@ -9,7 +9,6 @@
 #include "input.h"
 #include "renderer.h"
 #include "object.h"
-#include "object2D_anim.h"
 
 //==========================================
 //  É}ÉNÉçíËã`
@@ -37,7 +36,7 @@ CEnemy::CEnemy()
 		m_move.y *= -1.0f;
 	}
 
-	m_fSpeed = ENEMY_SPEED;
+	m_nSpeed = ENEMY_SPEED;
 	m_fRotMove = 0.0f;
 	m_fRotDest = 0.0f;
 	m_fRotDiff = 0.0f;
@@ -74,7 +73,6 @@ HRESULT CEnemy::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 //==========================================
 void CEnemy::Uninit(void)
 {
-	CObject2D_Anim::Create(m_pos, D3DXVECTOR3(m_size.x * 1.5f, m_size.y * 1.5f, 0.0f), 8, m_rot);
 	CObject2D::Uninit();
 
 	m_nNum--;
@@ -192,8 +190,8 @@ void CEnemy::Move(void)
 
 	//ê≥ãKâª
 	D3DXVec3Normalize(&m_move, &m_move);
-	m_move.x *= m_fSpeed;
-	m_move.y *= m_fSpeed;
+	m_move.x *= m_nSpeed;
+	m_move.y *= m_nSpeed;
 
 	//ìGìØémÇÃìñÇΩÇËîªíË
 	Collision();

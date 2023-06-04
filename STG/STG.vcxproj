@@ -154,30 +154,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="00_h\bg.h" />
     <ClInclude Include="00_h\bullet.h" />
     <ClInclude Include="00_h\debugproc.h" />
     <ClInclude Include="00_h\enemy.h" />
+    <ClInclude Include="00_h\explosion.h" />
     <ClInclude Include="00_h\input.h" />
     <ClInclude Include="00_h\main.h" />
     <ClInclude Include="00_h\manager.h" />
     <ClInclude Include="00_h\object.h" />
     <ClInclude Include="00_h\object2D.h" />
-    <ClInclude Include="00_h\object2D_anim.h" />
-    <ClInclude Include="00_h\bg.h" />
+    <ClInclude Include="00_h\object2D_Anim.h" />
     <ClInclude Include="00_h\player.h" />
     <ClInclude Include="00_h\renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="00_h\bullet.cpp" />
+    <ClCompile Include="01_cpp\bg.cpp" />
     <ClCompile Include="01_cpp\debugproc.cpp" />
     <ClCompile Include="01_cpp\enemy.cpp" />
+    <ClCompile Include="01_cpp\explosion.cpp" />
     <ClCompile Include="01_cpp\input.cpp" />
     <ClCompile Include="01_cpp\main.cpp" />
     <ClCompile Include="01_cpp\manager.cpp" />
     <ClCompile Include="01_cpp\object.cpp" />
     <ClCompile Include="01_cpp\object2D.cpp" />
-    <ClCompile Include="01_cpp\object2D_anim.cpp" />
-    <ClCompile Include="01_cpp\bg.cpp" />
+    <ClCompile Include="01_cpp\object2D_Anim.cpp" />
     <ClCompile Include="01_cpp\player.cpp" />
     <ClCompile Include="01_cpp\renderer.cpp" />
   </ItemGroup>

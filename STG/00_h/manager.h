@@ -41,7 +41,7 @@ public:
 	static CRenderer *GetRenderer() { return m_pRenderer; }
 	static CKeyboard *GetKeyboard() { return m_pKeyboard; }
 	static CMouse *GetMouse() { return m_pMouse; }
-	static CJoyPad *GetJoyPad(int nNum) { return m_pJoyPad[nNum]; }
+	static CJoyPad *GetJoyPad(int m_nNum) { return m_pJoyPad[m_nNum]; }
 	static CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
 
 private:

@@ -27,7 +27,7 @@ LPDIRECT3DTEXTURE9 CPlayer::m_pTexture = NULL;
 CPlayer::CPlayer()
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_fSpeed = 0.0f;
+	m_nSpeed = 0.0f;
 	m_fRotMove = 0.0f;
 	m_fRotDest = 0.0f;
 	m_fRotDiff = 0.0f;

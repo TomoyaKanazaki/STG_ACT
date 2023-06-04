@@ -164,27 +164,8 @@ void CObject2D::Update(void)
 		0.0f
 	);
 
-	//rhwの設定
-	pVtx[0].rhw = 1.0f;
-	pVtx[1].rhw = 1.0f;
-	pVtx[2].rhw = 1.0f;
-	pVtx[3].rhw = 1.0f;
-
-	//頂点カラーの設定
-	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-
-	//テクスチャ座標の設定
-	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
-
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
-
 }
 
 //==========================================
@@ -209,26 +190,22 @@ void CObject2D::Draw(void)
 }
 
 //==========================================
-//  オブジェクト生成処理
+//  テクスチャ座標の変更
 //==========================================
-CObject2D *CObject2D::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+void CObject2D::SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max)
 {
-	//インスタンス生成
-	CObject2D *pObject2D = NULL;
+	//頂点バッファの呼び出し
+	VERTEX_2D *pVtx;
 
-	//NULLチェック
-	if (pObject2D == NULL)
-	{
-		//メモリを確保
-		pObject2D = new CObject2D;
-	}
+	//頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//初期化
-	if (pObject2D != NULL)
-	{
-		pObject2D->Init(pos, size, rot);
-	}
+	//テクスチャ座標の設定
+	pVtx[0].tex = D3DXVECTOR2(min.x, min.y);
+	pVtx[1].tex = D3DXVECTOR2(max.x, min.y);
+	pVtx[2].tex = D3DXVECTOR2(min.x, max.y);
+	pVtx[3].tex = D3DXVECTOR2(max.x, max.y);
 
-	//ポインタを返す
-	return pObject2D;
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
 }

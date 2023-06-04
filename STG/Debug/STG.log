@@ -1,9 +1,3 @@
-﻿  bg.cpp
-c:\users\student\desktop\data\00_作業\01_ゲーム制作\00_git\stg_act\stg\01_cpp\bg.cpp(22): warning C4100: 'rot': 引数は関数の本体部で 1 度も参照されません。
-c:\users\student\desktop\data\00_作業\01_ゲーム制作\00_git\stg_act\stg\01_cpp\bg.cpp(22): warning C4100: 'size': 引数は関数の本体部で 1 度も参照されません。
-c:\users\student\desktop\data\00_作業\01_ゲーム制作\00_git\stg_act\stg\01_cpp\bg.cpp(22): warning C4100: 'pos': 引数は関数の本体部で 1 度も参照されません。
-c:\users\student\desktop\data\00_作業\01_ゲーム制作\00_git\stg_act\stg\01_cpp\bg.cpp(39): warning C4100: 'rot': 引数は関数の本体部で 1 度も参照されません。
-c:\users\student\desktop\data\00_作業\01_ゲーム制作\00_git\stg_act\stg\01_cpp\bg.cpp(39): warning C4100: 'size': 引数は関数の本体部で 1 度も参照されません。
-c:\users\student\desktop\data\00_作業\01_ゲーム制作\00_git\stg_act\stg\01_cpp\bg.cpp(39): warning C4100: 'pos': 引数は関数の本体部で 1 度も参照されません。
+﻿  object2D_Anim.cpp
   STG.vcxproj -> C:\Users\student\Desktop\DATA\00_作業\01_ゲーム制作\00_Git\STG_ACT\STG\Debug\STG.exe
   STG.vcxproj -> C:\Users\student\Desktop\DATA\00_作業\01_ゲーム制作\00_Git\STG_ACT\STG\Debug\STG.pdb (Full PDB)

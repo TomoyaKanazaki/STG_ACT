@@ -1,6 +1,6 @@
 //==========================================
 //
-//  アニメーションオブジェクト2D(object2D_anim.h)
+//  アニメーション2Dクラス(object2D_Anim.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
@@ -10,34 +10,37 @@
 #include "object2D.h"
 
 //==========================================
-//  アニメーションオブジェクト2Dクラス定義
+//  アニメーション2Dクラス定義
 //==========================================
 class CObject2D_Anim : public CObject2D
 {
 public:
+	typedef enum
+	{
+		TYPE_NONE = 0,
+		TYPE_U, //横方向のアニメーション
+		TYPE_V //縦方向のアニメーション
+	}UVTYPE;
+
 	CObject2D_Anim(); //コンストラクタ
 	~CObject2D_Anim(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, int nAnimPattern);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
-	static HRESULT Load(void);
-	static void UnLoad(void);
-
-	//静的メンバ関数
-	static CObject2D_Anim *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const int nAnimPattern, const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	virtual HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+	void SetAnim(int nPattern, int nInterval, bool bLoop, UVTYPE type);
 
 private:
 
 	//メンバ変数
-	int m_nNumPattern; //アニメーションパターン数
-	int m_nCountAnim; //アニメーションカウント
-	int m_nPatternAnim; //現在のアニメーションパターン
-
-	//静的メンバ変数
-	static LPDIRECT3DTEXTURE9 m_pTexture;
+	UVTYPE m_Type;
+	int m_nNumPattern; //パターン数
+	int m_nAnimPattern; //現在のパターン
+	int m_nUpdateFrame; //更新間隔
+	int m_nAnimCounter; //アニメーションカウンター
+	bool m_bLoop; //ループの有無
 
 };
 

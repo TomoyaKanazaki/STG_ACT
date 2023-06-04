@@ -37,7 +37,7 @@ private:
 
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
-	float m_fSpeed;
+	float m_nSpeed;
 	float m_fRotMove;
 	float m_fRotDest;
 	float m_fRotDiff;

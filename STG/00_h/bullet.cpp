@@ -7,8 +7,8 @@
 #include "bullet.h"
 #include "manager.h"
 #include "renderer.h"
-#include "object2D_anim.h"
 #include "debugproc.h"
+#include "explosion.h"
 
 //==========================================
 //  É}ÉNÉçíËã`
@@ -28,7 +28,7 @@ int CBullet::m_nNum = 0;
 CBullet::CBullet()
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_fSpeed = BULLET_SPEED;
+	m_nSpeed = BULLET_SPEED;
 	m_nLife = BULLET_LIFE;
 	m_nNum++;
 }
@@ -115,7 +115,7 @@ void CBullet::Update(void)
 	}
 	else if (m_nLife <= 0)
 	{
-		CObject2D_Anim::Create(m_pos, D3DXVECTOR3(m_size.x * 1.5f, m_size.y * 1.5f, 0.0f), 8, m_rot);
+		CExplosion::Create(m_pos, m_size, m_rot);
 		this->Release();
 		return;
 	}
@@ -220,7 +220,7 @@ bool CBullet::CollisionEnemy(void)
 
 		if (fLength < fOutLine)
 		{
-			CObject2D_Anim::Create(m_pos, D3DXVECTOR3(m_size.x * 1.5f, m_size.y * 1.5f, 0.0f), 8, m_rot);
+			CExplosion::Create(m_pos, m_size, m_rot);
 			pObj->Uninit();
 			this->Release();
 			return true;

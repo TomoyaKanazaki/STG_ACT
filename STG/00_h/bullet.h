@@ -39,7 +39,7 @@ private:
 
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
-	float m_fSpeed;
+	float m_nSpeed;
 	int m_nLife;
 
 	//Ã“Iƒƒ“ƒo•Ï”
