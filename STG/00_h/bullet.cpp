@@ -165,26 +165,26 @@ void CBullet::UnLoad(void)
 CBullet *CBullet::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
 	//インスタンス生成
-	CBullet *pPlayer = NULL;
+	CBullet *pBullet = NULL;
 
 	//NULLチェック
-	if (pPlayer == NULL)
+	if (pBullet == NULL)
 	{
 		//メモリを確保
-		pPlayer = new CBullet;
+		pBullet = new CBullet;
 	}
 
 	//初期化
-	if (pPlayer != NULL)
+	if (pBullet != NULL)
 	{
-		pPlayer->Init(pos, size, rot);
+		pBullet->Init(pos, size, rot);
 	}
 
 	//テクスチャを割り当てる
-	pPlayer->BindTexture(m_pTexture);
+	pBullet->BindTexture(m_pTexture);
 
 	//ポインタを返す
-	return pPlayer;
+	return pBullet;
 }
 
 //==========================================
@@ -203,7 +203,7 @@ bool CBullet::CollisionEnemy(void)
 			continue;
 		}
 
-		if (pObj->GetTypre() != TYPE_ENEMY) //敵の場合
+		if (pObj->GetType() != TYPE_ENEMY) //敵の場合
 		{
 			continue;
 		}

@@ -261,7 +261,7 @@ void CEnemy::Collision(void)
 			if (pObj != NULL)
 			{
 				//í—Ş‚Ìæ“¾
-				TYPE type = pObj->GetTypre();
+				TYPE type = pObj->GetType();
 
 				if (type == TYPE_ENEMY) //“G‚Ìê‡
 				{

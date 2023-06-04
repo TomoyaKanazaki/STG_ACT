@@ -61,7 +61,7 @@ HRESULT CBg::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTO
 //==========================================
 void CBg::Uninit(void)
 {
-	CObject2D::Uninit();
+	CObject2D_Anim::Uninit();
 }
 
 //==========================================

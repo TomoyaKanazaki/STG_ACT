@@ -14,6 +14,7 @@
 #include "enemy.h"
 #include "explosion.h"
 #include "bg.h"
+#include "effect.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -123,6 +124,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	CBullet::Load();
 	CExplosion::Load();
 	CBg::Load();
+	CEffect::Load();
 
 	//プレイヤーの生成
 	CPlayer::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
@@ -179,6 +181,7 @@ void CManager::Uninit(void)
 	CBullet::UnLoad();
 	CExplosion::UnLoad();
 	CBg::UnLoad();
+	CEffect::UnLoad();
 }
 
 //==========================================

@@ -27,6 +27,7 @@ public:
 		TYPE_BULLET, //弾
 		TYPE_EXPLOSION, //爆発
 		TYPE_BG, //背景
+		TYPE_EFFECT, //エフェクト
 		TYPE_MAX
 	}TYPE;
 
@@ -45,7 +46,7 @@ public:
 	CObject *GetObject(int nID) { return m_apObject[nID]; }
 	int GetID(void) { return m_nID; }
 	void SetType(TYPE type) { m_type = type; }
-	TYPE GetTypre(void) { return m_type; }
+	TYPE GetType(void) { return m_type; }
 
 	//静的メンバ関数
 	static void ReleaseAll(void);

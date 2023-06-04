@@ -80,7 +80,7 @@ void CObject2D_Anim::Update(void)
 		}
 
 		//テクスチャ座標の最大値を算出する
-		if (CObject::TYPE_BG == this->m_Type)
+		if (this->GetType() == CObject::TYPE_BG)
 		{
 			fUVPos += 1.0f;
 		}
@@ -141,8 +141,8 @@ void CObject2D_Anim::Draw(void)
 //==========================================
 void CObject2D_Anim::SetAnim(int nPattern, int nInterval, bool bLoop, UVTYPE type)
 {
-	m_Type = type;
 	m_nNumPattern = nPattern;
 	m_nUpdateFrame = nInterval;
 	m_bLoop = bLoop;
+	m_Type = type;
 }

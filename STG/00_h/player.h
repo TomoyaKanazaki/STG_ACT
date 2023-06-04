@@ -18,7 +18,7 @@ public:
 	CPlayer(); //コンストラクタ
 	~CPlayer(); //デストラクタ
 
-	//メンバ変数宣言
+	//メンバ関数
 	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
 	void Uninit(void);
 	void Update(void);

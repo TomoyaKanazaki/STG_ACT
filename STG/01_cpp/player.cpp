@@ -9,6 +9,7 @@
 #include "input.h"
 #include "renderer.h"
 #include "bullet.h"
+#include "effect.h"
 
 //==========================================
 //  マクロ定義
@@ -83,6 +84,9 @@ void CPlayer::Update(void)
 
 	//更新する
 	CObject2D::Update();
+
+	//エフェクトを呼び出す
+	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, 30);
 }
 
 //==========================================
