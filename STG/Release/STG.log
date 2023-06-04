@@ -1,1 +1,0 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets(356,5): error MSB6003: 指定されたタスク実行可能ファイル "CL.exe" を実行できませんでした。別のプロセスで使用されているため、プロセスはファイル 'C:\USERS\STUDENT\DESKTOP\DATA\00_作業\01_ゲーム制作\00_GIT\STG_ACT\STG\RELEASE\OBJECT2D_ANIM.OBJ' にアクセスできません。
