@@ -105,7 +105,7 @@ HRESULT CObject2D_Anim::SetTexPos(void)
 	fUVPos = (1.0f / m_nNumPattern) * m_nAnimPattern;
 
 	//値を適応する
-	switch (m_Type)
+	switch (CObject2D_Anim::m_Type)
 	{
 	case TYPE_U:
 		min = D3DXVECTOR2(fUVPos, 0.0f);
@@ -128,7 +128,7 @@ HRESULT CObject2D_Anim::SetTexPos(void)
 	}
 
 	//値を適応する
-	switch (m_Type)
+	switch (CObject2D_Anim::m_Type)
 	{
 	case TYPE_U:
 		max = D3DXVECTOR2(fUVPos, 1.0f);
@@ -161,4 +161,31 @@ HRESULT CObject2D_Anim::SetTexPos(void)
 	}
 
 	return S_OK;
+}
+
+//==========================================
+//  生成処理
+//==========================================
+CObject2D_Anim *CObject2D_Anim::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, int nPattern, int nInterval, bool bLoop, UVTYPE type)
+{
+	//インスタンス生成
+	CObject2D_Anim *pObject2D_Anim = NULL;
+
+	//NULLチェック
+	if (pObject2D_Anim == NULL)
+	{
+		//メモリを確保
+		pObject2D_Anim = new CObject2D_Anim;
+	}
+
+	//アニメーション情報を設定する
+	pObject2D_Anim->SetAnim(nPattern, nInterval, bLoop, type);
+
+	//初期化
+	if (pObject2D_Anim != NULL)
+	{
+		pObject2D_Anim->Init(pos, size, rot);
+	}
+
+	return pObject2D_Anim;
 }

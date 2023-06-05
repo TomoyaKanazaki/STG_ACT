@@ -19,7 +19,10 @@ int CEffect::m_nNum;
 //==========================================
 CEffect::CEffect()
 {
+	m_vecDeffSize = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nLife = 0;
+	m_fLifeRatio = 0;
 }
 
 //==========================================

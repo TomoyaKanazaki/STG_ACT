@@ -23,9 +23,6 @@ public:
 	virtual void Uninit(void);
 	virtual void Update(void);
 	virtual void Draw(void);
-	D3DXVECTOR3 GetPos(void) override { return m_pos; }
-	D3DXVECTOR3 GetRot(void) override { return m_rot; }
-	D3DXVECTOR3 GetSize(void) override { return m_size; }
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
 	void SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max);
 

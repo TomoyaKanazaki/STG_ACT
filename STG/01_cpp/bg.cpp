@@ -5,6 +5,7 @@
 //
 //==========================================
 #include "bg.h"
+#include "object2D_Anim.h"
 #include "manager.h"
 #include "renderer.h"
 
@@ -16,17 +17,17 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-int CBg::m_nNum = 0;
-LPDIRECT3DTEXTURE9 CBg::m_pTexture[BG_NUM] = {};
+LPDIRECT3DTEXTURE9 CBg::m_apTexture[MAX_BG] = {};
 
 //==========================================
 //  コンストラクタ
 //==========================================
 CBg::CBg()
 {
-	m_nID = m_nNum;
-	m_nNum++;
-	m_nSpeed = SCROLL_ROUND * m_nNum;
+	for (int nCnt = 0; nCnt < MAX_BG; nCnt++)
+	{
+		m_apObject[nCnt] = NULL;
+	}
 }
 
 //==========================================
@@ -34,7 +35,7 @@ CBg::CBg()
 //==========================================
 CBg::~CBg()
 {
-	m_nNum--;
+
 }
 
 //==========================================
@@ -42,16 +43,27 @@ CBg::~CBg()
 //==========================================
 HRESULT CBg::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
-	//アニメーション情報の登録
-	SetAnim(m_nSpeed, 1, true, TYPE_V);
-
-	if (FAILED(CObject2D_Anim::Init(pos, size, rot)))
+	//オブジェクト生成
+	for (int nCnt = 0; nCnt < MAX_BG; nCnt++)
 	{
-		return E_FAIL;
-	}
+		//NULLチェック
+		if (m_apObject[nCnt] == NULL)
+		{
+			if (FAILED(m_apObject[nCnt] = CObject2D_Anim::Create(pos, size, rot, SCROLL_ROUND * nCnt, 1, true, CObject2D_Anim::TYPE_V)))
+			{
+				return E_FAIL;
+			}
+		}
 
-	//タイプの設定
-	SetType(TYPE_BG);
+		if (m_apObject[nCnt] != NULL)
+		{
+			//テクスチャの設定
+			m_apObject[nCnt]->BindTexture(m_apTexture[nCnt]);
+
+			//タイプの設定
+			m_apObject[nCnt]->SetType(CObject::TYPE_BG);
+		}
+	}
 
 	return S_OK;
 }
@@ -61,7 +73,14 @@ HRESULT CBg::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTO
 //==========================================
 void CBg::Uninit(void)
 {
-	CObject2D_Anim::Uninit();
+	for (int nCnt = 0; nCnt < MAX_BG; nCnt++)
+	{
+		if (m_apObject[nCnt] != NULL)
+		{
+			m_apObject[nCnt]->Uninit();
+			m_apObject[nCnt] = NULL;
+		}
+	}
 }
 
 //==========================================
@@ -69,7 +88,7 @@ void CBg::Uninit(void)
 //==========================================
 void CBg::Update(void)
 {
-	CObject2D_Anim::Update();
+
 }
 
 //==========================================
@@ -77,7 +96,7 @@ void CBg::Update(void)
 //==========================================
 void CBg::Draw(void)
 {
-	CObject2D_Anim::Draw();
+
 }
 
 //==========================================
@@ -89,17 +108,17 @@ HRESULT CBg::Load(void)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/bg100.png", &m_pTexture[0])))
+	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/bg100.png", &m_apTexture[0])))
 	{
 		return E_FAIL;
 	}
 	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/bg101.png", &m_pTexture[1])))
+	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/bg101.png", &m_apTexture[1])))
 	{
 		return E_FAIL;
 	}
 	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/bg102.png", &m_pTexture[2])))
+	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/bg102.png", &m_apTexture[2])))
 	{
 		return E_FAIL;
 	}
@@ -113,12 +132,12 @@ HRESULT CBg::Load(void)
 void CBg::UnLoad(void)
 {
 	//テクスチャの破棄
-	for (int nCnt = 0; nCnt < BG_NUM; nCnt++)
+	for (int nCnt = 0; nCnt < MAX_BG; nCnt++)
 	{
-		if (m_pTexture[nCnt] != NULL)
+		if (m_apTexture[nCnt] != NULL)
 		{
-			m_pTexture[nCnt]->Release();
-			m_pTexture[nCnt] = NULL;
+			m_apTexture[nCnt]->Release();
+			m_apTexture[nCnt] = NULL;
 		}
 	}
 }
@@ -126,27 +145,23 @@ void CBg::UnLoad(void)
 //==========================================
 //  生成処理
 //==========================================
-void CBg::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+CBg *CBg::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
-	for (int nCnt = 0; nCnt < BG_NUM; nCnt++)
+	//インスタンス生成
+	CBg *pBg = NULL;
+
+	//NULLチェック
+	if (pBg == NULL)
 	{
-		//インスタンス生成
-		CBg *pBg = NULL;
-
-		//NULLチェック
-		if (pBg == NULL)
-		{
-			//メモリを確保
-			pBg = new CBg;
-		}
-
-		//初期化
-		if (pBg != NULL)
-		{
-			pBg->Init(pos, size, rot);
-		}
-
-		//テクスチャを割り当てる
-		pBg->BindTexture(m_pTexture[0]);
+		//メモリを確保
+		pBg = new CBg;
 	}
+
+	//初期化
+	if (pBg != NULL)
+	{
+		pBg->Init(pos, size, rot);
+	}
+
+	return pBg;
 }

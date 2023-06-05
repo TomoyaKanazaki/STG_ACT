@@ -34,6 +34,7 @@ private:
 
 	//メンバ変数
 	D3DXVECTOR3 m_vecDeffSize; //デフォルトサイズ
+	D3DXVECTOR3 m_move;
 	int m_nLife;
 	float m_fLifeRatio; //寿命の最大値における１単位
 

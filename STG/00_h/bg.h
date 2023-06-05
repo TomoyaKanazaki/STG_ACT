@@ -7,42 +7,45 @@
 #ifndef _BG_H_
 #define _BG_H_
 #include "main.h"
-#include "object2D_Anim.h"
+#include "object.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
-#define BG_NUM (3) //背景の数
+#define MAX_BG (3) //背景の数
+
+//==========================================
+//  前方宣言
+//==========================================
+class CObject2D_Anim;
 
 //==========================================
 //  背景クラス定義
 //==========================================
-class CBg : public CObject2D_Anim
+class CBg : public CObject
 {
 public:
 	CBg(); //コンストラクタ
 	~CBg(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot) override;
-	void Uninit(void) override;
-	void Update(void) override;
-	void Draw(void) override;
+	virtual HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
+	virtual void Uninit(void);
+	virtual void Update(void);
+	virtual void Draw(void);
 
 	//静的メンバ関数
 	static HRESULT Load(void);
 	static void UnLoad(void);
-	static void Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
-
-private:
+	static CBg *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot);
 	
+private:
+
 	//メンバ変数
-	int m_nID; //背景番号
-	int m_nSpeed; //スクロール速度
+	CObject2D_Anim *m_apObject[MAX_BG];
 
 	//静的メンバ変数
-	static int m_nNum; //背景数
-	static LPDIRECT3DTEXTURE9 m_pTexture[BG_NUM];
+	static LPDIRECT3DTEXTURE9 m_apTexture[MAX_BG];
 
 };
 
