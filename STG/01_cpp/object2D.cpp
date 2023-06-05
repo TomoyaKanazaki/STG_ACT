@@ -7,6 +7,7 @@
 #include "object2D.h"
 #include "manager.h"
 #include "renderer.h"
+#include "debugproc.h"
 
 //==========================================
 //  コンストラクタ
@@ -70,14 +71,14 @@ HRESULT CObject2D::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3D
 	);
 	pVtx[1].pos = D3DXVECTOR3
 	(
-		m_pos.x + sinf((m_rot.z + m_fAngle) + D3DX_PI * 0.5f) * m_fLength,
-		m_pos.y + cosf((m_rot.z + m_fAngle) + D3DX_PI * 0.5f) * m_fLength,
+		m_pos.x + sinf(m_rot.z + (D3DX_PI - m_fAngle)) * m_fLength,
+		m_pos.y + cosf(m_rot.z + (D3DX_PI - m_fAngle)) * m_fLength,
 		0.0f
 	);
 	pVtx[2].pos = D3DXVECTOR3
 	(
-		m_pos.x + sinf((m_rot.z + m_fAngle) - D3DX_PI * 0.5f) * m_fLength,
-		m_pos.y + cosf((m_rot.z + m_fAngle) - D3DX_PI * 0.5f) * m_fLength,
+		m_pos.x + sinf(m_rot.z - m_fAngle) * m_fLength,
+		m_pos.y + cosf(m_rot.z - m_fAngle) * m_fLength,
 		0.0f
 	);
 	pVtx[3].pos = D3DXVECTOR3
@@ -150,14 +151,14 @@ void CObject2D::Update(void)
 	);
 	pVtx[1].pos = D3DXVECTOR3
 	(
-		m_pos.x + sinf((m_rot.z + m_fAngle) + D3DX_PI * 0.5f) * m_fLength,
-		m_pos.y + cosf((m_rot.z + m_fAngle) + D3DX_PI * 0.5f) * m_fLength,
+		m_pos.x + sinf(m_rot.z + (D3DX_PI - m_fAngle)) * m_fLength,
+		m_pos.y + cosf(m_rot.z + (D3DX_PI - m_fAngle)) * m_fLength,
 		0.0f
 	);
 	pVtx[2].pos = D3DXVECTOR3
 	(
-		m_pos.x + sinf((m_rot.z + m_fAngle) - D3DX_PI * 0.5f) * m_fLength,
-		m_pos.y + cosf((m_rot.z + m_fAngle) - D3DX_PI * 0.5f) * m_fLength,
+		m_pos.x + sinf(m_rot.z - m_fAngle) * m_fLength,
+		m_pos.y + cosf(m_rot.z - m_fAngle) * m_fLength,
 		0.0f
 	);
 	pVtx[3].pos = D3DXVECTOR3
@@ -166,6 +167,15 @@ void CObject2D::Update(void)
 		m_pos.y + cosf((m_rot.z + m_fAngle)) * m_fLength,
 		0.0f
 	);
+
+	if (GetType() == TYPE_BG)
+	{
+		for (int nCnt = 0; nCnt < 4; nCnt++)
+		{
+			CManager::GetDebugProc()->Print("pVtx[%d] : %f, %f, %f\n", nCnt, pVtx[nCnt].pos.x, pVtx[nCnt].pos.y, pVtx[nCnt].pos.z);
+		}
+		CManager::GetDebugProc()->Print("\n");
+	}
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();

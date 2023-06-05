@@ -147,6 +147,6 @@ void CBg::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR
 		}
 
 		//テクスチャを割り当てる
-		pBg->BindTexture(m_pTexture[nCnt]);
+		pBg->BindTexture(m_pTexture[0]);
 	}
 }
