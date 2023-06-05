@@ -31,6 +31,7 @@ public:
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
 	void SetAnim(int nPattern, int nInterval, bool bLoop, UVTYPE type);
+	HRESULT SetTexPos(void);
 
 private:
 

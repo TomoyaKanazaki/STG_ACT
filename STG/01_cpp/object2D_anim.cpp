@@ -37,6 +37,9 @@ HRESULT CObject2D_Anim::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, cons
 		return E_FAIL;
 	}
 
+	//テクスチャ座標を設定
+	SetTexPos();
+
 	return S_OK;
 }
 
@@ -59,68 +62,10 @@ void CObject2D_Anim::Update(void)
 	//アニメーションの更新
 	if (m_nAnimCounter % m_nUpdateFrame == 0)
 	{
-		//ローカル変数宣言
-		float fUVPos;
-		D3DXVECTOR2 min, max;
-
-		//テクスチャ座標の最小値を算出する
-		fUVPos = (1.0f / m_nNumPattern) * m_nAnimPattern;
-
-		//値を適応する
-		switch (m_Type)
+		if (FAILED(SetTexPos()))
 		{
-		case TYPE_U:
-			min = D3DXVECTOR2(fUVPos, 0.0f);
-			break;
-		case TYPE_V:
-			min = D3DXVECTOR2(0.0f, fUVPos);
-			break;
-		default:
-			break;
-		}
-
-		//テクスチャ座標の最大値を算出する
-		if (this->GetType() == CObject::TYPE_BG)
-		{
-			fUVPos += 1.0f;
-		}
-		else
-		{
-			fUVPos = (1.0f / m_nNumPattern) * (m_nAnimPattern + 1);
-		}
-
-		//値を適応する
-		switch (m_Type)
-		{
-		case TYPE_U:
-			max = D3DXVECTOR2(fUVPos, 1.0f);
-			break;
-		case TYPE_V:
-			max = D3DXVECTOR2(1.0f, fUVPos);
-			break;
-		default:
-			break;
-		}
-
-		//テクスチャ座標の更新
-		SetTex(min, max);
-
-		if (m_nAnimPattern >= m_nNumPattern) //最後のアニメーションの場合
-		{
-			if (m_bLoop) //ループする場合
-			{
-				m_nAnimPattern = 0;
-			}
-			else
-			{
-				this->Release();
-				return;
-			}
-		}
-		else
-		{
-			//アニメーション番号を更新する
-			m_nAnimPattern++;
+			this->Release();
+			return;
 		}
 	}
 
@@ -145,4 +90,75 @@ void CObject2D_Anim::SetAnim(int nPattern, int nInterval, bool bLoop, UVTYPE typ
 	m_nUpdateFrame = nInterval;
 	m_bLoop = bLoop;
 	m_Type = type;
+}
+
+//==========================================
+//  テクスチャの設定
+//==========================================
+HRESULT CObject2D_Anim::SetTexPos(void)
+{
+	//ローカル変数宣言
+	float fUVPos;
+	D3DXVECTOR2 min, max;
+
+	//テクスチャ座標の最小値を算出する
+	fUVPos = (1.0f / m_nNumPattern) * m_nAnimPattern;
+
+	//値を適応する
+	switch (m_Type)
+	{
+	case TYPE_U:
+		min = D3DXVECTOR2(fUVPos, 0.0f);
+		break;
+	case TYPE_V:
+		min = D3DXVECTOR2(0.0f, fUVPos);
+		break;
+	default:
+		break;
+	}
+
+	//テクスチャ座標の最大値を算出する
+	if (this->GetType() == CObject::TYPE_BG)
+	{
+		fUVPos += 1.0f;
+	}
+	else
+	{
+		fUVPos = (1.0f / m_nNumPattern) * (m_nAnimPattern + 1);
+	}
+
+	//値を適応する
+	switch (m_Type)
+	{
+	case TYPE_U:
+		max = D3DXVECTOR2(fUVPos, 1.0f);
+		break;
+	case TYPE_V:
+		max = D3DXVECTOR2(1.0f, fUVPos);
+		break;
+	default:
+		break;
+	}
+
+	//テクスチャ座標の更新
+	SetTex(min, max);
+
+	if (m_nAnimPattern >= m_nNumPattern) //最後のアニメーションの場合
+	{
+		if (m_bLoop) //ループする場合
+		{
+			m_nAnimPattern = 0;
+		}
+		else
+		{
+			return E_FAIL;
+		}
+	}
+	else
+	{
+		//アニメーション番号を更新する
+		m_nAnimPattern++;
+	}
+
+	return S_OK;
 }

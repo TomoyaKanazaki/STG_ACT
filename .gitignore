@@ -1,6 +1,9 @@
-/STG/.vs/STG/v14/.suo
+/STG/.vs
 /STG/*.db
 /STG/*.iobj
 /STG/*.ipdb
 /STG/*.pdb
 /STG/*.user
+/STG/Release
+/STG/Debug
+/STG/x64

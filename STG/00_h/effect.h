@@ -33,7 +33,9 @@ public:
 private:
 
 	//メンバ変数
+	D3DXVECTOR3 m_vecDeffSize; //デフォルトサイズ
 	int m_nLife;
+	float m_fLifeRatio; //寿命の最大値における１単位
 
 	//静的メンバ変数
 	static LPDIRECT3DTEXTURE9 m_pTexture;

@@ -9,6 +9,7 @@
 #include "input.h"
 #include "renderer.h"
 #include "object.h"
+#include "explosion.h"
 
 //==========================================
 //  É}ÉNÉçíËã`
@@ -73,6 +74,8 @@ HRESULT CEnemy::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 //==========================================
 void CEnemy::Uninit(void)
 {
+	CExplosion::Create(m_pos, m_size, m_rot);
+
 	CObject2D::Uninit();
 
 	m_nNum--;

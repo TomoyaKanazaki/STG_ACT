@@ -40,13 +40,13 @@ CExplosion::~CExplosion()
 //==========================================
 HRESULT CExplosion::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
+	//アニメーション情報の登録
+	SetAnim(ANIM_PATTERN, UPDATECOUNT, false, TYPE_U);
+
 	if (FAILED(CObject2D_Anim::Init(pos, size, rot)))
 	{
 		return E_FAIL;
 	}
-
-	//アニメーション情報の登録
-	SetAnim(ANIM_PATTERN, UPDATECOUNT, false, TYPE_U);
 
 	//タイプの設定
 	SetType(TYPE_EXPLOSION);

@@ -42,13 +42,13 @@ CBg::~CBg()
 //==========================================
 HRESULT CBg::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
+	//アニメーション情報の登録
+	SetAnim(m_nSpeed, 1, true, TYPE_V);
+
 	if (FAILED(CObject2D_Anim::Init(pos, size, rot)))
 	{
 		return E_FAIL;
 	}
-
-	//アニメーション情報の登録
-	SetAnim(m_nSpeed, 1, true, TYPE_V);
 
 	//タイプの設定
 	SetType(TYPE_BG);

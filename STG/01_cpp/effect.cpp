@@ -69,6 +69,10 @@ void CEffect::Update(void)
 		return;
 	}
 
+	//サイズを小さくする
+	m_size.x -= m_vecDeffSize.x * m_fLifeRatio;
+	m_size.y -= m_vecDeffSize.y * m_fLifeRatio;
+
 	//更新
 	CObject2D::Update();
 }
@@ -149,8 +153,12 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 	//テクスチャを割り当てる
 	pEffect->BindTexture(m_pTexture);
 
+	//デフォルトサイズを保存する
+	pEffect->m_vecDeffSize = size;
+
 	//寿命を設定する
 	pEffect->m_nLife = nLife;
+	pEffect->m_fLifeRatio = 1.0f / nLife;
 
 	//ポインタを返す
 	return pEffect;
