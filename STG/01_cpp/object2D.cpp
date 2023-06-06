@@ -12,7 +12,7 @@
 //==========================================
 //  コンストラクタ
 //==========================================
-CObject2D::CObject2D()
+CObject2D::CObject2D(int nPriority) : CObject(nPriority)
 {
 	m_pTexture = NULL;
 	m_pVtxBuff = NULL;

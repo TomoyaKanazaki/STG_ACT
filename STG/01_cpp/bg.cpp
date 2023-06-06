@@ -22,7 +22,7 @@ LPDIRECT3DTEXTURE9 CBg::m_apTexture[MAX_BG] = {};
 //==========================================
 //  コンストラクタ
 //==========================================
-CBg::CBg()
+CBg::CBg(int nPriority) : CObject(nPriority)
 {
 	for (int nCnt = 0; nCnt < MAX_BG; nCnt++)
 	{

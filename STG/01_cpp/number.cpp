@@ -1,36 +1,30 @@
 //==========================================
 //
-//  爆発クラス(explosion.cpp)
+//  ナンバークラス(number.cpp)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#include "explosion.h"
+#include "number.h"
 #include "manager.h"
 #include "renderer.h"
 
 //==========================================
-//  マクロ定義
-//==========================================
-#define UPDATE_COUNT (5) //更新間隔
-#define ANIM_PATTERN (8) //アニメーションパターン数
-
-//==========================================
 //  静的メンバ変数宣言
 //==========================================
-LPDIRECT3DTEXTURE9 CExplosion::m_pTexture = NULL;
+LPDIRECT3DTEXTURE9 CNumber::m_pTexture = NULL;
 
 //==========================================
 //  コンストラクタ
 //==========================================
-CExplosion::CExplosion(int nPriority) : CObject2D_Anim(nPriority)
+CNumber::CNumber(int nPriority) : CObject2D(nPriority)
 {
-
+	m_nNumber = 0;
 }
 
 //==========================================
 //  デストラクタ
 //==========================================
-CExplosion::~CExplosion()
+CNumber::~CNumber()
 {
 
 }
@@ -38,18 +32,15 @@ CExplosion::~CExplosion()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CExplosion::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CNumber::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
-	//アニメーション情報の登録
-	SetAnim(ANIM_PATTERN, UPDATE_COUNT, false, TYPE_U);
-
-	if (FAILED(CObject2D_Anim::Init(pos, size, rot)))
+	if (FAILED(CObject2D::Init(pos, size, rot)))
 	{
 		return E_FAIL;
 	}
 
 	//タイプの設定
-	SetType(TYPE_EXPLOSION);
+	SetType(TYPE_NUMBER);
 
 	return S_OK;
 }
@@ -57,7 +48,7 @@ HRESULT CExplosion::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 //==========================================
 //  終了処理
 //==========================================
-void CExplosion::Uninit(void)
+void CNumber::Uninit(void)
 {
 	CObject2D::Uninit();
 }
@@ -65,29 +56,37 @@ void CExplosion::Uninit(void)
 //==========================================
 //  更新処理
 //==========================================
-void CExplosion::Update(void)
+void CNumber::Update(void)
 {
-	CObject2D_Anim::Update();
+	//ローカル変数宣言
+	D3DXVECTOR2 min, max;
+
+	//表示する値にテクスチャ座標を合わせる
+	min.x = m_nNumber * 0.1f;
+	max.x = min.x + 0.1f;
+
+	//テクスチャ座標を割り当てる
+	SetTex(min, max);
 }
 
 //==========================================
 //  描画処理
 //==========================================
-void CExplosion::Draw(void)
+void CNumber::Draw(void)
 {
-	CObject2D_Anim::Draw();
+	CObject2D::Draw();
 }
 
 //==========================================
 //  読み込み処理
 //==========================================
-HRESULT CExplosion::Load(void)
+HRESULT CNumber::Load(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/explosion.png", &m_pTexture)))
+	if (FAILED(D3DXCreateTextureFromFile(pDevice, "02_data/TEXTURE/number.png", &m_pTexture)))
 	{
 		return E_FAIL;
 	}
@@ -96,9 +95,9 @@ HRESULT CExplosion::Load(void)
 }
 
 //==========================================
-//  破棄処理
+//  テクスチャ破棄
 //==========================================
-void CExplosion::UnLoad(void)
+void CNumber::UnLoad(void)
 {
 	//テクスチャの破棄
 	if (m_pTexture != NULL)
@@ -109,29 +108,32 @@ void CExplosion::UnLoad(void)
 }
 
 //==========================================
-//  オブジェクト生成処理
+//  生成処理
 //==========================================
-CExplosion *CExplosion::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+CNumber * CNumber::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, int nNumber)
 {
 	//インスタンス生成
-	CExplosion *pExplosion = NULL;
+	CNumber *pNumber = NULL;
 
 	//NULLチェック
-	if (pExplosion == NULL)
+	if (pNumber == NULL)
 	{
 		//メモリを確保
-		pExplosion = new CExplosion;
+		pNumber = new CNumber;
 	}
 
+	//値を割り当てる
+	pNumber->m_nNumber = nNumber;
+
 	//初期化
-	if (pExplosion != NULL)
+	if (pNumber != NULL)
 	{
-		pExplosion->Init(pos, size, rot);
+		pNumber->Init(pos, size, rot);
 	}
 
 	//テクスチャを割り当てる
-	pExplosion->BindTexture(m_pTexture);
+	pNumber->BindTexture(m_pTexture);
 
 	//ポインタを返す
-	return pExplosion;
+	return pNumber;
 }

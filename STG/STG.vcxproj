@@ -163,6 +163,7 @@
     <ClInclude Include="00_h\input.h" />
     <ClInclude Include="00_h\main.h" />
     <ClInclude Include="00_h\manager.h" />
+    <ClInclude Include="00_h\number.h" />
     <ClInclude Include="00_h\object.h" />
     <ClInclude Include="00_h\object2D.h" />
     <ClInclude Include="00_h\object2D_Anim.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="01_cpp\input.cpp" />
     <ClCompile Include="01_cpp\main.cpp" />
     <ClCompile Include="01_cpp\manager.cpp" />
+    <ClCompile Include="01_cpp\number.cpp" />
     <ClCompile Include="01_cpp\object.cpp" />
     <ClCompile Include="01_cpp\object2D.cpp" />
     <ClCompile Include="01_cpp\object2D_Anim.cpp" />

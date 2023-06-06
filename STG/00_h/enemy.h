@@ -15,7 +15,7 @@
 class CEnemy : public CObject2D
 {
 public:
-	CEnemy(); //コンストラクタ
+	CEnemy(int nPriority = 3); //コンストラクタ
 	~CEnemy(); //デストラクタ
 
 	//メンバ関数

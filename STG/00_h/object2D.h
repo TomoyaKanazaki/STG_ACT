@@ -15,7 +15,7 @@
 class CObject2D : public CObject
 {
 public:
-	CObject2D(); //コンストラクタ
+	CObject2D(int nPriority = 3); //コンストラクタ
 	~CObject2D(); //デストラクタ
 
 	//メンバ関数

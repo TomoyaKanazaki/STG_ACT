@@ -11,7 +11,8 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define MAX_OBJECT (16384) //オブジェクトの最大数
+#define PRIORITY_NUM (8) //優先順位の最大数
+#define MAX_OBJECT (4096) //オブジェクトの最大数
 
 //==========================================
 //  オブジェクトクラス生成
@@ -28,11 +29,12 @@ public:
 		TYPE_EXPLOSION, //爆発
 		TYPE_BG, //背景
 		TYPE_EFFECT, //エフェクト
+		TYPE_NUMBER, //数字
 		TYPE_MAX
 	}TYPE;
 
-	CObject();
-	virtual ~CObject();
+	CObject(int nPriority = 3); //コンストラクタ
+	virtual ~CObject(); //デストラクタ
 
 	//メンバ関数
 	virtual HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot) = 0;
@@ -43,7 +45,7 @@ public:
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
-	CObject *GetObject(int nID) { return m_apObject[nID]; }
+	CObject *GetObject(int nPriority, int nID) { return m_apObject[nPriority][nID]; }
 	int GetID(void) { return m_nID; }
 	void SetType(TYPE type) { m_type = type; }
 	TYPE GetType(void) { return m_type; }
@@ -66,11 +68,12 @@ protected:
 private:
 
 	//静的メンバ変数
-	static CObject *m_apObject[MAX_OBJECT]; //オブジェクトのポインタ
+	static CObject *m_apObject[PRIORITY_NUM][MAX_OBJECT]; //オブジェクトのポインタ
 	static int m_nNumObject; //オブジェクトの総数
 
 	//メンバ変数
 	int m_nID; //自分自身のインデックス
+	int m_nPriority; //描画優先順位
 	TYPE m_type; //種類
 
 };

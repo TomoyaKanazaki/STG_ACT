@@ -22,7 +22,7 @@ public:
 		TYPE_V //縦方向のアニメーション
 	}UVTYPE;
 
-	CObject2D_Anim(); //コンストラクタ
+	CObject2D_Anim(int nPriority = 3); //コンストラクタ
 	~CObject2D_Anim(); //デストラクタ
 
 	//メンバ関数

@@ -17,7 +17,7 @@ int CEffect::m_nNum;
 //==========================================
 //  コンストラクタ
 //==========================================
-CEffect::CEffect()
+CEffect::CEffect(int nPriority) : CObject2D(nPriority)
 {
 	m_vecDeffSize = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

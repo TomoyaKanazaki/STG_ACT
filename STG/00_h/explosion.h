@@ -15,7 +15,7 @@
 class CExplosion : public CObject2D_Anim
 {
 public:
-	CExplosion(); //コンストラクタ
+	CExplosion(int nPriority = 2); //コンストラクタ
 	~CExplosion(); //デストラクタ
 
 	//メンバ関数

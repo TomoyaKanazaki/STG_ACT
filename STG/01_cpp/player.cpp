@@ -25,7 +25,7 @@ LPDIRECT3DTEXTURE9 CPlayer::m_pTexture = NULL;
 //==========================================
 //  コンストラクタ
 //==========================================
-CPlayer::CPlayer()
+CPlayer::CPlayer(int nPriority) : CObject2D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nSpeed = 0.0f;

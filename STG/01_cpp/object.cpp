@@ -10,19 +10,19 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-CObject *CObject::m_apObject[MAX_OBJECT] = {};
+CObject *CObject::m_apObject[PRIORITY_NUM][MAX_OBJECT] = {};
 int CObject::m_nNumObject = 0;
 
 //==========================================
 //  コンストラクタ
 //==========================================
-CObject::CObject()
+CObject::CObject(int nPriority)
 {
 	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 	{
-		if (m_apObject[nCntObject] == NULL)
+		if (m_apObject[nPriority][nCntObject] == NULL)
 		{
-			m_apObject[nCntObject] = this;
+			m_apObject[nPriority][nCntObject] = this;
 			m_nID = nCntObject;
 			m_nNumObject++;
 			break;
@@ -32,6 +32,7 @@ CObject::CObject()
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_nPriority = nPriority;
 	m_type = TYPE_NONE;
 }
 
@@ -48,11 +49,14 @@ CObject::~CObject()
 //==========================================
 void CObject::ReleaseAll(void)
 {
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		if (m_apObject[nCntObject] != NULL)
+		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 		{
-			m_apObject[nCntObject]->Uninit();
+			if (m_apObject[nCntPriority][nCntObject] != NULL)
+			{
+				m_apObject[nCntPriority][nCntObject]->Uninit();
+			}
 		}
 	}
 }
@@ -62,11 +66,14 @@ void CObject::ReleaseAll(void)
 //==========================================
 void CObject::UpdateAll(void)
 {
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		if (m_apObject[nCntObject] != NULL)
+		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 		{
-			m_apObject[nCntObject]->Update();
+			if (m_apObject[nCntPriority][nCntObject] != NULL)
+			{
+				m_apObject[nCntPriority][nCntObject]->Update();
+			}
 		}
 	}
 }
@@ -76,11 +83,14 @@ void CObject::UpdateAll(void)
 //==========================================
 void CObject::DrawAll(void)
 {
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		if (m_apObject[nCntObject] != NULL)
+		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
 		{
-			m_apObject[nCntObject]->Draw();
+			if (m_apObject[nCntPriority][nCntObject] != NULL)
+			{
+				m_apObject[nCntPriority][nCntObject]->Draw();
+			}
 		}
 	}
 }
@@ -90,13 +100,16 @@ void CObject::DrawAll(void)
 //==========================================
 void CObject::Release(void)
 {
+	//優先順位を保存
+	int nPriority = m_nPriority;
+
 	//インデックスを保存
 	int nIdx = m_nID;
 
-	if (m_apObject[nIdx] != NULL)
+	if (m_apObject[nPriority][nIdx] != NULL)
 	{
-		delete m_apObject[nIdx];
-		m_apObject[nIdx] = NULL;
+		delete m_apObject[nPriority][nIdx];
+		m_apObject[nPriority][nIdx] = NULL;
 		m_nNumObject--;
 	}
 }

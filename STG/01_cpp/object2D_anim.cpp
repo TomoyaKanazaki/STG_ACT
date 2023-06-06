@@ -9,7 +9,7 @@
 //==========================================
 //  コンストラクタ
 //==========================================
-CObject2D_Anim::CObject2D_Anim()
+CObject2D_Anim::CObject2D_Anim(int nPriority) : CObject2D(nPriority)
 {
 	m_Type = TYPE_NONE;
 	m_nNumPattern = 0;

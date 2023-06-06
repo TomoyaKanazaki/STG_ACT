@@ -25,7 +25,7 @@ int CBullet::m_nNum = 0;
 //==========================================
 //  コンストラクタ
 //==========================================
-CBullet::CBullet()
+CBullet::CBullet(int nPriority) : CObject2D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nSpeed = BULLET_SPEED;
@@ -192,38 +192,41 @@ CBullet *CBullet::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 //==========================================
 bool CBullet::CollisionEnemy(void)
 {
-	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		//オブジェクトを取得
-		CObject *pObj = GetObject(nCntObj);
-
-		//NULLチェック
-		if (pObj == NULL)
+		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
 		{
-			continue;
-		}
+			//オブジェクトを取得
+			CObject *pObj = GetObject(nCntPriority, nCntObj);
 
-		if (pObj->GetType() != TYPE_ENEMY) //敵の場合
-		{
-			continue;
-		}
+			//NULLチェック
+			if (pObj == NULL)
+			{
+				continue;
+			}
 
-		//敵の各情報を取得する
-		D3DXVECTOR3 pos = pObj->GetPos();
-		D3DXVECTOR3 size = pObj->GetSize();
+			if (pObj->GetType() != TYPE_ENEMY) //敵の場合
+			{
+				continue;
+			}
 
-		//敵と弾の距離を取得
-		float fLength = (pos.x - m_pos.x) * (pos.x - m_pos.x) + (pos.y - m_pos.y) * (pos.y - m_pos.y);
+			//敵の各情報を取得する
+			D3DXVECTOR3 pos = pObj->GetPos();
+			D3DXVECTOR3 size = pObj->GetSize();
 
-		//判定距離を取得
-		float fOutLine = (size.x - m_size.x * 0.3f) * (size.x - m_size.x * 0.3f) + (size.y - m_size.y * 0.3f) * (size.y - m_size.y * 0.3f);
+			//敵と弾の距離を取得
+			float fLength = (pos.x - m_pos.x) * (pos.x - m_pos.x) + (pos.y - m_pos.y) * (pos.y - m_pos.y);
 
-		if (fLength < fOutLine)
-		{
-			CExplosion::Create(m_pos, m_size, m_rot);
-			pObj->Uninit();
-			this->Release();
-			return true;
+			//判定距離を取得
+			float fOutLine = (size.x - m_size.x * 0.3f) * (size.x - m_size.x * 0.3f) + (size.y - m_size.y * 0.3f) * (size.y - m_size.y * 0.3f);
+
+			if (fLength < fOutLine)
+			{
+				CExplosion::Create(m_pos, m_size, m_rot);
+				pObj->Uninit();
+				this->Release();
+				return true;
+			}
 		}
 	}
 

@@ -26,7 +26,7 @@ int CEnemy::m_nNum = 0;
 //==========================================
 //  コンストラクタ
 //==========================================
-CEnemy::CEnemy()
+CEnemy::CEnemy(int nPriority) : CObject2D(nPriority)
 {
 	m_move = D3DXVECTOR3((float)(rand() % 100), (float)(rand() % 100), 0.0f);
 	if (rand() % 2)
@@ -255,38 +255,41 @@ void CEnemy::Rotate(void)
 //==========================================
 void CEnemy::Collision(void)
 {
-	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		if (nCntObj != GetID())
+		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
 		{
-			//インスタンス生成
-			CObject *pObj;
-
-			//オブジェクトを取得
-			pObj = GetObject(nCntObj);
-
-			//NULLチェック
-			if (pObj != NULL)
+			if (nCntObj != GetID())
 			{
-				//種類の取得
-				TYPE type = pObj->GetType();
+				//インスタンス生成
+				CObject *pObj;
 
-				if (type == TYPE_ENEMY) //敵の場合
+				//オブジェクトを取得
+				pObj = GetObject(nCntPriority, nCntObj);
+
+				//NULLチェック
+				if (pObj != NULL)
 				{
-					//敵の各情報を取得する
-					D3DXVECTOR3 pos = pObj->GetPos();
-					D3DXVECTOR3 size = pObj->GetSize();
+					//種類の取得
+					TYPE type = pObj->GetType();
 
-					//敵と弾の距離を取得
-					float fLength = (pos.x - m_pos.x) * (pos.x - m_pos.x) + (pos.y - m_pos.y) * (pos.y - m_pos.y);
-
-					//判定距離を取得
-					float fOutLine = (size.x - m_size.x * 0.3f) * (size.x - m_size.x * 0.3f) + (size.y - m_size.y * 0.3f) * (size.y - m_size.y * 0.3f);
-
-					if (fLength < fOutLine)
+					if (type == TYPE_ENEMY) //敵の場合
 					{
-						m_move.x *= -1.0f;
-						m_move.y *= -1.0f;
+						//敵の各情報を取得する
+						D3DXVECTOR3 pos = pObj->GetPos();
+						D3DXVECTOR3 size = pObj->GetSize();
+
+						//敵と弾の距離を取得
+						float fLength = (pos.x - m_pos.x) * (pos.x - m_pos.x) + (pos.y - m_pos.y) * (pos.y - m_pos.y);
+
+						//判定距離を取得
+						float fOutLine = (size.x - m_size.x * 0.3f) * (size.x - m_size.x * 0.3f) + (size.y - m_size.y * 0.3f) * (size.y - m_size.y * 0.3f);
+
+						if (fLength < fOutLine)
+						{
+							m_move.x *= -1.0f;
+							m_move.y *= -1.0f;
+						}
 					}
 				}
 			}

@@ -15,7 +15,7 @@
 class CPlayer : public CObject2D
 {
 public:
-	CPlayer(); //コンストラクタ
+	CPlayer(int nPriority = 4); //コンストラクタ
 	~CPlayer(); //デストラクタ
 
 	//メンバ関数
