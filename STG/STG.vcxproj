@@ -166,6 +166,7 @@
     <ClInclude Include="00_h\object.h" />
     <ClInclude Include="00_h\object2D.h" />
     <ClInclude Include="00_h\object2D_Anim.h" />
+    <ClInclude Include="00_h\particle.h" />
     <ClInclude Include="00_h\player.h" />
     <ClInclude Include="00_h\renderer.h" />
   </ItemGroup>
@@ -182,6 +183,7 @@
     <ClCompile Include="01_cpp\object.cpp" />
     <ClCompile Include="01_cpp\object2D.cpp" />
     <ClCompile Include="01_cpp\object2D_Anim.cpp" />
+    <ClCompile Include="01_cpp\particle.cpp" />
     <ClCompile Include="01_cpp\player.cpp" />
     <ClCompile Include="01_cpp\renderer.cpp" />
   </ItemGroup>

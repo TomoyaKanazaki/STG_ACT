@@ -10,6 +10,7 @@
 #include "renderer.h"
 #include "object.h"
 #include "explosion.h"
+#include "particle.h"
 
 //==========================================
 //  マクロ定義
@@ -74,7 +75,11 @@ HRESULT CEnemy::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 //==========================================
 void CEnemy::Uninit(void)
 {
+	//爆発の発生
 	CExplosion::Create(m_pos, m_size, m_rot);
+
+	//パーティクルを生成
+	CParticle::Create(m_pos, m_size, m_rot, m_size, D3DXCOLOR(1.0f, 0.3f, 0.0f, 1.0f), 50, 30, 5, 2);
 
 	CObject2D::Uninit();
 

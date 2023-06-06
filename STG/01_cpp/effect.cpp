@@ -76,6 +76,9 @@ void CEffect::Update(void)
 	m_size.x -= m_vecDeffSize.x * m_fLifeRatio;
 	m_size.y -= m_vecDeffSize.y * m_fLifeRatio;
 
+	//移動量を加算する
+	m_pos += m_move;
+
 	//更新
 	CObject2D::Update();
 }
@@ -135,7 +138,7 @@ void CEffect::UnLoad(void)
 //==========================================
 //  生成処理
 //==========================================
-CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, int nLife)
+CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, D3DXCOLOR col, int nLife)
 {
 	//インスタンス生成
 	CEffect *pEffect = NULL;
@@ -162,6 +165,24 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 	//寿命を設定する
 	pEffect->m_nLife = nLife;
 	pEffect->m_fLifeRatio = 1.0f / nLife;
+
+	//色を設定する
+	pEffect->SetCol(col);
+
+	//ポインタを返す
+	return pEffect;
+}
+
+//==========================================
+//  生成処理
+//==========================================
+CEffect * CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, D3DXVECTOR3 move, D3DXCOLOR col, int nLife)
+{
+	//インスタンス生成
+	CEffect *pEffect = Create(pos, size, rot, col, nLife);
+
+	//移動量を設定
+	pEffect->m_move = move;
 
 	//ポインタを返す
 	return pEffect;

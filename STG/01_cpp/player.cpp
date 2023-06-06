@@ -86,7 +86,7 @@ void CPlayer::Update(void)
 	CObject2D::Update();
 
 	//エフェクトを呼び出す
-	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, 30);
+	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(0.0f, 0.5f, 1.0f, 1.0f),  30);
 }
 
 //==========================================

@@ -25,12 +25,14 @@ public:
 	virtual void Draw(void);
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
 	void SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max);
+	void SetCol(const D3DXCOLOR col);
 
 private:
 
 	//ÉÅÉìÉoïœêî
 	LPDIRECT3DTEXTURE9 m_pTexture;
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;
+	D3DXCOLOR m_col;
 	float m_fLength;
 	float m_fAngle;
 };

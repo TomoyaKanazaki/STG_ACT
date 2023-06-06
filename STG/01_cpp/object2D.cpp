@@ -16,6 +16,7 @@ CObject2D::CObject2D()
 {
 	m_pTexture = NULL;
 	m_pVtxBuff = NULL;
+	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 //==========================================
@@ -95,10 +96,10 @@ HRESULT CObject2D::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3D
 	pVtx[3].rhw = 1.0f;
 
 	//頂点カラーの設定
-	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	pVtx[0].col = m_col;
+	pVtx[1].col = m_col;
+	pVtx[2].col = m_col;
+	pVtx[3].col = m_col;
 
 	//テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -218,6 +219,30 @@ void CObject2D::SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max)
 	pVtx[1].tex = D3DXVECTOR2(max.x, min.y);
 	pVtx[2].tex = D3DXVECTOR2(min.x, max.y);
 	pVtx[3].tex = D3DXVECTOR2(max.x, max.y);
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+}
+
+//==========================================
+//  色の設定
+//==========================================
+void CObject2D::SetCol(const D3DXCOLOR col)
+{
+	//色を設定する
+	m_col = col;
+
+	//頂点バッファの呼び出し
+	VERTEX_2D *pVtx;
+
+	//頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//設定した色の適用
+	pVtx[0].col = m_col;
+	pVtx[1].col = m_col;
+	pVtx[2].col = m_col;
+	pVtx[3].col = m_col;
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
