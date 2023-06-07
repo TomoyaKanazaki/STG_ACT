@@ -15,6 +15,8 @@
 #include "explosion.h"
 #include "bg.h"
 #include "effect.h"
+#include "score.h"
+#include "number.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -24,6 +26,7 @@ CKeyboard *CManager::m_pKeyboard = NULL;
 CMouse *CManager::m_pMouse = NULL;
 CJoyPad *CManager::m_pJoyPad[MAX_PLAYER] = {};
 CDebugProc *CManager::m_pDebugProc = NULL;
+CScore *CManager::m_pScore = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -60,6 +63,15 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 			return E_FAIL;
 		}
 	}
+
+	//テクスチャの読み込み
+	CPlayer::Load();
+	CEnemy::Load();
+	CBullet::Load();
+	CExplosion::Load();
+	CBg::Load();
+	CEffect::Load();
+	CNumber::Load();
 
 	//デバッグ表示の生成
 	if (m_pDebugProc == NULL)
@@ -103,6 +115,12 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
+	//スコアの生成
+	if (m_pScore == NULL)
+	{
+		m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 500.0f, 25.0f, 0.0f), D3DXVECTOR3(500.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
+	}
+
 	////ジョイパッドの生成
 	//if (m_pJoyPad[0] == NULL)
 	//{
@@ -117,14 +135,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//		return E_FAIL;
 	//	}
 	//}
-
-	//テクスチャの読み込み
-	CPlayer::Load();
-	CEnemy::Load();
-	CBullet::Load();
-	CExplosion::Load();
-	CBg::Load();
-	CEffect::Load();
 
 	//プレイヤーの生成
 	CPlayer::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
@@ -182,6 +192,7 @@ void CManager::Uninit(void)
 	CExplosion::UnLoad();
 	CBg::UnLoad();
 	CEffect::UnLoad();
+	CNumber::UnLoad();
 }
 
 //==========================================

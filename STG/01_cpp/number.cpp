@@ -62,8 +62,8 @@ void CNumber::Update(void)
 	D3DXVECTOR2 min, max;
 
 	//表示する値にテクスチャ座標を合わせる
-	min.x = m_nNumber * 0.1f;
-	max.x = min.x + 0.1f;
+	min = D3DXVECTOR2(m_nNumber * 0.1f, 0.0f);
+	max = D3DXVECTOR2(min.x + 0.1f, 1.0f);
 
 	//テクスチャ座標を割り当てる
 	SetTex(min, max);

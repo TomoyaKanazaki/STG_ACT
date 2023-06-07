@@ -170,6 +170,7 @@
     <ClInclude Include="00_h\particle.h" />
     <ClInclude Include="00_h\player.h" />
     <ClInclude Include="00_h\renderer.h" />
+    <ClInclude Include="00_h\score.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="00_h\bullet.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="01_cpp\particle.cpp" />
     <ClCompile Include="01_cpp\player.cpp" />
     <ClCompile Include="01_cpp\renderer.cpp" />
+    <ClCompile Include="01_cpp\score.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

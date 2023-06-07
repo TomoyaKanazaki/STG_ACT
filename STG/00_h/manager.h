@@ -21,6 +21,7 @@ class CKeyboard;
 class CMouse;
 class CJoyPad;
 class CDebugProc;
+class CScore;
 
 //==========================================
 //  マネージャクラス定義
@@ -43,6 +44,7 @@ public:
 	static CMouse *GetMouse() { return m_pMouse; }
 	static CJoyPad *GetJoyPad(int m_nNum) { return m_pJoyPad[m_nNum]; }
 	static CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
+	static CScore *GetScore(void) { return m_pScore; }
 
 private:
 
@@ -52,6 +54,7 @@ private:
 	static CMouse *m_pMouse;
 	static CJoyPad *m_pJoyPad[MAX_PLAYER];
 	static CDebugProc *m_pDebugProc;
+	static CScore *m_pScore;
 };
 
 #endif

@@ -19,10 +19,10 @@ public:
 	~CNumber(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
 	void SetNum(const int nNumber) { m_nNumber = nNumber; }
 
 	//静的メンバ関数

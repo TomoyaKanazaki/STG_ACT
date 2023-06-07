@@ -11,6 +11,7 @@
 #include "object.h"
 #include "explosion.h"
 #include "particle.h"
+#include "score.h"
 
 //==========================================
 //  マクロ定義
@@ -81,8 +82,13 @@ void CEnemy::Uninit(void)
 	//パーティクルを生成
 	CParticle::Create(m_pos, m_size, m_rot, m_size, D3DXCOLOR(1.0f, 0.3f, 0.0f, 1.0f), 50, 30, 5, 2);
 
+	//自身の終了
 	CObject2D::Uninit();
 
+	//スコアを加算
+	CManager::GetScore()->AddScore(10);
+
+	//総数を減らす
 	m_nNum--;
 }
 
