@@ -168,9 +168,11 @@
     <ClInclude Include="00_h\object2D.h" />
     <ClInclude Include="00_h\object2D_Anim.h" />
     <ClInclude Include="00_h\particle.h" />
+    <ClInclude Include="00_h\pause.h" />
     <ClInclude Include="00_h\player.h" />
     <ClInclude Include="00_h\renderer.h" />
     <ClInclude Include="00_h\score.h" />
+    <ClInclude Include="00_h\timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="00_h\bullet.cpp" />
@@ -187,9 +189,11 @@
     <ClCompile Include="01_cpp\object2D.cpp" />
     <ClCompile Include="01_cpp\object2D_Anim.cpp" />
     <ClCompile Include="01_cpp\particle.cpp" />
+    <ClCompile Include="01_cpp\pause.cpp" />
     <ClCompile Include="01_cpp\player.cpp" />
     <ClCompile Include="01_cpp\renderer.cpp" />
     <ClCompile Include="01_cpp\score.cpp" />
+    <ClCompile Include="01_cpp\timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

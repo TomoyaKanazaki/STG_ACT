@@ -16,7 +16,9 @@
 #include "bg.h"
 #include "effect.h"
 #include "score.h"
+#include "timer.h"
 #include "number.h"
+#include "pause.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -26,7 +28,9 @@ CKeyboard *CManager::m_pKeyboard = NULL;
 CMouse *CManager::m_pMouse = NULL;
 CJoyPad *CManager::m_pJoyPad[MAX_PLAYER] = {};
 CDebugProc *CManager::m_pDebugProc = NULL;
+CPause *CManager::m_pPause = NULL;
 CScore *CManager::m_pScore = NULL;
+CTimer *CManager::m_pTimer = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -115,10 +119,31 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
+	//ポーズの生成
+	if (m_pPause == NULL)
+	{
+		m_pPause = new CPause;
+	}
+
+	//ポーズの初期化
+	if (m_pPause != NULL)
+	{
+		if (FAILED(m_pPause->Init()))
+		{
+			return E_FAIL;
+		}
+	}
+
 	//スコアの生成
 	if (m_pScore == NULL)
 	{
 		m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 500.0f, 25.0f, 0.0f), D3DXVECTOR3(500.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
+	}
+
+	//タイマーの生成
+	if (m_pTimer == NULL)
+	{
+		m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 120);
 	}
 
 	////ジョイパッドの生成
@@ -177,12 +202,36 @@ void CManager::Uninit(void)
 		m_pKeyboard = NULL;
 	}
 
-	//キーボードの終了、破棄
+	//マウスの終了、破棄
 	if (m_pMouse != NULL)
 	{
 		m_pMouse->Uninit();
 		delete m_pMouse;
 		m_pMouse = NULL;
+	}
+
+	//ポーズの終了、破棄
+	if (m_pPause != NULL)
+	{
+		m_pPause->Uninit();
+		delete m_pPause;
+		m_pPause = NULL;
+	}
+
+	//スコアの終了、破棄
+	if (m_pScore != NULL)
+	{
+		m_pScore->Uninit();
+		delete m_pScore;
+		m_pScore = NULL;
+	}
+
+	//タイマーの終了、破棄
+	if (m_pTimer != NULL)
+	{
+		m_pTimer->Uninit();
+		delete m_pTimer;
+		m_pTimer = NULL;
 	}
 
 	//テクスチャの破棄
@@ -200,18 +249,6 @@ void CManager::Uninit(void)
 //==========================================
 void CManager::Update(void)
 {
-	//レンダラーの更新処理
-	if (m_pRenderer != NULL)
-	{
-		m_pRenderer->Update();
-	}
-
-	//デバッグ表示の更新処理
-	if (m_pDebugProc != NULL)
-	{
-		m_pDebugProc->Update();
-	}
-
 	//キーボードの更新処理
 	if (m_pKeyboard != NULL)
 	{
@@ -224,18 +261,39 @@ void CManager::Update(void)
 		m_pMouse->Update();
 	}
 
-	//敵の生成
-	if (CEnemy::GetNum() == 0 || m_pKeyboard->GetTrigger(DIK_RETURN))
+	//ポーズの更新処理
+	if (m_pPause != NULL)
 	{
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.2f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.4f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.6f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.7f, SCREEN_HEIGHT * 0.7f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.8f, SCREEN_HEIGHT * 0.8f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.9f, SCREEN_HEIGHT * 0.9f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		m_pPause->Update();
+	}
+
+	//レンダラーの更新処理
+	if (m_pRenderer != NULL)
+	{
+		m_pRenderer->Update();
+	}
+
+	//デバッグ表示の更新処理
+	if (m_pDebugProc != NULL)
+	{
+		m_pDebugProc->Update();
+	}
+
+	if (m_pPause->GetState() == false)
+	{
+		//敵の生成
+		if (CEnemy::GetNum() == 0 || m_pKeyboard->GetTrigger(DIK_RETURN))
+		{
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.2f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.4f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.6f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.7f, SCREEN_HEIGHT * 0.7f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.8f, SCREEN_HEIGHT * 0.8f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.9f, SCREEN_HEIGHT * 0.9f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		}
 	}
 }
 

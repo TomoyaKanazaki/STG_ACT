@@ -30,7 +30,9 @@ public:
 		TYPE_BG, //背景
 		TYPE_EFFECT, //エフェクト
 		TYPE_NUMBER, //数字
-		TYPE_MAX
+		TYPE_TIMER, //タイマー
+		TYPE_SCORE, //スコア
+		METHOD_MAX
 	}TYPE;
 
 	CObject(int nPriority = 3); //コンストラクタ

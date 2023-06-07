@@ -174,9 +174,6 @@ void CRenderer::Draw(void)
 	{
 		CObject::DrawAll();
 
-		//ƒfƒoƒbƒO•\Ž¦‚Ì•`‰æˆ—
-		CManager::GetDebugProc()->Print("’e‚Ì” : %d\n", CBullet::GetNum());
-		CManager::GetDebugProc()->Print("“G‚Ì” : %d", CEnemy::GetNum());
 		if (CManager::GetDebugProc() != NULL)
 		{
 			CManager::GetDebugProc()->Draw();

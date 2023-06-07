@@ -15,7 +15,9 @@ CScore::CScore(int nPriority) : CObject(nPriority)
 	for (int nCnt = 0; nCnt < SCORE_DIGIT; nCnt++)
 	{
 		m_apNumber[nCnt] = NULL;
+		m_aScore[nCnt] = 0;
 	}
+	m_nScore = 0;
 }
 
 //==========================================
@@ -54,6 +56,9 @@ HRESULT CScore::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 			}
 		}
 	}
+
+	//ƒ^ƒCƒv‚ðŠ„‚è“–‚Ä‚é
+	SetType(TYPE_SCORE);
 
 	return S_OK;
 }

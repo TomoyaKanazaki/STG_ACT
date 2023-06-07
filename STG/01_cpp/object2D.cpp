@@ -169,15 +169,6 @@ void CObject2D::Update(void)
 		0.0f
 	);
 
-	if (GetType() == TYPE_BG)
-	{
-		for (int nCnt = 0; nCnt < 4; nCnt++)
-		{
-			CManager::GetDebugProc()->Print("pVtx[%d] : %f, %f, %f\n", nCnt, pVtx[nCnt].pos.x, pVtx[nCnt].pos.y, pVtx[nCnt].pos.z);
-		}
-		CManager::GetDebugProc()->Print("\n");
-	}
-
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
 }

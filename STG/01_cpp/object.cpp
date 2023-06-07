@@ -6,6 +6,8 @@
 //==========================================
 #include "object.h"
 #include "renderer.h"
+#include "manager.h"
+#include "pause.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -72,7 +74,10 @@ void CObject::UpdateAll(void)
 		{
 			if (m_apObject[nCntPriority][nCntObject] != NULL)
 			{
-				m_apObject[nCntPriority][nCntObject]->Update();
+				if (CManager::GetPause()->GetState() == false || m_apObject[nCntPriority][nCntObject]->m_type == CObject::TYPE_TIMER)
+				{
+					m_apObject[nCntPriority][nCntObject]->Update();
+				}
 			}
 		}
 	}
