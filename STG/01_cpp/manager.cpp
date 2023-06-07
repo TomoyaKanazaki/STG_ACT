@@ -300,23 +300,6 @@ void CManager::Update(void)
 	{
 		m_pDebugProc->Update();
 	}
-
-	if (m_pPause->GetState() == false)
-	{
-		//“G‚Ì¶¬
-		if (CEnemy::GetNum() == 0 || m_pKeyboard->GetTrigger(DIK_RETURN))
-		{
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.2f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.4f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.6f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.7f, SCREEN_HEIGHT * 0.7f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.8f, SCREEN_HEIGHT * 0.8f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			CEnemy::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.9f, SCREEN_HEIGHT * 0.9f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		}
-	}
 }
 
 //==========================================
