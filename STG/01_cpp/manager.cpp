@@ -19,6 +19,7 @@
 #include "timer.h"
 #include "number.h"
 #include "pause.h"
+#include "sound.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -31,6 +32,7 @@ CDebugProc *CManager::m_pDebugProc = NULL;
 CPause *CManager::m_pPause = NULL;
 CScore *CManager::m_pScore = NULL;
 CTimer *CManager::m_pTimer = NULL;
+CSound *CManager::m_pSound = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -63,6 +65,21 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	if (m_pRenderer != NULL)
 	{
 		if (FAILED(m_pRenderer->Init(hWnd, bWindow)))
+		{
+			return E_FAIL;
+		}
+	}
+	
+	//サウンドの生成
+	if (m_pSound == NULL)
+	{
+		m_pSound = new CSound;
+	}
+
+	//サウンドの初期化
+	if (m_pSound != NULL)
+	{
+		if (FAILED(m_pSound->Init(hWnd)))
 		{
 			return E_FAIL;
 		}
@@ -167,6 +184,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//背景の生成
 	CBg::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
+	//BGMの再生
+	m_pSound->Play(CSound::SOUND_LABEL_BGM001);
+
 	return S_OK;
 }
 
@@ -175,12 +195,14 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 //==========================================
 void CManager::Uninit(void)
 {
+
 	//オブジェクトの終了
 	CObject::ReleaseAll();
 
 	//レンダラーの終了、破棄
 	if (m_pRenderer != NULL)
 	{
+		m_pSound->Stop();
 		m_pRenderer->Uninit();
 		delete m_pRenderer;
 		m_pRenderer = NULL;

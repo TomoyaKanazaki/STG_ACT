@@ -37,8 +37,8 @@ HRESULT CParticle::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3D
 	for (int nCnt = 0; nCnt < m_nEffectNum; nCnt++)
 	{
 		//エフェクトの移動量を算出
-		m_range.x = (float)((rand() % 2000) - 1000) * m_range.x;
-		m_range.y = (float)((rand() % 2000) - 1000) * m_range.y;
+		m_range.x = (float)((rand() % RAND_MAX) - (RAND_MAX / 2)) * m_range.x;
+		m_range.y = (float)((rand() % RAND_MAX) - (RAND_MAX / 2)) * m_range.y;
 		D3DXVec3Normalize(&m_range, &m_range);
 		m_range.x *= m_nMove;
 		m_range.y *= m_nMove;

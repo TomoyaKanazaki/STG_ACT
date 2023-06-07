@@ -7,6 +7,7 @@
 #include "explosion.h"
 #include "manager.h"
 #include "renderer.h"
+#include "sound.h"
 
 //==========================================
 //  マクロ定義
@@ -50,6 +51,9 @@ HRESULT CExplosion::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 
 	//タイプの設定
 	SetType(TYPE_EXPLOSION);
+
+	//効果音の再生
+	CManager::GetSound()->Play(CSound::SOUND_LABEL_SE_PLAYEREXPLOSION);
 
 	return S_OK;
 }

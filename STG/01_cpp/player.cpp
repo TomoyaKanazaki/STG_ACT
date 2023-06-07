@@ -10,6 +10,7 @@
 #include "renderer.h"
 #include "bullet.h"
 #include "effect.h"
+#include "sound.h"
 
 //==========================================
 //  マクロ定義
@@ -77,9 +78,13 @@ void CPlayer::Update(void)
 	//回転処理
 	Rotate();
 
+	//弾の発射
 	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT) || CManager::GetKeyboard()->GetPress(DIK_SPACE))
 	{
 		CBullet::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot);
+
+		//効果音の再生
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_SE_SHOT);
 	}
 
 	//更新する

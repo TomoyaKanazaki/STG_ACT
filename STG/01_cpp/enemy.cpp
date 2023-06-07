@@ -80,7 +80,7 @@ void CEnemy::Uninit(void)
 	CExplosion::Create(m_pos, m_size, m_rot);
 
 	//パーティクルを生成
-	CParticle::Create(m_pos, m_size, m_rot, m_size, D3DXCOLOR(1.0f, 0.3f, 0.0f, 1.0f), 50, 30, 5, 2);
+	CParticle::Create(m_pos, m_size, m_rot, D3DXVECTOR3(m_size.x * 0.3f, m_size.y * 0.3f, m_size.z), D3DXCOLOR(1.0f, 0.3f, 0.0f, 1.0f), 100, 50, 1, 2);
 
 	//自身の終了
 	CObject2D::Uninit();

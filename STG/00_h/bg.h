@@ -25,7 +25,7 @@ class CObject2D_Anim;
 class CBg : public CObject
 {
 public:
-	CBg(int nPriority = 1); //コンストラクタ
+	CBg(int nPriority = 0); //コンストラクタ
 	~CBg(); //デストラクタ
 
 	//メンバ関数

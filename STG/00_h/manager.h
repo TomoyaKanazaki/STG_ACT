@@ -24,6 +24,7 @@ class CDebugProc;
 class CPause;
 class CScore;
 class CTimer;
+class CSound;
 
 //==========================================
 //  マネージャクラス定義
@@ -49,6 +50,7 @@ public:
 	static CPause *GetPause(void) { return m_pPause; }
 	static CScore *GetScore(void) { return m_pScore; }
 	static CTimer *GetTimer(void) { return m_pTimer; }
+	static CSound *GetSound(void) { return m_pSound; }
 
 private:
 
@@ -61,6 +63,8 @@ private:
 	static CPause *m_pPause;
 	static CScore *m_pScore;
 	static CTimer *m_pTimer;
+	static CSound *m_pSound;
+
 };
 
 #endif
