@@ -39,7 +39,7 @@ CEnemy::CEnemy(int nPriority) : CObject2D(nPriority)
 		m_move.y *= -1.0f;
 	}
 
-	m_nSpeed = ENEMY_SPEED;
+	m_fSpeed = ENEMY_SPEED;
 	m_fRotMove = 0.0f;
 	m_fRotDest = 0.0f;
 	m_fRotDiff = 0.0f;
@@ -204,8 +204,8 @@ void CEnemy::Move(void)
 
 	//ê≥ãKâª
 	D3DXVec3Normalize(&m_move, &m_move);
-	m_move.x *= m_nSpeed;
-	m_move.y *= m_nSpeed;
+	m_move.x *= m_fSpeed;
+	m_move.y *= m_fSpeed;
 
 	//ìGìØémÇÃìñÇΩÇËîªíË
 	Collision();

@@ -15,8 +15,7 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define MOUSE_SPEED (0.03f) //プレイヤーの移動速度(マウス)
-#define KEYBOARD_SPEED (1.0f) //プレイヤーの移動速度(キーボード)
+#define PLAYER_SPEED (3.0f) //プレイヤーの移動速度(キーボード)
 
 //==========================================
 //  静的メンバ変数宣言
@@ -29,7 +28,7 @@ LPDIRECT3DTEXTURE9 CPlayer::m_pTexture = NULL;
 CPlayer::CPlayer(int nPriority) : CObject2D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_nSpeed = 0.0f;
+	m_fSpeed = 0.0f;
 	m_fRotMove = 0.0f;
 	m_fRotDest = 0.0f;
 	m_fRotDiff = 0.0f;
@@ -77,15 +76,6 @@ void CPlayer::Update(void)
 
 	//回転処理
 	Rotate();
-
-	//弾の発射
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT) || CManager::GetKeyboard()->GetPress(DIK_SPACE))
-	{
-		CBullet::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot);
-
-		//効果音の再生
-		CManager::GetSound()->Play(CSound::SOUND_LABEL_SE_SHOT);
-	}
 
 	//更新する
 	CObject2D::Update();
@@ -167,19 +157,24 @@ void CPlayer::Move(void)
 {
 	//ローカル変数宣言
 	D3DXVECTOR3 move = CManager::GetKeyboard()->GetWASD();
-	D3DXVECTOR3 mouse = CManager::GetMouse()->GetMouseMove();
 
 	//移動量の取得
-	if (move == D3DXVECTOR3(0.0f, 0.0f, 0.0f))
+	m_move.x += move.x * PLAYER_SPEED;
+
+	//ジャンプ
+	if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE) && m_bJunp == false)
 	{
-		m_move.x += mouse.x * MOUSE_SPEED;
-		m_move.y += mouse.y * MOUSE_SPEED;
+		m_move.y -= 20.0f;
+		m_bJunp = true;
 	}
-	else
+
+	//重力
+	if (m_bJunp)
 	{
-		m_move.x += move.x * KEYBOARD_SPEED;
-		m_move.y += move.y * KEYBOARD_SPEED;
+		m_move.y += 0.45f;
 	}
+
+	//移動量の適応
 	m_pos += m_move;
 
 	//x方向の移動制限
@@ -196,7 +191,10 @@ void CPlayer::Move(void)
 	if (m_pos.y + (m_size.y * 0.5f) > SCREEN_HEIGHT)
 	{
 		m_pos.y = SCREEN_HEIGHT - (m_size.y * 0.5f);
+		m_move.y = 0.0f;
+		m_bJunp = false;
 	}
+
 	if (m_pos.y - (m_size.y * 0.5f) < 0.0f)
 	{
 		m_pos.y = (m_size.y * 0.5f);
@@ -204,7 +202,6 @@ void CPlayer::Move(void)
 
 	//慣性よる移動の停止
 	m_move.x += (0.0f - m_move.x) * 0.1f;
-	m_move.y += (0.0f - m_move.y) * 0.1f;
 }
 
 //==========================================

@@ -37,10 +37,11 @@ private:
 
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
-	float m_nSpeed;
+	float m_fSpeed;
 	float m_fRotMove;
 	float m_fRotDest;
 	float m_fRotDiff;
+	bool m_bJunp;
 
 	//Ã“Iƒƒ“ƒo•Ï”
 	static LPDIRECT3DTEXTURE9 m_pTexture;

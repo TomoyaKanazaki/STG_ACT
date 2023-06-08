@@ -28,7 +28,7 @@ int CBullet::m_nNum = 0;
 CBullet::CBullet(int nPriority) : CObject2D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_nSpeed = BULLET_SPEED;
+	m_fSpeed = BULLET_SPEED;
 	m_nLife = BULLET_LIFE;
 	m_nNum++;
 }
