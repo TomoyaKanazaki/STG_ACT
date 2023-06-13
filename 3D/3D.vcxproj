@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\bg.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\effect.cpp" />
@@ -33,6 +32,7 @@
     <ClCompile Include="source\object2D.cpp" />
     <ClCompile Include="source\object2D_Anim.cpp" />
     <ClCompile Include="source\object3D.cpp" />
+    <ClCompile Include="source\object_x.cpp" />
     <ClCompile Include="source\particle.cpp" />
     <ClCompile Include="source\pause.cpp" />
     <ClCompile Include="source\player.cpp" />
@@ -42,13 +42,9 @@
     <ClCompile Include="source\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\bg.h" />
-    <ClInclude Include="source\bullet.h" />
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\effect.h" />
-    <ClInclude Include="source\enemy.h" />
-    <ClInclude Include="source\explosion.h" />
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\light.h" />
@@ -59,6 +55,7 @@
     <ClInclude Include="source\object2D.h" />
     <ClInclude Include="source\object2D_Anim.h" />
     <ClInclude Include="source\object3D.h" />
+    <ClInclude Include="source\object_x.h" />
     <ClInclude Include="source\particle.h" />
     <ClInclude Include="source\pause.h" />
     <ClInclude Include="source\player.h" />

@@ -62,16 +62,6 @@ void CField::Update(void)
 {
 	//更新する
 	CObject3D::Update();
-
-	//デバッグ表示
-	CManager::GetDebugProc()->Print("\n\n\n中心座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
-
-	//ビルボードに切り替える
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
-	{
-		SwitchBillboard();
-		SetType(TYPE_BG);
-	}
 }
 
 //==========================================

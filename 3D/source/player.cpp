@@ -8,7 +8,6 @@
 #include "manager.h"
 #include "input.h"
 #include "renderer.h"
-#include "bullet.h"
 #include "effect.h"
 #include "sound.h"
 

@@ -9,8 +9,6 @@
 #include "object.h"
 #include "manager.h"
 #include "debugproc.h"
-#include "bullet.h"
-#include "enemy.h"
 
 //==========================================
 //  コンストラクタ

@@ -1,22 +1,22 @@
 //==========================================
 //
-//  爆発クラス(explosion.h)
+//  xオブジェクトクラス(object_x.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#ifndef _EXPLOSION_H_
-#define _EXPLOSION_H_
+#ifndef _OBJECT_X_H_
+#define _OBJECT_X_H_
 #include "main.h"
-#include "object2D_Anim.h"
+#include "object.h"
 
 //==========================================
-//  爆発クラス定義
+//  xオブジェクトクラスの定義
 //==========================================
-class CExplosion : public CObject2D_Anim
+class CObject_X : public CObject
 {
 public:
-	CExplosion(int nPriority = 2); //コンストラクタ
-	~CExplosion(); //デストラクタ
+	CObject_X(int nPriority = 2); //コンストラクタ
+	~CObject_X(); //デストラクタ
 
 	//メンバ関数
 	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot) override;
@@ -25,14 +25,16 @@ public:
 	void Draw(void) override;
 
 	//静的メンバ関数
-	static HRESULT Load(void);
-	static void UnLoad(void);
-	static CExplosion *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
+	static CObject_X *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
 
 private:
 
-	//静的メンバ変数
-	static LPDIRECT3DTEXTURE9 m_pTexture;
+	//メンバ変数
+	LPDIRECT3DTEXTURE9 *m_pTexture;
+	LPD3DXMESH m_pMesh;
+	LPD3DXBUFFER m_pBuffMat;
+	DWORD m_dwNumMat;
+	D3DXMATRIX m_mtxWorld;
 
 };
 

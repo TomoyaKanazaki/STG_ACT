@@ -10,7 +10,6 @@
 #include "object2D.h"
 #include "player.h"
 #include "debugproc.h"
-#include "bg.h"
 #include "effect.h"
 #include "score.h"
 #include "timer.h"
@@ -20,6 +19,7 @@
 #include "camera.h"
 #include "light.h"
 #include "field.h"
+#include "object_x.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -89,7 +89,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//テクスチャの読み込み
 	CPlayer::Load();
-	CBg::Load();
 	CEffect::Load();
 	CNumber::Load();
 	CField::Load();
@@ -195,11 +194,11 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//プレイヤーの生成
 	CPlayer::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f));
 
-	//背景の生成
-	CBg::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
 	//床の生成
 	CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(100.0f, 100.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	//xオブジェクトの生成
+	CObject_X::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(100.0f, 100.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//BGMの再生
 	m_pSound->Play(CSound::SOUND_LABEL_BGM001);
@@ -290,7 +289,6 @@ void CManager::Uninit(void)
 
 	//テクスチャの破棄
 	CPlayer::UnLoad();
-	CBg::UnLoad();
 	CEffect::UnLoad();
 	CNumber::UnLoad();
 }
