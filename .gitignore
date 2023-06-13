@@ -16,3 +16,12 @@
 /ACT/Release
 /ACT/Debug
 /ACT/x64
+/3D/.vs
+/3D/*.db
+/3D/*.iobj
+/3D/*.ipdb
+/3D/*.pdb
+/3D/*.user
+/3D/Release
+/3D/Debug
+/3D/x64
