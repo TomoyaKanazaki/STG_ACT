@@ -27,6 +27,8 @@ class CTimer;
 class CSound;
 class CCamera;
 class CLight;
+class CPlayer;
+class CTexture;
 
 //==========================================
 //  マネージャクラス定義
@@ -55,6 +57,8 @@ public:
 	static CSound *GetSound(void) { return m_pSound; }
 	static CCamera *GetCamera(void) { return m_pCamera; }
 	static CLight *GetLight(void) { return m_pLight; }
+	static CPlayer *GetPlayer(void) { return m_pPlayer; }
+	static CTexture *GetTexture(void) { return m_pTexture; }
 
 private:
 
@@ -70,6 +74,8 @@ private:
 	static CSound *m_pSound;
 	static CCamera *m_pCamera;
 	static CLight *m_pLight;
+	static CPlayer *m_pPlayer;
+	static CTexture *m_pTexture;
 
 };
 

@@ -7,6 +7,7 @@
 #include "effect.h"
 #include "manager.h"
 #include "renderer.h"
+#include "texture.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -17,7 +18,7 @@ int CEffect::m_nNum;
 //==========================================
 //  コンストラクタ
 //==========================================
-CEffect::CEffect(int nPriority) : CObject2D(nPriority)
+CEffect::CEffect(int nPriority) : CObject3D(nPriority)
 {
 	m_vecDeffSize = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -38,10 +39,13 @@ CEffect::~CEffect()
 //==========================================
 HRESULT CEffect::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
-	if (FAILED(CObject2D::Init(pos, size, rot)))
+	if (FAILED(CObject3D::Init(pos, size, rot)))
 	{
 		return E_FAIL;
 	}
+
+	//ビルボードに設定する
+	SwitchBillboard();
 
 	//タイプの設定
 	SetType(TYPE_EFFECT);
@@ -54,7 +58,7 @@ HRESULT CEffect::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXV
 //==========================================
 void CEffect::Uninit(void)
 {
-	CObject2D::Uninit();
+	CObject3D::Uninit();
 }
 
 //==========================================
@@ -80,7 +84,7 @@ void CEffect::Update(void)
 	m_pos += m_move;
 
 	//更新
-	CObject2D::Update();
+	CObject3D::Update();
 }
 
 //==========================================
@@ -91,48 +95,24 @@ void CEffect::Draw(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	//ライティングを無効化
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	//アルファブレンディングを加算合成に設定
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 	//描画
-	CObject2D::Draw();
+	CObject3D::Draw();
 
 	//アルファブレンディングをの設定を元に戻す
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-}
 
-//==========================================
-//  読み込み処理
-//==========================================
-HRESULT CEffect::Load(void)
-{
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/effect.jpg", &m_pTexture)))
-	{
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-//==========================================
-//  テクスチャの終了処理
-//==========================================
-void CEffect::UnLoad(void)
-{
-	//テクスチャの破棄
-	if (m_pTexture != NULL)
-	{
-		m_pTexture->Release();
-		m_pTexture = NULL;
-	}
+	//ライティングを有効化
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //==========================================
@@ -157,7 +137,7 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 	}
 
 	//テクスチャを割り当てる
-	pEffect->BindTexture(m_pTexture);
+	pEffect->BindTexture(CManager::GetTexture()->GetAddress(1));
 
 	//デフォルトサイズを保存する
 	pEffect->m_vecDeffSize = size;

@@ -7,15 +7,15 @@
 #ifndef _EFFECT_H_
 #define _EFFECT_H_
 #include "main.h"
-#include "object2D.h"
+#include "object3D.h"
 
 //==========================================
 //  エフェクトクラス定義
 //==========================================
-class CEffect : public CObject2D
+class CEffect : public CObject3D
 {
 public:
-	CEffect(int nPriority = 1); //コンストラクタ
+	CEffect(int nPriority = 7); //コンストラクタ
 	~CEffect(); //デストラクタ
 
 	//メンバ関数

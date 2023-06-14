@@ -173,7 +173,7 @@ D3DXVECTOR3 CKeyboard::GetWASD(void)
 	//W
 	if (GetPress(DIK_W))
 	{
-		move.y += -1.0f;
+		move.z += 1.0f;
 	}
 
 	//A
@@ -185,7 +185,7 @@ D3DXVECTOR3 CKeyboard::GetWASD(void)
 	//S
 	if (GetPress(DIK_S))
 	{
-		move.y += 1.0f;
+		move.z += -1.0f;
 	}
 
 	//D
@@ -194,7 +194,7 @@ D3DXVECTOR3 CKeyboard::GetWASD(void)
 		move.x += 1.0f;
 	}
 
-	//ê≥ãKâª
+	//ÉxÉNÉgÉãÇÃê≥ãKâª
 	D3DXVec3Normalize(&move, &move);
 
 	return move;

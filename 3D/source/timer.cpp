@@ -96,7 +96,7 @@ void CTimer::Uninit(void)
 void CTimer::Update(void)
 {
 	//•\¦‰Â”\”ÍˆÍ‚ğ’´‚¦‚½ê‡
-	if (m_nTime < 0 || 999 < m_nTime)
+	if (m_nTime <= 0 || 999 <= m_nTime)
 	{
 		return;
 	}

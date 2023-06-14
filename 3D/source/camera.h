@@ -25,6 +25,9 @@ public:
 	void FirstPerson(void);
 	void ThirdPerson(void);
 	void Move(void);
+	D3DXVECTOR3 GetPosR(void) { return m_posR; }
+	D3DXVECTOR3 GetPosV(void) { return m_posV; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
 
 private:
 
@@ -37,29 +40,5 @@ private:
 	D3DXVECTOR3 m_rot; //Xの計算に使用する角度
 
 };
-
-//==========================================
-//  カメラ構造体定義
-//==========================================
-typedef struct
-{
-	D3DXVECTOR3 posV; //視点
-	D3DXVECTOR3 posR; //注視点
-	D3DXVECTOR3 vecU; //上方向ベクトル
-	D3DXMATRIX mtxProjection; //プロジェクションマトリックス
-	D3DXMATRIX mtxView; //ビューマトリックス
-	D3DXVECTOR3 rot; //Xの計算に使用する角度
-}Camera;
-
-//==========================================
-//  プロトタイプ宣言
-//==========================================
-void InitCamera(void);
-void UninitCamera(void);
-void UpdateCamera(void);
-void SetCamera(void);
-void FPSCamera(void);
-void TPSCamera(void);
-void CameraMove(void);
 
 #endif

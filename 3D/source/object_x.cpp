@@ -44,7 +44,7 @@ HRESULT CObject_X::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3D
 	//XÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
 	D3DXLoadMeshFromX
 	(
-		"data\\MODEL\\tree000.x",
+		"data\\MODEL\\Player\\player.x",
 		D3DXMESH_SYSTEMMEM,
 		pDevice,
 		NULL,

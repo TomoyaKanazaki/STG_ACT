@@ -10,11 +10,14 @@
 #include "renderer.h"
 #include "effect.h"
 #include "sound.h"
+#include "debugproc.h"
+#include "object_x.h"
+#include "camera.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
-#define PLAYER_SPEED (3.0f) //プレイヤーの移動速度(キーボード)
+#define PLAYER_SPEED (1.0f) //プレイヤーの移動速度(キーボード)
 
 //==========================================
 //  静的メンバ変数宣言
@@ -24,13 +27,12 @@ LPDIRECT3DTEXTURE9 CPlayer::m_pTexture = NULL;
 //==========================================
 //  コンストラクタ
 //==========================================
-CPlayer::CPlayer(int nPriority) : CObject2D(nPriority)
+CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_fSpeed = 0.0f;
-	m_fRotMove = 0.0f;
-	m_fRotDest = 0.0f;
-	m_fRotDiff = 0.0f;
+	m_fAngle = 0.0f;
+	body = NULL;
 }
 
 //==========================================
@@ -46,13 +48,16 @@ CPlayer::~CPlayer()
 //==========================================
 HRESULT CPlayer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
-	if (FAILED(CObject2D::Init(pos, size, rot)))
-	{
-		return E_FAIL;
-	}
+	//各種情報の保存
+	m_pos = pos;
+	m_size = size;
+	m_rot = rot;
 
 	//タイプの設定
 	SetType(TYPE_PLAYER);
+
+	//モデルを生成する
+	body = CObject_X::Create(m_pos, m_size, m_rot);
 
 	return S_OK;
 }
@@ -62,7 +67,7 @@ HRESULT CPlayer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXV
 //==========================================
 void CPlayer::Uninit(void)
 {
-	CObject2D::Uninit();
+
 }
 
 //==========================================
@@ -70,17 +75,27 @@ void CPlayer::Uninit(void)
 //==========================================
 void CPlayer::Update(void)
 {
+	//前回座標の保存
+	D3DXVECTOR3 oldpos = m_pos;
+
 	//移動処理
 	Move();
 
 	//回転処理
-	Rotate();
+	if (oldpos != m_pos)
+	{
+		Rotate();
+	}
 
-	//更新する
-	CObject2D::Update();
+	//モデルに情報を与える
+	body->SetTransform(m_pos, m_rot);
 
 	//エフェクトを呼び出す
-	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(0.0f, 0.5f, 1.0f, 1.0f),  30);
+	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 0.0f, 30.0f), m_rot, D3DXCOLOR(0.0f, 0.5f, 1.0f, 1.0f), 30);
+
+	CManager::GetDebugProc()->Print("\n\n\nプレイヤー座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
+	CManager::GetDebugProc()->Print("プレイヤー方向 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
+	CManager::GetDebugProc()->Print("プレイヤー移動量 : ( %f, %f, %f )\n", m_move.x, m_move.y, m_move.z);
 }
 
 //==========================================
@@ -88,37 +103,7 @@ void CPlayer::Update(void)
 //==========================================
 void CPlayer::Draw()
 {
-	CObject2D::Draw();
-}
 
-//==========================================
-//  テクスチャの読み込み
-//==========================================
-HRESULT CPlayer::Load(void)
-{
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/Player.png", &m_pTexture)))
-	{
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-//==========================================
-//  テクスチャの破棄
-//==========================================
-void CPlayer::UnLoad(void)
-{
-	//テクスチャの破棄
-	if (m_pTexture != NULL)
-	{
-		m_pTexture->Release();
-		m_pTexture = NULL;
-	}
 }
 
 //==========================================
@@ -142,9 +127,6 @@ CPlayer *CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 		pPlayer->Init(pos, size, rot);
 	}
 
-	//テクスチャを割り当てる
-	pPlayer->BindTexture(m_pTexture);
-
 	//ポインタを返す
 	return pPlayer;
 }
@@ -154,53 +136,18 @@ CPlayer *CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 //==========================================
 void CPlayer::Move(void)
 {
-	//ローカル変数宣言
-	D3DXVECTOR3 move = CManager::GetKeyboard()->GetWASD();
+	//慣性による移動の停止
+	m_move.x += (0.0f - m_move.x) * 0.1f;
+	m_move.z += (0.0f - m_move.z) * 0.1f;
 
 	//移動量の取得
-	m_move.x += move.x * PLAYER_SPEED;
+	m_move += CManager::GetKeyboard()->GetWASD();
 
-	//ジャンプ
-	if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE) && m_bJunp == false)
-	{
-		m_move.y -= 20.0f;
-		m_bJunp = true;
-	}
-
-	//重力
-	if (m_bJunp)
-	{
-		m_move.y += 0.45f;
-	}
+	//移動方向の取得
+	m_fAngle = atan2f(m_move.x, m_move.z);
 
 	//移動量の適応
 	m_pos += m_move;
-
-	//x方向の移動制限
-	if (m_pos.x + (m_size.x * 0.5f) > SCREEN_WIDTH)
-	{
-		m_pos.x = SCREEN_WIDTH - (m_size.x * 0.5f);
-	}
-	if (m_pos.x - (m_size.x * 0.5f) < 0.0f)
-	{
-		m_pos.x = (m_size.x * 0.5f);
-	}
-
-	//y方向の移動制限
-	if (m_pos.y + (m_size.y * 0.5f) > SCREEN_HEIGHT)
-	{
-		m_pos.y = SCREEN_HEIGHT - (m_size.y * 0.5f);
-		m_move.y = 0.0f;
-		m_bJunp = false;
-	}
-
-	if (m_pos.y - (m_size.y * 0.5f) < 0.0f)
-	{
-		m_pos.y = (m_size.y * 0.5f);
-	}
-
-	//慣性よる移動の停止
-	m_move.x += (0.0f - m_move.x) * 0.1f;
 }
 
 //==========================================
@@ -208,44 +155,38 @@ void CPlayer::Move(void)
 //==========================================
 void CPlayer::Rotate(void)
 {
-	//目標角度の取得
-	if (m_move != D3DXVECTOR3(0.0f, 0.0f, 0.0f))
+	float fRotMove, fRotDest, fRotDiff;
+
+	//現在の角度と目的の角度の差分を計算
+	fRotMove = m_rot.y;
+	fRotDest = m_fAngle;
+	fRotDiff = fRotDest - fRotMove;
+
+	//角度の補正
+	if (fRotDiff > D3DX_PI)
 	{
-		m_fRotDest = -atan2f(m_move.x, -m_move.y);
+		fRotDiff -= D3DX_PI * 2.0f;
+	}
+	else if (fRotDiff <= -D3DX_PI)
+	{
+		fRotDiff += D3DX_PI * 2.0f;
 	}
 
-	//現在角度の取得
-	m_fRotMove = m_rot.z;
+	//方向転換の慣性
+	fRotMove += fRotDiff * 0.2f;
 
-	//目標-現在角度の差分を取得
-	m_fRotDiff = m_fRotDest - m_fRotMove;
-
-	//差分の値を補正
-	if (m_fRotDiff > D3DX_PI || m_fRotDiff < -D3DX_PI)
+	//角度の補正
+	if (fRotMove > D3DX_PI)
 	{
-		if (m_fRotDiff > D3DX_PI)
-		{
-			m_fRotDiff += (-D3DX_PI * 2);
-		}
-		else if (m_fRotDiff <= -D3DX_PI)
-		{
-			m_fRotDiff += (D3DX_PI * 2);
-		}
+		fRotMove -= D3DX_PI * 2.0f;
+	}
+	else if (fRotMove <= -D3DX_PI)
+	{
+		fRotMove += D3DX_PI * 2.0f;
 	}
 
-	//回転する
-	m_rot.z += m_fRotDiff * 0.2f;
+	//方向を適用する
+	m_rot.y = fRotMove;
 
-	//回転角度の補正
-	if (m_rot.z > D3DX_PI || m_rot.z < -D3DX_PI)
-	{
-		if (m_rot.z > D3DX_PI)
-		{
-			m_rot.z += (-D3DX_PI * 2);
-		}
-		else if (m_rot.z < -D3DX_PI)
-		{
-			m_rot.z += (D3DX_PI * 2);
-		}
-	}
+	m_fAngle = m_rot.y;
 }

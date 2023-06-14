@@ -7,6 +7,7 @@
 #include "number.h"
 #include "manager.h"
 #include "renderer.h"
+#include "texture.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -78,36 +79,6 @@ void CNumber::Draw(void)
 }
 
 //==========================================
-//  読み込み処理
-//==========================================
-HRESULT CNumber::Load(void)
-{
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	//テクスチャの読み込み
-	if (FAILED(D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/number.png", &m_pTexture)))
-	{
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-//==========================================
-//  テクスチャ破棄
-//==========================================
-void CNumber::UnLoad(void)
-{
-	//テクスチャの破棄
-	if (m_pTexture != NULL)
-	{
-		m_pTexture->Release();
-		m_pTexture = NULL;
-	}
-}
-
-//==========================================
 //  生成処理
 //==========================================
 CNumber * CNumber::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, int nNumber)
@@ -132,7 +103,7 @@ CNumber * CNumber::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D
 	}
 
 	//テクスチャを割り当てる
-	pNumber->BindTexture(m_pTexture);
+	pNumber->BindTexture(CManager::GetTexture()->GetAddress(2));
 
 	//ポインタを返す
 	return pNumber;

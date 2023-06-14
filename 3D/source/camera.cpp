@@ -8,11 +8,13 @@
 #include "manager.h"
 #include "renderer.h"
 #include "input.h"
+#include "player.h"
+#include "debugproc.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
-#define DISTANCE (200.0f) //視点と注視点の距離
+#define DISTANCE (500.0f) //視点と注視点の距離
 #define SPEED (0.05f) //カメラのスピード
 #define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
 #define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
@@ -41,7 +43,7 @@ CCamera::~CCamera()
 //==========================================
 HRESULT CCamera::Init(void)
 {
-	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_posR = CManager::GetPlayer()->GetPos();
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(atan2f(m_posR.x - m_posV.x, m_posR.z - m_posV.z), 0.0f, tanf(m_posR.y - m_posV.y));
 	m_rot.x = (D3DX_PI * 0.5f);
@@ -66,18 +68,52 @@ void CCamera::Uninit(void)
 //==========================================
 void CCamera::Update(void)
 {
-	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT) && CManager::GetMouse()->GetPress(CMouse::BUTTON_RIGHT))
+	m_posR = CManager::GetPlayer()->GetPos();
+	m_rot.x = atan2f(m_posR.x - m_posV.x, m_posR.z - m_posV.z);
+	m_rot.z =  tanf(m_posR.y - m_posV.y);
+
+	//移動量を取得
+	D3DXVECTOR3 rot = CManager::GetPlayer()->GetRot();
+	float fRotMove, fRotDest, fRotDiff;
+
+	//現在の角度と目的の角度の差分を計算
+	fRotMove = m_rot.y;
+	fRotDest = rot.y;
+	fRotDiff = fRotDest - fRotMove;
+
+	//角度の補正
+	if (fRotDiff > D3DX_PI)
 	{
-		Move();
+		fRotDiff -= D3DX_PI * 2.0f;
 	}
-	else if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
+	else if (fRotDiff <= -D3DX_PI)
 	{
-		ThirdPerson();
+		fRotDiff += D3DX_PI * 2.0f;
 	}
-	else if (CManager::GetMouse()->GetPress(CMouse::BUTTON_RIGHT))
+
+	//方向転換の慣性
+	fRotMove += fRotDiff * 0.05f;
+
+	//角度の補正
+	if (fRotMove > D3DX_PI)
 	{
-		FirstPerson();
+		fRotMove -= D3DX_PI * 2.0f;
 	}
+	else if (fRotMove <= -D3DX_PI)
+	{
+		fRotMove += D3DX_PI * 2.0f;
+	}
+
+	//方向を適用する
+	m_rot.y = fRotMove;
+
+	D3DXVECTOR3 slip = D3DXVECTOR3(sinf(m_rot.y) * 50.0f, 0.0f, cosf(m_rot.y) * 50.0f);
+
+	m_posR += slip;
+	m_posV = D3DXVECTOR3(m_posR.x, 800.0f, m_posR.z - 200.0f);
+
+	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
+	CManager::GetDebugProc()->Print("視点 : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
 }
 
 //==========================================
@@ -98,7 +134,7 @@ void CCamera::SetCamera(void)
 		D3DXToRadian(54.0f),
 		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
 		10.0f,
-		1000.0f
+		10000.0f
 	);
 
 	//プロジェクションマトリックスの設定

@@ -23,6 +23,8 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
+	void SetTransform(D3DXVECTOR3 pos, D3DXVECTOR3 rot) { m_pos = pos; m_rot = rot; }
+	D3DXMATRIX GetMtx(void) { return m_mtxWorld; }
 
 	//ê√ìIÉÅÉìÉoä÷êî
 	static CObject_X *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
@@ -35,6 +37,8 @@ private:
 	LPD3DXBUFFER m_pBuffMat;
 	DWORD m_dwNumMat;
 	D3DXMATRIX m_mtxWorld;
+	int m_nPriorityParent;
+	int m_nIdxParent;
 
 };
 
