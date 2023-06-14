@@ -26,9 +26,12 @@ CSound::CSound()
 {
 	m_pXAudio2 = NULL;
 	m_pMasteringVoice = NULL;
-	m_apSourceVoice[SOUND_LABEL_MAX] = {};
-	m_apDataAudio[SOUND_LABEL_MAX] = {};
-	m_aSizeAudio[SOUND_LABEL_MAX] = {};
+	for (int nCnt = 0; nCnt < SOUND_LABEL_MAX; nCnt++)
+	{
+		m_apSourceVoice[nCnt] = NULL;
+		m_apDataAudio[nCnt] = NULL;
+		m_aSizeAudio[nCnt] = NULL;
+	}
 }
 
 //==========================================

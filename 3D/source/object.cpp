@@ -9,6 +9,8 @@
 #include "manager.h"
 #include "pause.h"
 #include "camera.h"
+#include "debugproc.h"
+#include "effect.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -94,6 +96,9 @@ void CObject::DrawAll(void)
 
 	//カメラの設定
 	pCamera->SetCamera();
+
+	CManager::GetDebugProc()->Print("オブジェクト数 : %d\n", m_nNumObject);
+	CManager::GetDebugProc()->Print("エフェクト数 : %d\n", CEffect::GetNum());
 
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{

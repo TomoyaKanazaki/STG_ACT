@@ -7,6 +7,7 @@
 #include "object_x.h"
 #include "manager.h"
 #include "renderer.h"
+#include "texture.h"
 
 //==========================================
 //  コンストラクタ
@@ -71,6 +72,12 @@ HRESULT CObject_X::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3D
 	{
 		if (pMat[nCntMat].pTextureFilename != NULL)
 		{
+			//テクスチャを保存し、管理番号を取得する
+			int nNumTexID = CManager::GetTexture()->Regist(pMat[nCntMat].pTextureFilename);
+
+			//テクスチャを割り当てる
+			m_pTexture[nCntMat] = CManager::GetTexture()->GetAddress(nNumTexID);
+
 			D3DXCreateTextureFromFile
 			(
 				pDevice,

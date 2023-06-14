@@ -15,7 +15,7 @@
 class CEffect : public CObject3D
 {
 public:
-	CEffect(int nPriority = 7); //コンストラクタ
+	CEffect(int nPriority = 5); //コンストラクタ
 	~CEffect(); //デストラクタ
 
 	//メンバ関数
@@ -25,8 +25,6 @@ public:
 	void Draw(void);
 
 	//静的メンバ関数
-	static HRESULT Load(void);
-	static void UnLoad(void);
 	static CEffect *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, D3DXCOLOR col, int nLife);
 	static CEffect *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, D3DXVECTOR3 move, D3DXCOLOR col, int nLife);
 	static int GetNum(void) { return m_nNum; }
@@ -40,7 +38,6 @@ private:
 	float m_fLifeRatio; //寿命の最大値における１単位
 
 	//静的メンバ変数
-	static LPDIRECT3DTEXTURE9 m_pTexture;
 	static int m_nNum;
 
 };

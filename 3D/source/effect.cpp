@@ -12,8 +12,7 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-LPDIRECT3DTEXTURE9 CEffect::m_pTexture;
-int CEffect::m_nNum;
+int CEffect::m_nNum = 0;
 
 //==========================================
 //  コンストラクタ
@@ -24,6 +23,7 @@ CEffect::CEffect(int nPriority) : CObject3D(nPriority)
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nLife = 0;
 	m_fLifeRatio = 0;
+	m_nNum++;
 }
 
 //==========================================
@@ -31,7 +31,7 @@ CEffect::CEffect(int nPriority) : CObject3D(nPriority)
 //==========================================
 CEffect::~CEffect()
 {
-	
+	m_nNum--;
 }
 
 //==========================================
@@ -78,7 +78,7 @@ void CEffect::Update(void)
 
 	//サイズを小さくする
 	m_size.x -= m_vecDeffSize.x * m_fLifeRatio;
-	m_size.y -= m_vecDeffSize.y * m_fLifeRatio;
+	m_size.z -= m_vecDeffSize.z * m_fLifeRatio;
 
 	//移動量を加算する
 	m_pos += m_move;
@@ -98,6 +98,15 @@ void CEffect::Draw(void)
 	//ライティングを無効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
+	//Zテストの無効化
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+	//アルファテストの有効化
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+
 	//アルファブレンディングを加算合成に設定
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -106,10 +115,19 @@ void CEffect::Draw(void)
 	//描画
 	CObject3D::Draw();
 
-	//アルファブレンディングをの設定を元に戻す
+	//アルファブレンディングの設定を元に戻す
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	//アルファテストの無効化
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+
+	//Zテストの有効化
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	//ライティングを有効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -130,14 +148,16 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 		pEffect = new CEffect;
 	}
 
-	//初期化
-	if (pEffect != NULL)
+	if (pEffect == NULL)
 	{
-		pEffect->Init(pos, size, rot);
+		return NULL;
 	}
 
+	//初期化
+	pEffect->Init(pos, size, rot);
+
 	//テクスチャを割り当てる
-	pEffect->BindTexture(CManager::GetTexture()->GetAddress(1));
+	pEffect->BindTexture(CManager::GetTexture()->GetAddress(0));
 
 	//デフォルトサイズを保存する
 	pEffect->m_vecDeffSize = size;

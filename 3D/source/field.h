@@ -25,14 +25,9 @@ public:
 	void Draw(void);
 
 	//静的メンバ関数
-	static HRESULT Load(void);
-	static void UnLoad(void);
 	static CField *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
 
 private:
-
-	//静的メンバ変数
-	static LPDIRECT3DTEXTURE9 m_pTexture;
 
 };
 

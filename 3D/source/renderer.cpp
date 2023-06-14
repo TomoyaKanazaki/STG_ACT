@@ -9,6 +9,7 @@
 #include "object.h"
 #include "manager.h"
 #include "debugproc.h"
+#include "texture.h"
 
 //==========================================
 //  コンストラクタ
@@ -171,6 +172,8 @@ void CRenderer::Draw(void)
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
 		CObject::DrawAll();
+
+		CManager::GetDebugProc()->Print("テクスチャ総数 : %d", CManager::GetTexture()->GetNum());
 
 		if (CManager::GetDebugProc() != NULL)
 		{

@@ -91,7 +91,7 @@ void CPlayer::Update(void)
 	body->SetTransform(m_pos, m_rot);
 
 	//エフェクトを呼び出す
-	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 0.0f, 30.0f), m_rot, D3DXCOLOR(0.0f, 0.5f, 1.0f, 1.0f), 30);
+	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 0.0f, 30.0f), m_rot, D3DXCOLOR(01.0f, 1.0f, 1.0f, 1.0f), 100);
 
 	CManager::GetDebugProc()->Print("\n\n\nプレイヤー座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
 	CManager::GetDebugProc()->Print("プレイヤー方向 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
@@ -144,7 +144,7 @@ void CPlayer::Move(void)
 	m_move += CManager::GetKeyboard()->GetWASD();
 
 	//移動方向の取得
-	m_fAngle = atan2f(m_move.x, m_move.z);
+	m_fAngle = atan2f(-m_move.x, -m_move.z);
 
 	//移動量の適応
 	m_pos += m_move;

@@ -39,6 +39,9 @@ private:
 	D3DXMATRIX m_mtxView; //ビューマトリックス
 	D3DXVECTOR3 m_rot; //Xの計算に使用する角度
 
+	//メンバ関数
+	void CalcPos(void);
+
 };
 
 #endif

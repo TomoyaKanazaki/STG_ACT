@@ -11,7 +11,7 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define MAX_TEXTURE (64) //仕様するテクスチャの最大数
+#define MAX_TEXTURE (256) //使用するテクスチャの最大数
 
 //==========================================
 //  テクスチャ管理クラス
@@ -27,6 +27,7 @@ public:
 	void UnLoad(void); //テクスチャの破棄
 	int Regist(const char *pFilName); //テクスチャの登録
 	LPDIRECT3DTEXTURE9 GetAddress(int nIdx) { return m_apTexture[nIdx]; } //テクスチャの取得
+	int GetNum(void) { return m_nNumAll; }
 
 	//静的メンバ関数
 	static bool GetLoadState(void) { return m_bLoad; }; //テクスチャの読み込み状態を取得

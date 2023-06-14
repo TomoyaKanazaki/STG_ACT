@@ -94,10 +94,10 @@ HRESULT CObject3D::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3D
 	}
 
 	//頂点カラーの設定
-	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		pVtx[nCnt].col = m_col;
+	}
 
 	//テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -167,6 +167,18 @@ void CObject3D::Update(void)
 		pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	}
 
+	//頂点カラーの設定
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		pVtx[nCnt].col = m_col;
+	}
+
+	//テクスチャ座標の設定
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
 }
@@ -195,20 +207,20 @@ void CObject3D::Draw(void)
 		D3DXMatrixInverse(&m_mtxWorld, NULL, &mtxView);
 
 		//値の補正
-		m_mtxWorld._41 = 0.0f;
-		m_mtxWorld._42 = 0.0f;
-		m_mtxWorld._43 = 0.0f;
+		m_mtxWorld._41 = m_pos.x;
+		m_mtxWorld._42 = m_pos.y;
+		m_mtxWorld._43 = m_pos.z;
 	}
 	else
 	{
 		//向きの反映
 		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-	}
 
-	//位置の反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+		//位置の反映
+		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	}
 
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);

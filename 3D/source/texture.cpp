@@ -12,7 +12,7 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define TXTFILENAME "data\\TXT\\TexData.txt" //テクスチャ情報を持ったテキストファイルのパス
+#define TXTFILENAME_TEX "data\\TXT\\TexData.txt" //テクスチャ情報を持ったテキストファイルのパス
 #define SHARE_PASS "data\\TEXTURE\\" //全てのテクスチャファイルに共通する相対パス
 
 //==========================================
@@ -41,6 +41,12 @@ CTexture::~CTexture()
 //==========================================
 HRESULT CTexture::Load(void)
 {
+	//2度目はないぞ
+	if (m_bLoad)
+	{
+		return E_FAIL;
+	}
+
 	//ローカル変数宣言
 	FILE *pFile; //ファイル名
 	int nNumTex; //読み込むテクスチャ数

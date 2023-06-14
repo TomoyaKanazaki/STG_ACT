@@ -43,14 +43,11 @@ CCamera::~CCamera()
 //==========================================
 HRESULT CCamera::Init(void)
 {
-	m_posR = CManager::GetPlayer()->GetPos();
+	//上方向ベクトルを設定
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	m_rot = D3DXVECTOR3(atan2f(m_posR.x - m_posV.x, m_posR.z - m_posV.z), 0.0f, tanf(m_posR.y - m_posV.y));
-	m_rot.x = (D3DX_PI * 0.5f);
 
-	m_posV.x = m_posR.x + (sinf(m_rot.z) * cosf(m_rot.x)) * DISTANCE;
-	m_posV.y = m_posR.y + cosf(m_rot.z) * DISTANCE;
-	m_posV.z = m_posR.z + (sinf(m_rot.z) * sinf(m_rot.x)) * DISTANCE;
+	//位置を設定
+	CalcPos();
 
 	return S_OK;
 }
@@ -68,49 +65,9 @@ void CCamera::Uninit(void)
 //==========================================
 void CCamera::Update(void)
 {
-	m_posR = CManager::GetPlayer()->GetPos();
-	m_rot.x = atan2f(m_posR.x - m_posV.x, m_posR.z - m_posV.z);
-	m_rot.z =  tanf(m_posR.y - m_posV.y);
-
-	//移動量を取得
-	D3DXVECTOR3 rot = CManager::GetPlayer()->GetRot();
-	float fRotMove, fRotDest, fRotDiff;
-
-	//現在の角度と目的の角度の差分を計算
-	fRotMove = m_rot.y;
-	fRotDest = rot.y;
-	fRotDiff = fRotDest - fRotMove;
-
-	//角度の補正
-	if (fRotDiff > D3DX_PI)
-	{
-		fRotDiff -= D3DX_PI * 2.0f;
-	}
-	else if (fRotDiff <= -D3DX_PI)
-	{
-		fRotDiff += D3DX_PI * 2.0f;
-	}
-
-	//方向転換の慣性
-	fRotMove += fRotDiff * 0.05f;
-
-	//角度の補正
-	if (fRotMove > D3DX_PI)
-	{
-		fRotMove -= D3DX_PI * 2.0f;
-	}
-	else if (fRotMove <= -D3DX_PI)
-	{
-		fRotMove += D3DX_PI * 2.0f;
-	}
-
-	//方向を適用する
-	m_rot.y = fRotMove;
-
-	D3DXVECTOR3 slip = D3DXVECTOR3(sinf(m_rot.y) * 50.0f, 0.0f, cosf(m_rot.y) * 50.0f);
-
-	m_posR += slip;
-	m_posV = D3DXVECTOR3(m_posR.x, 800.0f, m_posR.z - 200.0f);
+	//位置の更新
+	//CalcPos();
+	ThirdPerson();
 
 	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
 	CManager::GetDebugProc()->Print("視点 : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
@@ -246,4 +203,55 @@ void CCamera::Move(void)
 	{
 		m_rot.y -= 0.01f;
 	}
+}
+
+//==========================================
+//  カメラ位置計算処理
+//==========================================
+void CCamera::CalcPos(void)
+{
+	m_posR = CManager::GetPlayer()->GetPos();
+	m_rot.x = atan2f(m_posR.x - m_posV.x, m_posR.z - m_posV.z);
+	m_rot.z = tanf(m_posR.y - m_posV.y);
+
+	//移動量を取得
+	D3DXVECTOR3 rot = CManager::GetPlayer()->GetRot();
+	float fRotMove, fRotDest, fRotDiff;
+
+	//現在の角度と目的の角度の差分を計算
+	fRotMove = m_rot.y;
+	fRotDest = rot.y;
+	fRotDiff = fRotDest - fRotMove;
+
+	//角度の補正
+	if (fRotDiff > D3DX_PI)
+	{
+		fRotDiff -= D3DX_PI * 2.0f;
+	}
+	else if (fRotDiff <= -D3DX_PI)
+	{
+		fRotDiff += D3DX_PI * 2.0f;
+	}
+
+	//方向転換の慣性
+	fRotMove += fRotDiff * 0.03f;
+
+	//角度の補正
+	if (fRotMove > D3DX_PI)
+	{
+		fRotMove -= D3DX_PI * 2.0f;
+	}
+	else if (fRotMove <= -D3DX_PI)
+	{
+		fRotMove += D3DX_PI * 2.0f;
+	}
+
+	//方向を適用する
+	m_rot.y = fRotMove;
+
+	//注視点のずれを設定
+	D3DXVECTOR3 slip = D3DXVECTOR3(sinf(m_rot.y) * -50.0f, 0.0f, cosf(m_rot.y) * -50.0f);
+
+	m_posR += slip;
+	m_posV = D3DXVECTOR3(m_posR.x, 800.0f, m_posR.z - 200.0f);
 }
