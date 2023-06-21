@@ -11,6 +11,7 @@
 //  静的メンバ変数宣言
 //==========================================
 LPDIRECTINPUT8 CInput::m_pInput = NULL;
+//LPDIRECTINPUTDEVICE8 *CJoyPad::m_pDevTemp = NULL;
 
 //==========================================
 //  マクロ定義
@@ -237,8 +238,11 @@ CMouse::~CMouse()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CMouse::Init(HINSTANCE /*hInstance*/, HWND hWnd)
+HRESULT CMouse::Init(HINSTANCE hInstance, HWND hWnd)
 {
+	//オブジェクト生成
+	CInput::Init(hInstance, hWnd);
+
 	//入力デバイスの設定
 	if (FAILED(m_pInput->CreateDevice(GUID_SysMouse, &m_pDevice, NULL)))
 	{
@@ -383,7 +387,7 @@ bool CMouse::GetMouseControll(void)
 //{
 //	//ローカル変数宣言
 //	HRESULT hr;
-//	LPDIRECTINPUTDEVICE8 pDevJoypad = m_pDevice;
+//	LPDIRECTINPUTDEVICE8 pDevJoypad = *m_pDevTemp;
 //
 //	//NULLチェック
 //	if (pDevJoypad != nullptr)
@@ -399,7 +403,7 @@ bool CMouse::GetMouseControll(void)
 //	}
 //
 //	//生成した変数を代入
-//	m_pDevice = pDevJoypad;
+//	*m_pDevTemp = pDevJoypad;
 //
 //	//次のデバイスを調べるときはDIENUM_CONTINUE、最初の一回のみの場合はDIENUM_STOP
 //	return DIENUM_CONTINUE;
@@ -454,8 +458,12 @@ bool CMouse::GetMouseControll(void)
 ////==========================================
 //HRESULT CJoyPad::Init(HINSTANCE hInstance, HWND hWnd)
 //{
+//	//オブジェクト生成
+//	CInput::Init(hInstance, hWnd);
+//
 //	//デバイスの列挙
-//	HRESULT hr = m_pInput->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoySticksCallBack, nullptr, DIEDFL_ATTACHEDONLY);
+//	m_pDevTemp = &m_pDevice;
+//	HRESULT hr = m_pInput->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoySticksCallBack, NULL, DIEDFL_ATTACHEDONLY);
 //	if (FAILED(hr))
 //	{
 //		return E_FAIL;

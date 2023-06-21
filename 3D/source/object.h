@@ -33,6 +33,8 @@ public:
 		TYPE_TIMER, //タイマー
 		TYPE_SCORE, //スコア
 		TYPE_FIELD, //床
+		TYPE_WALL, //壁
+		TYPE_SHADOW, //影
 		METHOD_MAX
 	}TYPE;
 

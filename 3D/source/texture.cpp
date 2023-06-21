@@ -13,7 +13,7 @@
 //  マクロ定義
 //==========================================
 #define TXTFILENAME_TEX "data\\TXT\\TexData.txt" //テクスチャ情報を持ったテキストファイルのパス
-#define SHARE_PASS "data\\TEXTURE\\" //全てのテクスチャファイルに共通する相対パス
+#define SHARE_PASS_TEX "data\\TEXTURE\\" //全てのテクスチャファイルに共通する相対パス
 
 //==========================================
 //  静的メンバ変数宣言
@@ -53,7 +53,7 @@ HRESULT CTexture::Load(void)
 	char aStr[256]; //不要な文字列の記録用
 
 	//ファイルを読み取り専用で開く
-	pFile = fopen(TXTFILENAME, "r");
+	pFile = fopen(TXTFILENAME_TEX, "r");
 
 	if (pFile != NULL)
 	{
@@ -88,7 +88,7 @@ HRESULT CTexture::Load(void)
 				char sTexName[256];
 
 				//共通のパスを取得
-				strcpy(&sTexName[0], SHARE_PASS);
+				strcpy(&sTexName[0], SHARE_PASS_TEX);
 
 				//ファイル名の読み込み
 				for (int nCnt = 0; nCnt < 3; nCnt++)

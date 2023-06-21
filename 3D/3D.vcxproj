@@ -27,20 +27,24 @@
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\manager.cpp" />
+    <ClCompile Include="source\model.cpp" />
+    <ClCompile Include="source\motion.cpp" />
     <ClCompile Include="source\number.cpp" />
     <ClCompile Include="source\object.cpp" />
     <ClCompile Include="source\object2D.cpp" />
     <ClCompile Include="source\object2D_Anim.cpp" />
     <ClCompile Include="source\object3D.cpp" />
-    <ClCompile Include="source\object_x.cpp" />
+    <ClCompile Include="source\object_mesh.cpp" />
     <ClCompile Include="source\particle.cpp" />
     <ClCompile Include="source\pause.cpp" />
     <ClCompile Include="source\player.cpp" />
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\score.cpp" />
+    <ClCompile Include="source\shadow.cpp" />
     <ClCompile Include="source\sound.cpp" />
     <ClCompile Include="source\texture.cpp" />
     <ClCompile Include="source\timer.cpp" />
+    <ClCompile Include="source\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\camera.h" />
@@ -51,20 +55,24 @@
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\manager.h" />
+    <ClInclude Include="source\model.h" />
+    <ClInclude Include="source\motion.h" />
     <ClInclude Include="source\number.h" />
     <ClInclude Include="source\object.h" />
     <ClInclude Include="source\object2D.h" />
     <ClInclude Include="source\object2D_Anim.h" />
     <ClInclude Include="source\object3D.h" />
-    <ClInclude Include="source\object_x.h" />
+    <ClInclude Include="source\object_mesh.h" />
     <ClInclude Include="source\particle.h" />
     <ClInclude Include="source\pause.h" />
     <ClInclude Include="source\player.h" />
     <ClInclude Include="source\renderer.h" />
     <ClInclude Include="source\score.h" />
+    <ClInclude Include="source\shadow.h" />
     <ClInclude Include="source\sound.h" />
     <ClInclude Include="source\texture.h" />
     <ClInclude Include="source\timer.h" />
+    <ClInclude Include="source\wall.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0418BA22-5E8B-4858-8440-467E4D32FD1E}</ProjectGuid>

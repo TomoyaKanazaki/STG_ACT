@@ -20,6 +20,9 @@
 #include "light.h"
 #include "field.h"
 #include "texture.h"
+#include "model.h"
+#include "wall.h"
+#include "object_mesh.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -27,7 +30,7 @@
 CRenderer *CManager::m_pRenderer = NULL;
 CKeyboard *CManager::m_pKeyboard = NULL;
 CMouse *CManager::m_pMouse = NULL;
-CJoyPad *CManager::m_pJoyPad[MAX_PLAYER] = {};
+CJoyPad *CManager::m_pJoyPad = NULL;
 CDebugProc *CManager::m_pDebugProc = NULL;
 CPause *CManager::m_pPause = NULL;
 CScore *CManager::m_pScore = NULL;
@@ -37,6 +40,8 @@ CCamera *CManager::m_pCamera = NULL;
 CLight *CManager::m_pLight = NULL;
 CPlayer *CManager::m_pPlayer = NULL;
 CTexture *CManager::m_pTexture = NULL;
+CField *CManager::m_pField = NULL;
+CObject_Mesh *CManager::m_pMesh = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -106,6 +111,13 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
+	//モデルの読み込み
+	if (CModel::GetLoadState() == false)
+	{
+		//モデルを読み込む
+		CModel::Load();
+	}
+
 	//デバッグ表示の生成
 	if (m_pDebugProc == NULL)
 	{
@@ -149,15 +161,15 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	////ジョイパッドの生成
-	//if (m_pJoyPad[0] == NULL)
+	//if (m_pJoyPad == NULL)
 	//{
-	//	m_pJoyPad[0] = new CJoyPad;
+	//	m_pJoyPad = new CJoyPad;
 	//}
 
 	////ジョイパッドの初期化
-	//if (m_pJoyPad[0] != NULL)
+	//if (m_pJoyPad != NULL)
 	//{
-	//	if (FAILED(m_pJoyPad[0]->Init(hInstance, hWnd)))
+	//	if (FAILED(m_pJoyPad->Init(hInstance, hWnd)))
 	//	{
 	//		return E_FAIL;
 	//	}
@@ -202,7 +214,13 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	//床の生成
-	CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 1000.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(200.0f, 0.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	//メッシュフィールドの生成
+	m_pMesh = CObject_Mesh::Create(D3DXVECTOR3(0.0f, 10.0f, 0.0f), D3DXVECTOR3(500.0f, 0.0f, 500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(3.0f, 3.0f));
+
+	//壁の生成
+	CWall::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(200.0f, 200.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//BGMの再生
 	m_pSound->Play(CSound::SOUND_LABEL_BGM001);
@@ -250,6 +268,14 @@ void CManager::Uninit(void)
 		delete m_pMouse;
 		m_pMouse = NULL;
 	}
+	
+	////ジョイパッドの終了、破棄
+	//if (m_pJoyPad != NULL)
+	//{
+	//	m_pJoyPad->Uninit();
+	//	delete m_pJoyPad;
+	//	m_pJoyPad = NULL;
+	//}
 
 	//ポーズの終了、破棄
 	if (m_pPause != NULL)
@@ -298,6 +324,13 @@ void CManager::Uninit(void)
 		delete m_pTexture;
 		m_pTexture = NULL;
 	}
+
+	//モデルの読み込み
+	if (CModel::GetLoadState() == false)
+	{
+		//モデルを読み込む
+		CModel::Load();
+	}
 }
 
 //==========================================
@@ -316,6 +349,12 @@ void CManager::Update(void)
 	{
 		m_pMouse->Update();
 	}
+	
+	////ジョイパッドの更新処理
+	//if (m_pJoyPad != NULL)
+	//{
+	//	m_pJoyPad->Update();
+	//}
 
 	//ポーズの更新処理
 	if (m_pPause != NULL)

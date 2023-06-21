@@ -29,6 +29,8 @@ class CCamera;
 class CLight;
 class CPlayer;
 class CTexture;
+class CField;
+class CObject_Mesh;
 
 //==========================================
 //  マネージャクラス定義
@@ -46,10 +48,10 @@ public:
 	void Draw(void);
 
 	//静的メンバ関数
-	static CRenderer *GetRenderer() { return m_pRenderer; }
-	static CKeyboard *GetKeyboard() { return m_pKeyboard; }
-	static CMouse *GetMouse() { return m_pMouse; }
-	static CJoyPad *GetJoyPad(int m_nNum) { return m_pJoyPad[m_nNum]; }
+	static CRenderer *GetRenderer(void) { return m_pRenderer; }
+	static CKeyboard *GetKeyboard(void) { return m_pKeyboard; }
+	static CMouse *GetMouse(void) { return m_pMouse; }
+	static CJoyPad *GetJoyPad(void) { return m_pJoyPad; }
 	static CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
 	static CPause *GetPause(void) { return m_pPause; }
 	static CScore *GetScore(void) { return m_pScore; }
@@ -59,6 +61,8 @@ public:
 	static CLight *GetLight(void) { return m_pLight; }
 	static CPlayer *GetPlayer(void) { return m_pPlayer; }
 	static CTexture *GetTexture(void) { return m_pTexture; }
+	static CField *GetField(void) { return m_pField; }
+	static CObject_Mesh *GetMesh(void) { return m_pMesh; }
 
 private:
 
@@ -66,7 +70,7 @@ private:
 	static CRenderer *m_pRenderer;
 	static CKeyboard *m_pKeyboard;
 	static CMouse *m_pMouse;
-	static CJoyPad *m_pJoyPad[MAX_PLAYER];
+	static CJoyPad *m_pJoyPad;
 	static CDebugProc *m_pDebugProc;
 	static CPause *m_pPause;
 	static CScore *m_pScore;
@@ -76,6 +80,8 @@ private:
 	static CLight *m_pLight;
 	static CPlayer *m_pPlayer;
 	static CTexture *m_pTexture;
+	static CField *m_pField;
+	static CObject_Mesh *m_pMesh;
 
 };
 

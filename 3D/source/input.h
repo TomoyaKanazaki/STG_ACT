@@ -96,86 +96,89 @@ private:
 	bool m_bMouseMove; //マウス操作の有無
 };
 
-//==========================================
-//  ジョイパッドクラス
-//==========================================
-class CJoyPad : public CInput
-{
-public:
-	//ボタン
-	typedef enum
-	{
-		KEY_X = 0,
-		KEY_Y,
-		KEY_A,
-		KEY_B,
-		KEY_LB,
-		KEY_RB,
-		KEY_LT,
-		KEY_RT,
-		KEY_L3,
-		KEY_R3,
-		KEY_BACK,
-		KEY_START,
-		KEY_MAX
-	}BUTTON;
-
-	//十字キー
-	typedef enum
-	{
-		CROSS_UP = 0, //上方向
-		CROSS_RIGHT = 9000, //右方向
-		CROSS_DOWN = 18000, //下方向
-		CROSS_LEFT = 27000, //左方向
-		CROSS_NONE = -1 //入力がない状態の情報
-	}CROSS;
-
-	//スティック方向
-	typedef enum
-	{
-		STICK_UP = 180, //上方向
-		STICK_DOWN = 0, //下方向
-		STICK_RIGHT = 90, //右方向
-		STICK_LEFT = -90 //左方向
-	}STICK;
-
-	CJoyPad(); //コンストラクタ
-	~CJoyPad(); //デストラクタ
-
-	//メンバ関数
-	HRESULT Init(HINSTANCE hInstance, HWND hWnd);
-	void Uninit(void);
-	void Update(void);
-	bool GetJoyPadButtonPress(BUTTON nKey);
-	bool GetJoyPadButtonTrigger(BUTTON nKey);
-	bool GetJoyPadCrossPress(int nDirection);
-	bool GetJoyPadCrossTrigger(int nDirection);
-	bool GetJoyPadCrossNone(void);
-	D3DXVECTOR3 GetStickL(void);
-	D3DXVECTOR3 GetStickR(void);
-	bool GetStickTriggerL(int nDirection);
-	bool GetStickTriggerR(int nDirection);
-
-private:
-
-	//メンバ関数
-	bool KnockStickL(DIJOYSTATE JoyKey, int nDead); //左スティックの入力判定
-	bool KnockStickR(DIJOYSTATE JoyKey, int nDead); //右スティックの入力判定
-
-	//静的
-	static BOOL CALLBACK EnumJoySticksCallBack(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext);
-	static BOOL CALLBACK EnumAxesCallback(const DIDEVICEOBJECTINSTANCE *pdidInstance, VOID *pContext);
-
-	//メンバ変数
-	DIJOYSTATE m_aKeyState; //全入力情報の保管
-	DIJOYSTATE m_aKeyStateTrigger; //トリガー情報
-	DIJOYSTATE m_aKeyStateRerease; //リリース情報
-	DIJOYSTATE m_aKeyStateRepeat; //リピート情報
-	DWORD m_CrossTrigger; //十字キー専用のトリガー情報
-	int m_nStickAngleL; //左スティックの角度
-	int m_nStickAngleR; //右スティックの角度
-	int m_nStickTriggerL; //左スティックのトリガー情報
-	int m_nStickTriggerR; //右スティックのトリガー情報
-};
+////==========================================
+////  ジョイパッドクラス
+////==========================================
+//class CJoyPad : public CInput
+//{
+//public:
+//	//ボタン
+//	typedef enum
+//	{
+//		KEY_X = 0,
+//		KEY_Y,
+//		KEY_A,
+//		KEY_B,
+//		KEY_LB,
+//		KEY_RB,
+//		KEY_LT,
+//		KEY_RT,
+//		KEY_L3,
+//		KEY_R3,
+//		KEY_BACK,
+//		KEY_START,
+//		KEY_MAX
+//	}BUTTON;
+//
+//	//十字キー
+//	typedef enum
+//	{
+//		CROSS_UP = 0, //上方向
+//		CROSS_RIGHT = 9000, //右方向
+//		CROSS_DOWN = 18000, //下方向
+//		CROSS_LEFT = 27000, //左方向
+//		CROSS_NONE = -1 //入力がない状態の情報
+//	}CROSS;
+//
+//	//スティック方向
+//	typedef enum
+//	{
+//		STICK_UP = 180, //上方向
+//		STICK_DOWN = 0, //下方向
+//		STICK_RIGHT = 90, //右方向
+//		STICK_LEFT = -90 //左方向
+//	}STICK;
+//
+//	CJoyPad(); //コンストラクタ
+//	~CJoyPad(); //デストラクタ
+//
+//	//メンバ関数
+//	HRESULT Init(HINSTANCE hInstance, HWND hWnd);
+//	void Uninit(void);
+//	void Update(void);
+//	bool GetJoyPadButtonPress(BUTTON nKey);
+//	bool GetJoyPadButtonTrigger(BUTTON nKey);
+//	bool GetJoyPadCrossPress(int nDirection);
+//	bool GetJoyPadCrossTrigger(int nDirection);
+//	bool GetJoyPadCrossNone(void);
+//	D3DXVECTOR3 GetStickL(void);
+//	D3DXVECTOR3 GetStickR(void);
+//	bool GetStickTriggerL(int nDirection);
+//	bool GetStickTriggerR(int nDirection);
+//
+//private:
+//
+//	//メンバ関数
+//	bool KnockStickL(DIJOYSTATE JoyKey, int nDead); //左スティックの入力判定
+//	bool KnockStickR(DIJOYSTATE JoyKey, int nDead); //右スティックの入力判定
+//
+//	//静的メンバ関数
+//	static BOOL CALLBACK EnumJoySticksCallBack(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext);
+//	static BOOL CALLBACK EnumAxesCallback(const DIDEVICEOBJECTINSTANCE *pdidInstance, VOID *pContext);
+//
+//	//メンバ変数
+//	DIJOYSTATE m_aKeyState; //全入力情報の保管
+//	DIJOYSTATE m_aKeyStateTrigger; //トリガー情報
+//	DIJOYSTATE m_aKeyStateRerease; //リリース情報
+//	DIJOYSTATE m_aKeyStateRepeat; //リピート情報
+//	DWORD m_CrossTrigger; //十字キー専用のトリガー情報
+//	int m_nStickAngleL; //左スティックの角度
+//	int m_nStickAngleR; //右スティックの角度
+//	int m_nStickTriggerL; //左スティックのトリガー情報
+//	int m_nStickTriggerR; //右スティックのトリガー情報
+//
+//	//静的メンバ変数
+//	static LPDIRECTINPUTDEVICE8 *m_pDevTemp;
+//};
 
 #endif

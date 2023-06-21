@@ -4,7 +4,7 @@
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#include "field.h"
+#include "wall.h"
 #include "manager.h"
 #include "renderer.h"
 #include "debugproc.h"
@@ -13,7 +13,7 @@
 //==========================================
 //  コンストラクタ
 //==========================================
-CField::CField(int nPriority) : CObject3D(nPriority)
+CWall::CWall(int nPriority) : CObject3D(nPriority)
 {
 
 }
@@ -21,7 +21,7 @@ CField::CField(int nPriority) : CObject3D(nPriority)
 //==========================================
 //  デストラクタ
 //==========================================
-CField::~CField()
+CWall::~CWall()
 {
 
 }
@@ -29,10 +29,10 @@ CField::~CField()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CField::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CWall::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
 	//タイプの設定
-	SetType(TYPE_FIELD);
+	SetType(TYPE_WALL);
 
 	if (FAILED(CObject3D::Init(pos, size, rot)))
 	{
@@ -45,7 +45,7 @@ HRESULT CField::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 //==========================================
 //  終了処理
 //==========================================
-void CField::Uninit(void)
+void CWall::Uninit(void)
 {
 	CObject3D::Uninit();
 }
@@ -53,7 +53,7 @@ void CField::Uninit(void)
 //==========================================
 //  更新処理
 //==========================================
-void CField::Update(void)
+void CWall::Update(void)
 {
 	//更新する
 	CObject3D::Update();
@@ -62,7 +62,7 @@ void CField::Update(void)
 //==========================================
 //  描画処理
 //==========================================
-void CField::Draw()
+void CWall::Draw()
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -77,16 +77,16 @@ void CField::Draw()
 //==========================================
 //  オブジェクト生成処理
 //==========================================
-CField *CField::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+CWall *CWall::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
 	//インスタンス生成
-	CField *pField = NULL;
+	CWall *pField = NULL;
 
 	//NULLチェック
 	if (pField == NULL)
 	{
 		//メモリを確保
-		pField = new CField;
+		pField = new CWall;
 	}
 
 	//初期化

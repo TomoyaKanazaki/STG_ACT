@@ -12,7 +12,8 @@
 //==========================================
 //  前方宣言
 //==========================================
-class CObject_X;
+class CModel;
+class CShadow;
 
 //==========================================
 //  プレイヤークラスの定義
@@ -46,10 +47,8 @@ private:
 	bool m_bJunp;
 
 	//モデル情報
-	CObject_X *body;
-
-	//静的メンバ変数
-	static LPDIRECT3DTEXTURE9 m_pTexture;
+	CModel *m_apModel[2];
+	CShadow *m_pShadow;
 
 };
 
