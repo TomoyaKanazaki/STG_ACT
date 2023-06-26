@@ -11,7 +11,7 @@
 //==========================================
 CMotion::CMotion()
 {
-	INFO m_aInfo[64] = {};
+	INFO m_aInfo[32] = {};
 	int m_nNumAll = 0;
 	int m_nType = 0;
 	int m_nNumKey = 0;

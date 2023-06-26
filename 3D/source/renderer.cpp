@@ -174,7 +174,7 @@ void CRenderer::Draw(void)
 	{
 		CObject::DrawAll();
 
-		CManager::GetDebugProc()->Print("テクスチャ総数 : %d", CManager::GetTexture()->GetNum());
+		CManager::GetDebugProc()->Print("テクスチャ総数 : %d\n", CManager::GetTexture()->GetNum());
 		CManager::GetDebugProc()->Print("モデル総数 : %d", CModel::GetNum());
 
 		if (CManager::GetDebugProc() != NULL)

@@ -229,7 +229,6 @@ void CManager::Uninit(void)
 	//レンダラーの終了、破棄
 	if (m_pRenderer != NULL)
 	{
-		m_pSound->Stop();
 		m_pRenderer->Uninit();
 		delete m_pRenderer;
 		m_pRenderer = NULL;

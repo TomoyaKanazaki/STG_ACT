@@ -17,17 +17,17 @@ D3DXVECTOR3 Collision::GetRevisionVec(const D3DXVECTOR3 vecMove, const D3DXVECTO
 	float fRate = 0.0f;
 	D3DXVECTOR3 vecRevision = vecMove;
 
-	////補正値を算出する
-	//fRate = (vecToPos.z * vecLine.x) - (vecToPos.x * vecLine.z);
-	//fRate /= (vecMove.z * vecLine.x) - (vecMove.x * vecLine.z);
+	//補正値を算出する
+	fRate = (vecToPos.z * vecLine.x) - (vecToPos.x * vecLine.z);
+	fRate /= (vecMove.z * vecLine.x) - (vecMove.x * vecLine.z);
 
-	//CManager::GetDebugProc()->Print("fRate : %f\n", fRate);
+	CManager::GetDebugProc()->Print("fRate : %f\n", fRate);
 
-	////ベクトルを補正する
-	//if (fRate >= 0.0f && fRate <= 1.0f)
-	//{
-	//	vecRevision = D3DXVECTOR3(vecMove.x * fRate, vecMove.y * fRate, vecMove.z * fRate);
-	//}
+	//ベクトルを補正する
+	if (fRate >= 0.0f && fRate <= 1.0f)
+	{
+		vecRevision = D3DXVECTOR3(vecMove.x * fRate, vecMove.y * fRate, vecMove.z * fRate);
+	}
 
 	//補正後の値を返す
 	return vecRevision;

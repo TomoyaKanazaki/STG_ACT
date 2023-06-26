@@ -54,6 +54,7 @@ private:
 	void SetVtx(void);
 	void SetIdx(void);
 	void CalcData(void);
+	bool CheckOnMesh(const D3DXVECTOR3 &posJudge, const D3DXVECTOR3 &posStart, const D3DXVECTOR3 &posEnd) const;
 
 };
 

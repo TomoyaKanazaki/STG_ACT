@@ -90,7 +90,11 @@ void CInput::Uninit(void)
 //==========================================
 CKeyboard::CKeyboard()
 {
-
+	for (int nCnt = 0; nCnt < NUM_KEY_MAX; nCnt++)
+	{
+		m_aKeyState[nCnt] = NULL;
+		m_aKeyStateTrigger[nCnt] = NULL;
+	}
 }
 
 //==========================================

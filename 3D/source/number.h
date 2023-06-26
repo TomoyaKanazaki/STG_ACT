@@ -26,8 +26,6 @@ public:
 	void SetNum(const int nNumber) { m_nNumber = nNumber; }
 
 	//Ã“Iƒƒ“ƒoŠÖ”
-	static HRESULT Load(void);
-	static void UnLoad(void);
 	static CNumber *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, int nNumber);
 
 private:
