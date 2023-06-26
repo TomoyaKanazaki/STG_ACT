@@ -4,6 +4,7 @@
 //  Author : Tomoya Kanazaki
 //
 //==========================================
+#include <windows.h>
 #include "player.h"
 #include "manager.h"
 #include "input.h"
@@ -16,11 +17,14 @@
 #include "shadow.h"
 #include "field.h"
 #include "object_mesh.h"
+#include "collision.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
 #define PLAYER_SPEED (1.0f) //プレイヤーの移動速度(キーボード)
+#define TXTFILENAME_PLAYER "data\\TXT\\PlayerData.txt" //プレイヤー情報を持ったテキストファイルのパス
+#define SHARE_PASS_PLAYER "data\\MODEL\\Player\\" //全てのプレイヤーモデルファイルに共通する相対パス
 
 //==========================================
 //  コンストラクタ
@@ -28,10 +32,10 @@
 CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_nNumModel = 0;
 	m_fSpeed = 0.0f;
 	m_fAngle = 0.0f;
-	m_apModel[0] = NULL;
-	m_apModel[1] = NULL;
+	m_apModel = NULL;
 }
 
 //==========================================
@@ -56,11 +60,10 @@ HRESULT CPlayer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXV
 	SetType(TYPE_PLAYER);
 
 	//実体を生成
-	m_apModel[0] = CModel::Create(m_pos, m_size, m_rot, 1);
-	m_apModel[1] = CModel::Create(m_pos, m_size, m_rot, 0, m_apModel[0]);
+	Load();
 
 	//影を生成
-	//m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
+	m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
 
 	return S_OK;
 }
@@ -70,6 +73,12 @@ HRESULT CPlayer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXV
 //==========================================
 void CPlayer::Uninit(void)
 {
+	if (m_apModel != NULL)
+	{
+		delete m_apModel;
+		m_apModel = NULL;
+	}
+
 	//自分自身の破棄
 	Release();
 }
@@ -79,36 +88,38 @@ void CPlayer::Uninit(void)
 //==========================================
 void CPlayer::Update(void)
 {
-	//前回座標の保存
-	D3DXVECTOR3 oldpos = m_pos;
+	//押し戻し算出用ベクトル
+	D3DXVECTOR3 vecLine;
+	D3DXVECTOR3 vecToPos;
 
-	//存在位置の判定
-	if (CManager::GetMesh()->OnMesh(m_pos) == false)
-	{
-		//デバッグ表示
-		CManager::GetDebugProc()->Print("\n\n\n外に出てる!");
-	}
+	//前回座標の保存
+	D3DXVECTOR3 m_oldPos = m_pos;
 
 	//移動処理
 	Move();
 
-	//回転処理
-	if (oldpos != m_pos)
+	//存在位置の判定
+	if (CManager::GetMesh()->OnMesh(m_oldPos + m_move, m_oldPos, &vecLine, &vecToPos) == false)
 	{
-		Rotate();
+		CManager::GetDebugProc()->Print("\n\n\n外に出ている\n");
+
+		//フィールド上に留まる
+		m_move = Collision::GetRevisionVec(m_move, vecLine, vecToPos);
 	}
 
-	//高さを取得する
-	m_pos.y = CManager::GetField()->GetHeight(m_pos);
+	//移動量の適用
+	m_pos += m_move;
 
-	//実体に情報を与える
-	m_apModel[0]->SetTransform(m_pos, m_rot);
+	//回転処理
+	Rotate();
 
 	//エフェクトを呼び出す
-	//CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 100);
+	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 100);
+
+	m_apModel[0]->SetTransform(m_pos, m_rot);
 
 	//影の情報を更新する
-	//m_pShadow->SetTransform(m_pos, m_rot);
+	m_pShadow->SetTransform(m_pos, m_rot);
 
 	//デバッグ表示
 	CManager::GetDebugProc()->Print("\n\n\nプレイヤー座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
@@ -160,12 +171,6 @@ void CPlayer::Move(void)
 
 	//移動量の取得
 	m_move += CManager::GetKeyboard()->GetWASD();
-
-	//移動方向の取得
-	m_fAngle = atan2f(m_move.x, m_move.z);
-
-	//移動量の適応
-	m_pos += m_move;
 }
 
 //==========================================
@@ -173,6 +178,13 @@ void CPlayer::Move(void)
 //==========================================
 void CPlayer::Rotate(void)
 {
+	//マウスカーソル位置の取得
+	D3DXVECTOR2 CursorPos = CManager::GetMouse()->GetCursor();
+
+	//プレイヤー方向の取得
+	m_fAngle = atan2f(-CursorPos.x, CursorPos.y);
+
+	//方向転換用変数
 	float fRotMove, fRotDest, fRotDiff;
 
 	//現在の角度と目的の角度の差分を計算
@@ -191,7 +203,7 @@ void CPlayer::Rotate(void)
 	}
 
 	//方向転換の慣性
-	fRotMove += fRotDiff * 0.2f;
+	fRotMove += fRotDiff * 0.5f;
 
 	//角度の補正
 	if (fRotMove > D3DX_PI)
@@ -205,6 +217,101 @@ void CPlayer::Rotate(void)
 
 	//方向を適用する
 	m_rot.y = fRotMove;
+}
 
-	m_fAngle = m_rot.y;
+//==========================================
+//  プレイヤー情報の読み込み
+//==========================================
+void CPlayer::Load(void)
+{
+	//ローカル変数宣言
+	FILE *pFile; //ファイル名
+	char aStr[256]; //不要な文字列の記録用
+
+	//ファイルを読み取り専用で開く
+	pFile = fopen(TXTFILENAME_PLAYER, "r");
+
+	if (pFile != NULL)
+	{
+		//不要な文字列の読み込み
+		for (int nCntDiscard = 0; nCntDiscard < 13; nCntDiscard++)
+		{
+			fscanf(pFile, "%s", &aStr[0]);
+		}
+
+		//モデル数の取得
+		fscanf(pFile, "%d", &m_nNumModel);
+
+		//モデルが存在する場合
+		if (m_nNumModel > 0)
+		{
+			//必要なメモリを確保する
+			if (m_apModel == NULL)
+			{
+				m_apModel = new CModel*[m_nNumModel];
+			}
+		}
+
+		//メモリを確保した場合
+		if (m_apModel != NULL)
+		{
+			//不要な文字列の読み込み
+			for (int nCntDiscard = 0; nCntDiscard < 4; nCntDiscard++)
+			{
+				fscanf(pFile, "%s", &aStr[0]);
+			}
+
+			//各モデルを生成する
+			for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+			{
+				//モデル生成用変数
+				D3DXVECTOR3 pos, size = D3DXVECTOR3(0.0f, 5.0f, 0.0f), rot;
+				int nModelID, nParentID;
+
+				//不要な文字列の読み込み
+				for (int nCntDiscard = 0; nCntDiscard < 3; nCntDiscard++)
+				{
+					fscanf(pFile, "%s", &aStr[0]);
+				}
+
+				//位置情報を取得
+				fscanf(pFile, "%f", &pos.x); fscanf(pFile, "%f", &pos.y); fscanf(pFile, "%f", &pos.z);
+
+				//不要な文字列の読み込み
+				fscanf(pFile, "%s", &aStr[0]);
+
+				//角度を取得
+				fscanf(pFile, "%f", &rot.x); fscanf(pFile, "%f", &rot.y); fscanf(pFile, "%f", &rot.z);
+
+				//不要な文字列の読み込み
+				fscanf(pFile, "%s", &aStr[0]);
+
+				//使用するモデルの情報を取得
+				fscanf(pFile, "%d", &nModelID);
+
+				//不要な文字列の読み込み
+				fscanf(pFile, "%s", &aStr[0]);
+
+				//親の情報を取得
+				fscanf(pFile, "%d", &nParentID);
+
+				//取得した情報からモデルを生成
+				if (nParentID == -1)
+				{
+					m_apModel[nCnt] = CModel::Create(pos, size, rot, nModelID);
+				}
+				else
+				{
+					m_apModel[nCnt] = CModel::Create(pos, size, rot, nModelID, m_apModel[nParentID]);
+				}
+			}
+		}
+
+		//ファイルを閉じる
+		fclose(pFile);
+	}
+	else
+	{
+
+	}
 }

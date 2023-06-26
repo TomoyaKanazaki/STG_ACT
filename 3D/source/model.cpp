@@ -22,6 +22,7 @@ CModel::MODEL *CModel::m_pModel = NULL;
 int CModel::m_nNumAll = 0;
 char CModel::m_sFilePass[MAX_MODEL][128] = {};
 bool CModel::m_bLoad = false;
+int CModel::m_nNum = 0;
 
 //==========================================
 //  コンストラクタ
@@ -35,6 +36,7 @@ CModel::CModel(int nPriority) : CObject(nPriority)
 	m_Info.mtxWorld = {};
 	m_pParent = NULL;
 	m_nSelfID = 0;
+	m_nNum++;
 }
 
 //==========================================
@@ -42,7 +44,7 @@ CModel::CModel(int nPriority) : CObject(nPriority)
 //==========================================
 CModel::~CModel()
 {
-
+	m_nNum--;
 }
 
 //==========================================
@@ -360,12 +362,12 @@ void CModel::UnLoad(void)
 		//テクスチャの破棄
 		if (m_pModel[nCnt].pTexture != NULL)
 		{
-			for (int nCntMat = 0; nCntMat < (int)m_pModel[nCntMat].dwNumMat; nCntMat++)
+			for (int nCntMat = 0; nCntMat < (int)m_pModel[nCnt].dwNumMat; nCntMat++)
 			{
-				if (m_pModel[nCntMat].pTexture[nCntMat] != NULL)
+				if (m_pModel[nCnt].pTexture[nCntMat] != NULL)
 				{
-					m_pModel[nCntMat].pTexture[nCntMat]->Release();
-					m_pModel[nCntMat].pTexture[nCntMat] = NULL;
+					m_pModel[nCnt].pTexture[nCntMat]->Release();
+					m_pModel[nCnt].pTexture[nCntMat] = NULL;
 				}
 			}
 			delete[] m_pModel[nCnt].pTexture;

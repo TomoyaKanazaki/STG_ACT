@@ -47,7 +47,7 @@ HRESULT CCamera::Init(void)
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 	//ˆÊ’u‚ðÝ’è
-	CalcPos();
+	CalcPos(SLIP_OFF);
 
 	return S_OK;
 }
@@ -66,8 +66,7 @@ void CCamera::Uninit(void)
 void CCamera::Update(void)
 {
 	//ˆÊ’u‚ÌXV
-	//CalcPos();
-	ThirdPerson();
+	CalcPos();
 
 	CManager::GetDebugProc()->Print("’Ž‹“_ : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
 	CManager::GetDebugProc()->Print("Ž‹“_ : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
@@ -208,7 +207,7 @@ void CCamera::Move(void)
 //==========================================
 //  ƒJƒƒ‰ˆÊ’uŒvŽZˆ—
 //==========================================
-void CCamera::CalcPos(void)
+void CCamera::CalcPos(SLIP slipFlag)
 {
 	m_posR = CManager::GetPlayer()->GetPos();
 	m_rot.x = atan2f(m_posR.x - m_posV.x, m_posR.z - m_posV.z);
@@ -216,42 +215,50 @@ void CCamera::CalcPos(void)
 
 	//ˆÚ“®—Ê‚ðŽæ“¾
 	D3DXVECTOR3 rot = CManager::GetPlayer()->GetRot();
-	float fRotMove, fRotDest, fRotDiff;
 
-	//Œ»Ý‚ÌŠp“x‚Æ–Ú“I‚ÌŠp“x‚Ì·•ª‚ðŒvŽZ
-	fRotMove = m_rot.y;
-	fRotDest = rot.y;
-	fRotDiff = fRotDest - fRotMove;
-
-	//Šp“x‚Ì•â³
-	if (fRotDiff > D3DX_PI)
+	if (slipFlag == SLIP_ON)
 	{
-		fRotDiff -= D3DX_PI * 2.0f;
-	}
-	else if (fRotDiff <= -D3DX_PI)
-	{
-		fRotDiff += D3DX_PI * 2.0f;
-	}
+		float fRotMove, fRotDest, fRotDiff;
 
-	//•ûŒü“]Š·‚ÌŠµ«
-	fRotMove += fRotDiff * 0.03f;
+		//Œ»Ý‚ÌŠp“x‚Æ–Ú“I‚ÌŠp“x‚Ì·•ª‚ðŒvŽZ
+		fRotMove = m_rot.y;
+		fRotDest = rot.y;
+		fRotDiff = fRotDest - fRotMove;
 
-	//Šp“x‚Ì•â³
-	if (fRotMove > D3DX_PI)
-	{
-		fRotMove -= D3DX_PI * 2.0f;
-	}
-	else if (fRotMove <= -D3DX_PI)
-	{
-		fRotMove += D3DX_PI * 2.0f;
-	}
+		//Šp“x‚Ì•â³
+		if (fRotDiff > D3DX_PI)
+		{
+			fRotDiff -= D3DX_PI * 2.0f;
+		}
+		else if (fRotDiff <= -D3DX_PI)
+		{
+			fRotDiff += D3DX_PI * 2.0f;
+		}
 
-	//•ûŒü‚ð“K—p‚·‚é
-	m_rot.y = fRotMove;
+		//•ûŒü“]Š·‚ÌŠµ«
+		fRotMove += fRotDiff * 0.03f;
+
+		//Šp“x‚Ì•â³
+		if (fRotMove > D3DX_PI)
+		{
+			fRotMove -= D3DX_PI * 2.0f;
+		}
+		else if (fRotMove <= -D3DX_PI)
+		{
+			fRotMove += D3DX_PI * 2.0f;
+		}
+
+		//•ûŒü‚ð“K—p‚·‚é
+		m_rot.y = fRotMove;
+	}
+	else
+	{
+		m_rot = rot;
+	}
 
 	//’Ž‹“_‚Ì‚¸‚ê‚ðÝ’è
-	D3DXVECTOR3 slip = D3DXVECTOR3(sinf(m_rot.y) * -50.0f, 0.0f, cosf(m_rot.y) * -50.0f);
+	D3DXVECTOR3 slip = D3DXVECTOR3(sinf(m_rot.y) * -100.0f, 0.0f, cosf(m_rot.y) * -100.0f);
 
 	m_posR += slip;
-	m_posV = D3DXVECTOR3(m_posR.x, 800.0f, m_posR.z - 200.0f);
+	m_posV = D3DXVECTOR3(m_posR.x, 500.0f, m_posR.z - 200.0f);
 }

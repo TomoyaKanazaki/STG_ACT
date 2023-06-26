@@ -30,6 +30,7 @@ public:
 	void Update(void);
 	void Draw(void);
 	D3DXVECTOR3 GetMove(void) { return m_move; }
+	D3DXVECTOR3 GetOldPos(void) { return m_oldPos; }
 
 	//静的メンバ変数
 	static CPlayer *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -39,15 +40,18 @@ private:
 	//メンバ関数
 	void Move(void);
 	void Rotate(void);
+	void Load(void); //プレイヤー情報の読み込み
 
 	//メンバ変数
 	D3DXVECTOR3 m_move;
+	D3DXVECTOR3 m_oldPos;
+	int m_nNumModel;
 	float m_fSpeed;
 	float m_fAngle;
 	bool m_bJunp;
 
 	//モデル情報
-	CModel *m_apModel[2];
+	CModel **m_apModel;
 	CShadow *m_pShadow;
 
 };

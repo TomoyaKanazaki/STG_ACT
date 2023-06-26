@@ -14,6 +14,12 @@
 class CCamera
 {
 public:
+	typedef enum
+	{
+		SLIP_ON = 0, //慣性あり
+		SLIP_OFF //慣性なし
+	}SLIP;
+
 	CCamera(); //コンストラクタ
 	~CCamera(); //デストラクタ
 
@@ -40,7 +46,7 @@ private:
 	D3DXVECTOR3 m_rot; //Xの計算に使用する角度
 
 	//メンバ関数
-	void CalcPos(void);
+	void CalcPos(SLIP slipFlag = SLIP_ON);
 
 };
 

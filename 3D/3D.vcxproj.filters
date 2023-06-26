@@ -87,10 +87,10 @@
     <ClCompile Include="source\shadow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\wall.cpp">
+    <ClCompile Include="source\object_mesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\object_mesh.cpp">
+    <ClCompile Include="source\collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,10 +167,10 @@
     <ClInclude Include="source\shadow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\wall.h">
+    <ClInclude Include="source\object_mesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\object_mesh.h">
+    <ClInclude Include="source\collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

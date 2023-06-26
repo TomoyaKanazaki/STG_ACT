@@ -10,6 +10,7 @@
 #include "manager.h"
 #include "debugproc.h"
 #include "texture.h"
+#include "model.h"
 
 //==========================================
 //  コンストラクタ
@@ -174,6 +175,7 @@ void CRenderer::Draw(void)
 		CObject::DrawAll();
 
 		CManager::GetDebugProc()->Print("テクスチャ総数 : %d", CManager::GetTexture()->GetNum());
+		CManager::GetDebugProc()->Print("モデル総数 : %d", CModel::GetNum());
 
 		if (CManager::GetDebugProc() != NULL)
 		{

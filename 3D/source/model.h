@@ -39,6 +39,7 @@ public:
 	void Update(void);
 	void Draw(void);
 	void SetTransform(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot) { m_pos = pos; m_rot = rot; }
+	static int GetNum(void) { return m_nNum; }
 
 	//ê√ìIÉÅÉìÉoä÷êî
 	static CModel *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nModelID, CModel *m_pParent = NULL);
@@ -60,6 +61,7 @@ private:
 	static MODEL *m_pModel;
 	static char m_sFilePass[MAX_MODEL][128];
 	static bool m_bLoad;
+	static int m_nNum;
 
 };
 

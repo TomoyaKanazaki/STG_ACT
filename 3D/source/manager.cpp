@@ -21,7 +21,6 @@
 #include "field.h"
 #include "texture.h"
 #include "model.h"
-#include "wall.h"
 #include "object_mesh.h"
 
 //==========================================
@@ -160,20 +159,17 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
-	////ジョイパッドの生成
-	//if (m_pJoyPad == NULL)
-	//{
-	//	m_pJoyPad = new CJoyPad;
-	//}
+	//ジョイパッドの生成
+	if (m_pJoyPad == NULL)
+	{
+		m_pJoyPad = new CJoyPad;
+	}
 
-	////ジョイパッドの初期化
-	//if (m_pJoyPad != NULL)
-	//{
-	//	if (FAILED(m_pJoyPad->Init(hInstance, hWnd)))
-	//	{
-	//		return E_FAIL;
-	//	}
-	//}
+	//ジョイパッドの初期化
+	if (m_pJoyPad != NULL)
+	{
+		m_pJoyPad->Init(hInstance, hWnd);
+	}
 
 	//ポーズの生成
 	if (m_pPause == NULL)
@@ -194,7 +190,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 500.0f, 25.0f, 0.0f), D3DXVECTOR3(500.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
 
 	//タイマーの生成
-	m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10);
+	m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 120);
 
 	//ライトの生成
 	if (m_pLight == NULL)
@@ -213,14 +209,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pCamera->Init();
 	}
 
-	//床の生成
-	m_pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(200.0f, 0.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
 	//メッシュフィールドの生成
-	m_pMesh = CObject_Mesh::Create(D3DXVECTOR3(0.0f, 10.0f, 0.0f), D3DXVECTOR3(500.0f, 0.0f, 500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(3.0f, 3.0f));
-
-	//壁の生成
-	CWall::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(200.0f, 200.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pMesh = CObject_Mesh::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(128.0f, 128.0f));
 
 	//BGMの再生
 	m_pSound->Play(CSound::SOUND_LABEL_BGM001);
@@ -243,6 +233,15 @@ void CManager::Uninit(void)
 		m_pRenderer->Uninit();
 		delete m_pRenderer;
 		m_pRenderer = NULL;
+	}
+
+	//サウンドの終了、破棄
+	if (m_pSound != NULL)
+	{
+		m_pSound->Stop();
+		m_pSound->Uninit();
+		delete m_pSound;
+		m_pSound = NULL;
 	}
 
 	//デバッグ表示の終了、破棄
@@ -269,13 +268,13 @@ void CManager::Uninit(void)
 		m_pMouse = NULL;
 	}
 	
-	////ジョイパッドの終了、破棄
-	//if (m_pJoyPad != NULL)
-	//{
-	//	m_pJoyPad->Uninit();
-	//	delete m_pJoyPad;
-	//	m_pJoyPad = NULL;
-	//}
+	//ジョイパッドの終了、破棄
+	if (m_pJoyPad != NULL)
+	{
+		m_pJoyPad->Uninit();
+		delete m_pJoyPad;
+		m_pJoyPad = NULL;
+	}
 
 	//ポーズの終了、破棄
 	if (m_pPause != NULL)
@@ -325,11 +324,11 @@ void CManager::Uninit(void)
 		m_pTexture = NULL;
 	}
 
-	//モデルの読み込み
-	if (CModel::GetLoadState() == false)
+	//モデルを破棄
+	if (CModel::GetLoadState())
 	{
-		//モデルを読み込む
-		CModel::Load();
+		//モデルを破棄
+		CModel::UnLoad();
 	}
 }
 
@@ -350,11 +349,11 @@ void CManager::Update(void)
 		m_pMouse->Update();
 	}
 	
-	////ジョイパッドの更新処理
-	//if (m_pJoyPad != NULL)
-	//{
-	//	m_pJoyPad->Update();
-	//}
+	//ジョイパッドの更新処理
+	if (m_pJoyPad != NULL)
+	{
+		m_pJoyPad->Update();
+	}
 
 	//ポーズの更新処理
 	if (m_pPause != NULL)
