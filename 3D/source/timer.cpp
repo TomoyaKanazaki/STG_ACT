@@ -39,13 +39,8 @@ CTimer::~CTimer()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CTimer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CTimer::Init(void)
 {
-	//各種情報を保存
-	m_pos = pos;
-	m_size = size;
-	m_rot = rot;
-
 	//計算処理
 	CalcTime();
 
@@ -58,7 +53,7 @@ HRESULT CTimer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 			//生成する座標を計算
 			D3DXVECTOR3 NumPos = CalcPos(nCnt);
 
-			if (FAILED(m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(size.x / TIME_DIGIT, size.y, size.z), rot, m_aTime[nCnt])))
+			if (FAILED(m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(m_size.x / TIME_DIGIT, m_size.y, m_size.z), m_rot, m_aTime[nCnt])))
 			{
 				return E_FAIL;
 			}
@@ -153,11 +148,14 @@ CTimer * CTimer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int 
 	//値を割り当てる
 	pTime->m_nTime = nTimeDeff;
 	pTime->m_nTimeDeff = nTimeDeff;
+	pTime->m_pos = pos;
+	pTime->m_size = size;
+	pTime->m_rot = rot;
 
 	//初期化
 	if (pTime != NULL)
 	{
-		pTime->Init(pos, size, rot);
+		pTime->Init();
 	}
 
 	//ポインタを返す

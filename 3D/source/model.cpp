@@ -50,21 +50,8 @@ CModel::~CModel()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CModel::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CModel::Init(void)
 {
-	//各種情報の設定
-	if (m_nNumAll > m_nSelfID)
-	{
-		m_Info = m_pModel[m_nSelfID];
-		m_pos = pos;
-		m_size = size;
-		m_rot = rot;
-	}
-	else
-	{
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -169,16 +156,23 @@ CModel *CModel::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int n
 	}
 
 	//各種情報の保存
-	if (pModel != NULL)
+
+	pModel->m_pParent = m_pParent;
+	pModel->m_nSelfID = nModelID;
+
+	//各種情報の設定
+	if (m_nNumAll > pModel->m_nSelfID)
 	{
-		pModel->m_pParent = m_pParent;
-		pModel->m_nSelfID = nModelID;
+		pModel->m_Info = m_pModel[pModel->m_nSelfID];
+		pModel->m_pos = pos;
+		pModel->m_size = size;
+		pModel->m_rot = rot;
 	}
 
 	//初期化
 	if (pModel != NULL)
 	{
-		pModel->Init(pos, size, rot);
+		pModel->Init();
 	}
 
 	//ポインタを返す

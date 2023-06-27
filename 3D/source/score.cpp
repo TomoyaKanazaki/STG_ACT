@@ -31,13 +31,8 @@ CScore::~CScore()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CScore::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CScore::Init(void)
 {
-	//各種情報を保存
-	m_pos = pos;
-	m_size = size;
-	m_rot = rot;
-
 	//計算処理
 	CalcScore();
 
@@ -50,7 +45,7 @@ HRESULT CScore::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 			//生成する座標を計算
 			D3DXVECTOR3 NumPos = CalcPos(nCnt);
 
-			if (FAILED(m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(size.x / SCORE_DIGIT, size.y, size.z), rot, m_aScore[nCnt])))
+			if (FAILED(m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(m_size.x / SCORE_DIGIT, m_size.y, m_size.z), m_rot, m_aScore[nCnt])))
 			{
 				return E_FAIL;
 			}
@@ -112,11 +107,14 @@ CScore * CScore::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int 
 
 	//値を割り当てる
 	pScore->m_nScore = nScoreDeff;
+	pScore->m_pos = pos;
+	pScore->m_size = size;
+	pScore->m_rot = rot;
 
 	//初期化
 	if (pScore != NULL)
 	{
-		pScore->Init(pos, size, rot);
+		pScore->Init();
 	}
 
 	//ポインタを返す

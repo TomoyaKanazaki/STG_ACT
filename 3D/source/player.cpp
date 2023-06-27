@@ -53,13 +53,8 @@ CPlayer::~CPlayer()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CPlayer::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CPlayer::Init(void)
 {
-	//各種情報の保存
-	m_pos = pos;
-	m_size = size;
-	m_rot = rot;
-
 	//タイプの設定
 	SetType(TYPE_PLAYER);
 
@@ -182,10 +177,15 @@ CPlayer *CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 		pPlayer = new CPlayer;
 	}
 
+	//各種情報の保存
+	pPlayer->m_pos = pos;
+	pPlayer->m_size = size;
+	pPlayer->m_rot = rot;
+
 	//初期化
 	if (pPlayer != NULL)
 	{
-		pPlayer->Init(pos, size, rot);
+		pPlayer->Init();
 	}
 
 	//ポインタを返す

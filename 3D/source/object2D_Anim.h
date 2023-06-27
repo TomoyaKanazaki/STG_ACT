@@ -26,7 +26,7 @@ public:
 	~CObject2D_Anim(); //デストラクタ
 
 	//メンバ関数
-	virtual HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot) override;
+	virtual HRESULT Init(void) override;
 	virtual void Uninit(void) override;
 	virtual void Update(void) override;
 	virtual void Draw(void) override;

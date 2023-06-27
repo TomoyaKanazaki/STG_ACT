@@ -1,36 +1,33 @@
 //==========================================
 //
-//  シャドークラス(shadow.h)
+//  ターゲットクラス(target.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#ifndef _SHADOW_H_
-#define _SHADOW_H_
+#ifndef _TARGET_H_
+#define _TARGET_H_
 #include "main.h"
 #include "object3D.h"
 
 //==========================================
-//  シャドークラス定義
+//  ターゲットクラス定義
 //==========================================
-class CShadow : public CObject3D
+class CTarget : public CObject3D
 {
 public:
-	CShadow(int nPriority = 5); //コンストラクタ
-	~CShadow(); //デストラクタ
+	CTarget(); //コンストラクタ
+	~CTarget(); //デストラクタ
 
 	//メンバ関数
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	void SetTransform(D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
 	//静的メンバ関数
-	static CShadow *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
+	static CTarget *Create(const D3DXVECTOR3 size);
 
 private:
-
-	//メンバ変数
 
 };
 

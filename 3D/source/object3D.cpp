@@ -31,15 +31,10 @@ CObject3D::~CObject3D()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CObject3D::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CObject3D::Init(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	//値を保存する
-	m_pos = pos;
-	m_rot = rot;
-	m_size = size;
 
 	//ローカル変数宣言
 	m_fLength = sqrtf(m_size.x * m_size.x + m_size.z * m_size.z) * 0.5f;

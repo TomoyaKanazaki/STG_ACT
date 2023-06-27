@@ -37,9 +37,9 @@ CEffect::~CEffect()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CEffect::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CEffect::Init(void)
 {
-	if (FAILED(CObject3D::Init(pos, size, rot)))
+	if (FAILED(CObject3D::Init()))
 	{
 		return E_FAIL;
 	}
@@ -153,8 +153,13 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 		return NULL;
 	}
 
+	//各種情報を設定する
+	pEffect->m_pos = pos;
+	pEffect->m_size = size;
+	pEffect->m_rot = rot;
+
 	//初期化
-	pEffect->Init(pos, size, rot);
+	pEffect->Init();
 
 	//テクスチャを割り当てる
 	pEffect->BindTexture(CManager::GetTexture()->GetAddress(1));

@@ -34,7 +34,7 @@ HRESULT CField::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVE
 	//É^ÉCÉvÇÃê›íË
 	SetType(TYPE_FIELD);
 
-	if (FAILED(CObject3D::Init(pos, size, rot)))
+	if (FAILED(CObject3D::Init()))
 	{
 		return E_FAIL;
 	}

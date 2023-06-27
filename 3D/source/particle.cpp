@@ -31,7 +31,7 @@ CParticle::~CParticle()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CParticle::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CParticle::Init(void)
 {
 	//オブジェクト生成
 	for (int nCnt = 0; nCnt < m_nEffectNum; nCnt++)
@@ -44,7 +44,7 @@ HRESULT CParticle::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3D
 		m_range.y *= m_nMove;
 
 		//エフェクトを生成
-		if (FAILED(CEffect::Create(pos, size, rot, m_range, m_col, m_nEffectLife)))
+		if (FAILED(CEffect::Create(m_pos, m_size, m_rot, m_range, m_col, m_nEffectLife)))
 		{
 			return E_FAIL;
 		}
@@ -131,7 +131,7 @@ CParticle *CParticle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot,
 	//初期化
 	if (pParticle != NULL)
 	{
-		pParticle->Init(pos, size, rot);
+		pParticle->Init();
 	}
 
 	return pParticle;

@@ -30,9 +30,9 @@ CObject2D_Anim::~CObject2D_Anim()
 //==========================================
 //  ‰Šú‰»ˆ—
 //==========================================
-HRESULT CObject2D_Anim::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CObject2D_Anim::Init(void)
 {
-	if (FAILED(CObject2D::Init(pos, size, rot)))
+	if (FAILED(CObject2D::Init()))
 	{
 		return E_FAIL;
 	}
@@ -184,7 +184,7 @@ CObject2D_Anim *CObject2D_Anim::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 
 	//‰Šú‰»
 	if (pObject2D_Anim != NULL)
 	{
-		pObject2D_Anim->Init(pos, size, rot);
+		pObject2D_Anim->Init();
 	}
 
 	return pObject2D_Anim;

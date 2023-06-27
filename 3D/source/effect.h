@@ -19,7 +19,7 @@ public:
 	~CEffect(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
+	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);

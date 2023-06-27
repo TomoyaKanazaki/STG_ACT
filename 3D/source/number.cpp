@@ -33,9 +33,9 @@ CNumber::~CNumber()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CNumber::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CNumber::Init(void)
 {
-	if (FAILED(CObject2D::Init(pos, size, rot)))
+	if (FAILED(CObject2D::Init()))
 	{
 		return E_FAIL;
 	}
@@ -95,11 +95,14 @@ CNumber * CNumber::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D
 
 	//値を割り当てる
 	pNumber->m_nNumber = nNumber;
+	pNumber->m_pos = pos;
+	pNumber->m_size = size;
+	pNumber->m_rot = rot;
 
 	//初期化
 	if (pNumber != NULL)
 	{
-		pNumber->Init(pos, size, rot);
+		pNumber->Init();
 	}
 
 	//テクスチャを割り当てる

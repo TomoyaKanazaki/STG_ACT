@@ -28,12 +28,12 @@ CShadow::~CShadow()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CShadow::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CShadow::Init(void)
 {
 	//タイプの設定
 	SetType(TYPE_SHADOW);
 
-	if (FAILED(CObject3D::Init(pos, size, rot)))
+	if (FAILED(CObject3D::Init()))
 	{
 		return E_FAIL;
 	}
@@ -116,8 +116,13 @@ CShadow *CShadow::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 		return NULL;
 	}
 
+	//値を設定
+	pShadow->m_pos = pos;
+	pShadow->m_size = size;
+	pShadow->m_rot = rot;
+
 	//初期化
-	pShadow->Init(pos, size, rot);
+	pShadow->Init();
 
 	//テクスチャを割り当てる
 	pShadow->BindTexture(CManager::GetTexture()->GetAddress(1));

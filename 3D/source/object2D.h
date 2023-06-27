@@ -19,10 +19,10 @@ public:
 	~CObject2D(); //デストラクタ
 
 	//メンバ関数
-	virtual HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
-	virtual void Uninit(void);
-	virtual void Update(void);
-	virtual void Draw(void);
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
 	void SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max);
 	void SetCol(const D3DXCOLOR col);

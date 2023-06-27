@@ -38,13 +38,8 @@ CObject_Mesh::~CObject_Mesh()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CObject_Mesh::Init(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+HRESULT CObject_Mesh::Init(void)
 {
-	//各種変数の初期化
-	m_pos = pos;
-	m_size = size;
-	m_rot = rot;
-
 	//頂点生成用変数の設定
 	CalcData();
 
@@ -197,9 +192,12 @@ CObject_Mesh * CObject_Mesh::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 siz
 	//分割数を設定
 	pMesh->m_Mesh.nNumMesh_U = (int)uv.x;
 	pMesh->m_Mesh.nNumMesh_V = (int)uv.y;
+	pMesh->m_pos = pos;
+	pMesh->m_size = size;
+	pMesh->m_rot = rot;
 
 	//初期化
-	pMesh->Init(pos, size, rot);
+	pMesh->Init();
 
 	//テクスチャを割り当てる
 	pMesh->BindTexture(CManager::GetTexture()->GetAddress(0));
