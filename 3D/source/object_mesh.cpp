@@ -25,6 +25,7 @@ CObject_Mesh::CObject_Mesh(int nPriority) : CObject(nPriority)
 	m_Mesh.nNumVtx_U = 0;
 	m_Mesh.nNumVtx_V = 0;
 	m_mtxWorld = {};
+	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 //==========================================
@@ -195,12 +196,10 @@ CObject_Mesh * CObject_Mesh::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 siz
 	pMesh->m_pos = pos;
 	pMesh->m_size = size;
 	pMesh->m_rot = rot;
+	pMesh->m_Color = D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.8f);
 
 	//初期化
 	pMesh->Init();
-
-	//テクスチャを割り当てる
-	pMesh->BindTexture(CManager::GetTexture()->GetAddress(0));
 
 	//ポインタを返す
 	return pMesh;
@@ -223,7 +222,7 @@ void CObject_Mesh::SetVtx(void)
 		pVtx[nCntVtx].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 		//頂点カラーの設定
-		pVtx[nCntVtx].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pVtx[nCntVtx].col = m_Color;
 
 		//テクスチャ座標の設定
 		pVtx[nCntVtx].tex = D3DXVECTOR2(0.0f, 0.0f);

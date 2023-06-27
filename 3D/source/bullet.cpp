@@ -7,11 +7,13 @@
 #include "bullet.h"
 #include "manager.h"
 #include "texture.h"
+#include "effect.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
-#define BULLET_SPEED (20.0f) //弾速
+#define BULLET_SPEED (10.0f) //弾速
+#define BULLET_LIFE (256) //寿命
 
 //==========================================
 //  コンストラクタ
@@ -72,6 +74,9 @@ void CBullet::Update(void)
 	//移動量を加算する
 	m_pos += m_move;
 
+	//エフェクトを呼ぶ
+	CEffect::Create(m_pos, m_size, m_rot, D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 10);
+
 	//更新
 	CObject3D::Update();
 }
@@ -88,7 +93,7 @@ void CBullet::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CBullet * CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move, int nLife)
+CBullet * CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move)
 {
 	//インスタンス生成
 	CBullet *pBullet = NULL;
@@ -111,8 +116,8 @@ CBullet * CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move, i
 	pBullet->m_move = move;
 	pBullet->m_move.x = move.x * BULLET_SPEED;
 	pBullet->m_move.z = move.z * BULLET_SPEED;
-	pBullet->m_nLife = nLife;
 	pBullet->m_rot.x = D3DX_PI * 0.5f;
+	pBullet->m_nLife = BULLET_LIFE;
 
 	//初期化
 	pBullet->Init();

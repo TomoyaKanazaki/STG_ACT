@@ -25,7 +25,7 @@ public:
 	void Draw(void) override;
 
 	//ê√ìIÉÅÉìÉoä÷êî
-	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move, int nLife);
+	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move);
 
 private:
 

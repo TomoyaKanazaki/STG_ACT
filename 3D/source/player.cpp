@@ -20,6 +20,7 @@
 #include "collision.h"
 #include "target.h"
 #include "bullet.h"
+#include "motion.h"
 
 //==========================================
 //  マクロ定義
@@ -135,7 +136,7 @@ void CPlayer::Update(void)
 	Rotate();
 
 	//エフェクトを呼び出す
-	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 100);
+	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 30);
 
 	//弾を撃つ
 	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
@@ -149,7 +150,7 @@ void CPlayer::Update(void)
 		);
 
 		//弾の生成
-		CBullet::Create(m_pos, m_size * 0.5f, BulletMove, 300);
+		CBullet::Create(m_pos, m_size * 0.5f, BulletMove);
 	}
 
 	m_apModel[0]->SetTransform(m_pos, m_rot);

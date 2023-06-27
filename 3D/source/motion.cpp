@@ -11,15 +11,15 @@
 //==========================================
 CMotion::CMotion()
 {
-	INFO m_aInfo[32] = {};
-	int m_nNumAll = 0;
-	int m_nType = 0;
-	int m_nNumKey = 0;
-	int m_nKey = 0;
-	int m_nNumModel = 0;
-	bool m_bLoop = false;
-	bool m_bFinish = false;
-	CModel **m_pModel = NULL;
+	m_apInfo = NULL;
+	m_nNumAll = 0;
+	m_nType = 0;
+	m_nNumKey = 0;
+	m_nKey = 0;
+	m_nNumModel = 0;
+	m_bLoop = false;
+	m_bFinish = false;
+	m_pModel = NULL;
 }
 
 //==========================================
@@ -81,20 +81,20 @@ void CMotion::Init(char *sFileName)
 			} while (strcmp(aStr, "MOTIONSET") != 0);
 
 			//モーション識別
-			fscanf(pFile, "%s = %d	%s %s %s %s", &aStr[0], &m_aInfo[nCntMotion].nLoop, &aStr[0], &aStr[0], &aStr[0], &aStr[0]);
+			fscanf(pFile, "%s = %d	%s %s %s %s", &aStr[0], &m_apInfo[nCntMotion].nLoop, &aStr[0], &aStr[0], &aStr[0], &aStr[0]);
 			fscanf(pFile, "%s = %d	%s %s\n", &aStr[0], &m_nNumKey, &aStr[0], &aStr[0]);
 
 			//キーモーション
 			for (int nCntKey = 0; nCntKey < m_nNumKey; nCntKey++)
 			{
 				fgets(&aStr[0], 128, pFile);
-				fscanf(pFile, "%s = %d\n", &aStr[0], &m_aInfo[nCntMotion].aKeyMotion[nCntKey].nFrame);
+				fscanf(pFile, "%s = %d\n", &aStr[0], &m_apInfo[nCntMotion].aKeyMotion[nCntKey].nFrame);
 
 				for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 				{
 					fgets(&aStr[0], 128, pFile);
-					fscanf(pFile, "%s = %f %f %f", &aStr[0], &m_aInfo[nCntMotion].aKeyMotion[nCntKey].pos[nCntModel].x, &m_aInfo[nCntMotion].aKeyMotion[nCntKey].pos[nCntModel].y, &m_aInfo[nCntMotion].aKeyMotion[nCntKey].pos[nCntModel].z);
-					fscanf(pFile, "%s = %f %f %f\n", &aStr[0], &m_aInfo[nCntMotion].aKeyMotion[nCntKey].rot[nCntModel].x, &m_aInfo[nCntMotion].aKeyMotion[nCntKey].rot[nCntModel].y, &m_aInfo[nCntMotion].aKeyMotion[nCntKey].rot[nCntModel].z);
+					fscanf(pFile, "%s = %f %f %f", &aStr[0], &m_apInfo[nCntMotion].aKeyMotion[nCntKey].pos[nCntModel].x, &m_apInfo[nCntMotion].aKeyMotion[nCntKey].pos[nCntModel].y, &m_apInfo[nCntMotion].aKeyMotion[nCntKey].pos[nCntModel].z);
+					fscanf(pFile, "%s = %f %f %f\n", &aStr[0], &m_apInfo[nCntMotion].aKeyMotion[nCntKey].rot[nCntModel].x, &m_apInfo[nCntMotion].aKeyMotion[nCntKey].rot[nCntModel].y, &m_apInfo[nCntMotion].aKeyMotion[nCntKey].rot[nCntModel].z);
 					fgets(&aStr[0], 128, pFile);
 				}
 
@@ -144,7 +144,7 @@ void CMotion::Update(void)
 //==========================================
 //  設定処理
 //==========================================
-void CMotion::Set(int Type)
+void CMotion::SetType(int Type)
 {
 	//モーションの種類を設定
 	m_nType = Type;
@@ -176,4 +176,29 @@ void CMotion::SetModel(CModel *pModel, int nNumAll)
 
 	//モデル数を設定
 	m_nNumModel = nNumAll;
+}
+
+//==========================================
+//  モーションデータを作成
+CMotion *CMotion::Set(CModel *ppModel, int nNumAll)
+{
+	//インスタンス生成
+	CMotion *pMotion = NULL;
+
+	//NULLチェック
+	if (pMotion == NULL)
+	{
+		//メモリを確保
+		pMotion = new CMotion;
+	}
+
+	if (pMotion == NULL)
+	{
+		return NULL;
+	}
+
+	pMotion->Set(ppModel, nNumAll);
+
+	//ポインタを返す
+	return pMotion;
 }

@@ -66,7 +66,12 @@ void CTarget::Update(void)
 {
 	//情報を更新
 	m_rot = CManager::GetPlayer()->GetRot();
-	m_pos = D3DXVECTOR3(sinf(m_rot.y) * TARGET_RANGE, 10.0f, cosf(m_rot.y) * TARGET_RANGE);
+	m_pos = D3DXVECTOR3
+	(
+		CManager::GetPlayer()->GetPos().x + sinf(m_rot.y) * TARGET_RANGE,
+		10.0f,
+		CManager::GetPlayer()->GetPos().z + cosf(m_rot.y) * TARGET_RANGE
+	);
 
 	//デバッグ表示
 	CManager::GetDebugProc()->Print("ターゲット座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
@@ -127,7 +132,12 @@ CTarget *CTarget::Create(const D3DXVECTOR3 size)
 	//値を設定
 	pTarget->m_size = size;
 	pTarget->m_rot = CManager::GetPlayer()->GetRot();
-	pTarget->m_pos = D3DXVECTOR3(sinf(pTarget->m_rot.y) * TARGET_RANGE, 10.0f, cosf(pTarget->m_rot.y) * TARGET_RANGE) ;
+	pTarget->m_pos = D3DXVECTOR3
+	(
+		CManager::GetPlayer()->GetPos().x + sinf(pTarget->m_rot.y) * TARGET_RANGE,
+		10.0f,
+		CManager::GetPlayer()->GetPos().z + cosf(pTarget->m_rot.y) * TARGET_RANGE
+	);
 
 	//初期化
 	pTarget->Init();

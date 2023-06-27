@@ -38,7 +38,6 @@ HRESULT CObject3D::Init(void)
 
 	//ローカル変数宣言
 	m_fLength = sqrtf(m_size.x * m_size.x + m_size.z * m_size.z) * 0.5f;
-	m_fAngle = atan2f(m_size.x, m_size.z);
 
 	if (FAILED(pDevice->CreateVertexBuffer
 	(
@@ -159,6 +158,9 @@ void CObject3D::Update(void)
 
 	//頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//サイズの更新
+	m_fLength = sqrtf(m_size.x * m_size.x + m_size.z * m_size.z) * 0.5f;
 
 	if (GetType() == TYPE_FIELD || GetType() == TYPE_SHADOW)
 	{

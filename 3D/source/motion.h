@@ -33,7 +33,6 @@ public:
 	{
 		KEY_INFO aKeyMotion[MAX_MOTION]; //キー数分のキー情報
 		int nLoop; //ループの有無
-
 	}INFO;
 
 	CMotion(); //コンストラクタ
@@ -43,15 +42,18 @@ public:
 	void Init(char *sFileName);
 	void Uninit(void);
 	void Update(void);
-	void Set(int Type);
+	void SetType(int Type);
 	int GetType(void);
 	bool IsFinish(void);
 	void SetModel(CModel *ppModel, int nNumAll);
 
+	//静的メンバ関数
+	static CMotion *Set(CModel *ppModel, int nNumAll);
+
 private:
 
 	//メンバ変数
-	INFO m_aInfo[64]; //モーション情報
+	INFO *m_apInfo; //モーション情報
 	int m_nNumAll; //モーションの総数
 	int m_nType; //実行するモーション
 	int m_nNumKey; //次のキー

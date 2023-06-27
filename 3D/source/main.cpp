@@ -87,7 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hInstancePrev*/, LPSTR /*lpC
 			return -1;
 		}
 #else
-		if (FAILED(pManager->Init(hInstance, hWnd, TRUE)))
+		if (FAILED(pManager->Init(hInstance, hWnd, FALSE)))
 		{
 			//‰Šú‰»ˆ—‚É¸”s‚µ‚½ê‡
 			return -1;

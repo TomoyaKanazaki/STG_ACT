@@ -49,6 +49,7 @@ private:
 	MeshData m_Mesh; //メッシュ情報
 	LPDIRECT3DTEXTURE9 m_pTexture; //テクスチャ情報
 	D3DXMATRIX m_mtxWorld; //ワールドマトリックス
+	D3DXCOLOR m_Color;
 
 	//メンバ関数
 	void SetVtx(void);
