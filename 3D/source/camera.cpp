@@ -10,6 +10,7 @@
 #include "input.h"
 #include "player.h"
 #include "debugproc.h"
+#include "target.h"
 
 //==========================================
 //  マクロ定義
@@ -48,6 +49,9 @@ HRESULT CCamera::Init(void)
 
 	//位置を設定
 	CalcPos(SLIP_OFF);
+
+	//ターゲットを生成
+	CTarget::Create(D3DXVECTOR3(30.0f, 0.0f, 30.0f));
 
 	return S_OK;
 }

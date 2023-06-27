@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\bullet.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\collision.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="source\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\bullet.h" />
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\collision.h" />
     <ClInclude Include="source\debugproc.h" />

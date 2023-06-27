@@ -5,7 +5,7 @@
 //
 //==========================================
 #ifndef _FIELD_H_
-#define _BULLET_H_
+#define _FIELD_H_
 #include "main.h"
 #include "object3D.h"
 

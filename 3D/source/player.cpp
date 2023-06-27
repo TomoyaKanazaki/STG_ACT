@@ -18,6 +18,8 @@
 #include "field.h"
 #include "object_mesh.h"
 #include "collision.h"
+#include "target.h"
+#include "bullet.h"
 
 //==========================================
 //  マクロ定義
@@ -134,6 +136,21 @@ void CPlayer::Update(void)
 
 	//エフェクトを呼び出す
 	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 100);
+
+	//弾を撃つ
+	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
+	{
+		//弾の移動量を算出
+		D3DXVECTOR3 BulletMove = D3DXVECTOR3
+		(
+			-sinf(m_rot.y),
+			0.0f, 
+			-cosf(m_rot.y)
+		);
+
+		//弾の生成
+		CBullet::Create(m_pos, m_size * 0.5f, BulletMove, 300);
+	}
 
 	m_apModel[0]->SetTransform(m_pos, m_rot);
 
