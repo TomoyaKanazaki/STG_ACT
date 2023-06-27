@@ -310,15 +310,13 @@ bool CObject_Mesh::OnMesh(const D3DXVECTOR3 pos)
 	//上の存在判定
 	for (int nCnt = 0; nCnt < m_Mesh.nNumVtx_U - 1; nCnt++)
 	{
-		//判定用変数宣言
-		float fJudge = (pVtx[nCnt + 1].pos.z - pVtx[nCnt].pos.z) * (pos.x - pVtx[nCnt].pos.x) - (pVtx[nCnt + 1].pos.x - pVtx[nCnt].pos.x) * (pos.z - pVtx[nCnt].pos.z);
-		if (nCnt == m_Mesh.nNumVtx_U - 1)
-		{
-			fJudge = (pVtx[0].pos.z - pVtx[nCnt].pos.z) * (pos.x - pVtx[nCnt].pos.x) - (pVtx[0].pos.x - pVtx[nCnt].pos.x) * (pos.z - pVtx[nCnt].pos.z);
-		}
+		int IdxStart = nCnt; //左
+		int IdxEnd = nCnt + 1; //右
+		D3DXVECTOR3 posStart = pVtx[IdxStart].pos;
+		D3DXVECTOR3 posEnd = pVtx[IdxEnd].pos;
 
 		//範囲外だった場合false
-		if (fJudge < 0.0f)
+		if (CheckOnMesh(pos, posStart, posEnd))
 		{
 			//頂点バッファをアンロック
 			m_pVtxBuff->Unlock();
@@ -327,73 +325,52 @@ bool CObject_Mesh::OnMesh(const D3DXVECTOR3 pos)
 	}
 
 	//下の存在判定
-	for (int nCnt = m_Mesh.nNumVtx - 1; nCnt > m_Mesh.nNumVtx - m_Mesh.nNumVtx_U; nCnt--)
+	for (int nCnt = 0; nCnt < m_Mesh.nNumVtx_U - 1; nCnt++)
 	{
-		//判定用変数宣言
-		float fJudge = (pVtx[nCnt - 1].pos.z - pVtx[nCnt].pos.z) * (pos.x - pVtx[nCnt].pos.x) - (pVtx[nCnt - 1].pos.x - pVtx[nCnt].pos.x) * (pos.z - pVtx[nCnt].pos.z);
-		if (nCnt == m_Mesh.nNumVtx_U - 1)
-		{
-			fJudge = (pVtx[0].pos.z - pVtx[nCnt].pos.z) * (pos.x - pVtx[nCnt].pos.x) - (pVtx[0].pos.x - pVtx[nCnt].pos.x) * (pos.z - pVtx[nCnt].pos.z);
-		}
+		int IdxStart = (m_Mesh.nNumVtx_U * m_Mesh.nNumMesh_V) + nCnt + 1; //右
+		int IdxEnd = IdxStart - 1; //左
+		D3DXVECTOR3 posStart = pVtx[IdxStart].pos;
+		D3DXVECTOR3 posEnd = pVtx[IdxEnd].pos;
 
 		//範囲外だった場合false
-		if (fJudge < 0.0f)
+		if (CheckOnMesh(pos, posStart, posEnd))
 		{
 			//頂点バッファをアンロック
 			m_pVtxBuff->Unlock();
 			return false;
 		}
-	}
-
-	//縦の判定用の変数
-	D3DXVECTOR3 *pPoint = NULL;
-
-	//必要数のメモリを確保する
-	if (pPoint == NULL)
-	{
-		pPoint = new D3DXVECTOR3[m_Mesh.nNumVtx_V];
-	}
-
-	//右の頂点を取得する
-	for (int nCnt = 0; nCnt < m_Mesh.nNumVtx_V; nCnt++)
-	{
-		pPoint[nCnt] = pVtx[(m_Mesh.nNumVtx_U * (nCnt + 1)) - 1].pos;
 	}
 
 	//右の判定
 	for (int nCnt = 0; nCnt < m_Mesh.nNumVtx_V - 1; nCnt++)
 	{
-		//判定用変数宣言
-		float fJudge = (pPoint[nCnt + 1].z - pPoint[nCnt].z) * (pos.x - pPoint[nCnt].x) - (pPoint[nCnt + 1].x - pPoint[nCnt].x) * (pos.z - pPoint[nCnt].z);
+		int IdxStart = (nCnt + 1) * m_Mesh.nNumVtx_U - 1; //上
+		int IdxEnd = IdxStart + m_Mesh.nNumVtx_U; //下
+		D3DXVECTOR3 posStart = pVtx[IdxStart].pos;
+		D3DXVECTOR3 posEnd = pVtx[IdxEnd].pos;
 
 		//範囲外だった場合false
-		if (fJudge < 0.0f)
+		if (CheckOnMesh(pos, posStart, posEnd))
 		{
 			//頂点バッファをアンロック
 			m_pVtxBuff->Unlock();
-			delete[] pPoint;
 			return false;
 		}
 	}
 
-	//左の頂点を取得する
-	for (int nCnt = m_Mesh.nNumVtx_V - 1; nCnt >= 0; nCnt--)
-	{
-		pPoint[nCnt] = pVtx[m_Mesh.nNumVtx_U * nCnt].pos;
-	}
-
 	//左の判定
-	for (int nCnt = m_Mesh.nNumVtx_V - 1; nCnt > 0; nCnt--)
+	for (int nCnt = 0; nCnt < m_Mesh.nNumVtx_V - 1; nCnt++)
 	{
-		//判定用変数宣言
-		float fJudge = (pPoint[nCnt - 1].z - pPoint[nCnt].z) * (pos.x - pPoint[nCnt].x) - (pPoint[nCnt - 1].x - pPoint[nCnt].x) * (pos.z - pPoint[nCnt].z);
+		int IdxEnd = nCnt * m_Mesh.nNumVtx_V; //上
+		int IdxStart = IdxEnd + m_Mesh.nNumVtx_U; //下
+		D3DXVECTOR3 posStart = pVtx[IdxStart].pos;
+		D3DXVECTOR3 posEnd = pVtx[IdxEnd].pos;
 
 		//範囲外だった場合false
-		if (fJudge < 0.0f)
+		if (CheckOnMesh(pos, posStart, posEnd))
 		{
 			//頂点バッファをアンロック
 			m_pVtxBuff->Unlock();
-			delete[] pPoint;
 			return false;
 		}
 	}

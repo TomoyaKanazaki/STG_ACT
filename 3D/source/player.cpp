@@ -33,9 +33,13 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nNumModel = 0;
+	m_nLife = 0;
+	m_nDeadCounter = 0;
 	m_fSpeed = 0.0f;
 	m_fAngle = 0.0f;
 	m_apModel = NULL;
+	m_bRand = true;
+	m_bDead = false;
 }
 
 //==========================================
@@ -88,23 +92,43 @@ void CPlayer::Uninit(void)
 //==========================================
 void CPlayer::Update(void)
 {
-	//押し戻し算出用ベクトル
-	D3DXVECTOR3 vecLine;
-	D3DXVECTOR3 vecToPos;
+	//死亡確認
+	if (m_bDead)
+	{
+		//死亡カウンターの加算
+		m_nDeadCounter++;
+
+		//死亡から一定時間経過していたら蘇生する
+		if (m_nDeadCounter >= 60)
+		{
+			m_bDead = false;
+			m_nDeadCounter = 0;
+			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	//着地状態を取得
+	m_bRand = CManager::GetMesh()->OnMesh(m_pos);
 
 	//前回座標の保存
 	D3DXVECTOR3 m_oldPos = m_pos;
 
-	//移動処理
-	Move();
-
 	//存在位置の判定
-	if (CManager::GetMesh()->OnMesh(m_oldPos + m_move, m_oldPos, &vecLine, &vecToPos) == false)
+	if (m_bRand)
 	{
+		//移動処理
+		Move();
+	}
+	else
+	{
+		//落下
+		m_move.y += -0.5f;
 		CManager::GetDebugProc()->Print("\n\n\n外に出ている\n");
-
-		//フィールド上に留まる
-		m_move = Collision::GetRevisionVec(m_move, vecLine, vecToPos);
 	}
 
 	//移動量の適用
@@ -120,11 +144,19 @@ void CPlayer::Update(void)
 
 	//影の情報を更新する
 	m_pShadow->SetTransform(m_pos, m_rot);
+	
+	//死亡判定
+	if (m_pos.y < -500.0f)
+	{
+		m_nLife--;
+		m_bDead = true;
+	}
 
 	//デバッグ表示
 	CManager::GetDebugProc()->Print("\n\n\nプレイヤー座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
 	CManager::GetDebugProc()->Print("プレイヤー方向 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
 	CManager::GetDebugProc()->Print("プレイヤー移動量 : ( %f, %f, %f )\n", m_move.x, m_move.y, m_move.z);
+	CManager::GetDebugProc()->Print("プレイヤー体力 : %d\n", m_nLife);
 }
 
 //==========================================

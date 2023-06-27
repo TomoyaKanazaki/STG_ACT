@@ -45,10 +45,13 @@ private:
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
 	D3DXVECTOR3 m_oldPos;
+	int m_nLife;
 	int m_nNumModel;
+	int m_nDeadCounter;
 	float m_fSpeed;
 	float m_fAngle;
-	bool m_bJunp;
+	bool m_bRand;
+	bool m_bDead;
 
 	//ƒ‚ƒfƒ‹î•ñ
 	CModel **m_apModel;
