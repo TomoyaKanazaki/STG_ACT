@@ -6,14 +6,20 @@
 //==========================================
 #include "bullet.h"
 #include "manager.h"
+#include "debugproc.h"
 #include "texture.h"
 #include "effect.h"
+#include "collision.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
 #define BULLET_SPEED (10.0f) //弾速
 #define BULLET_LIFE (256) //寿命
+#define HOMING_LENGTH (200.0f) //ホーミング判定距離
+#define HOMING_POWER (0.2f) //ホーミングの強さ
+#define HOMING_TIMER (30) //ホーミング時間
+#define HIT_LENGTH (20.0f) //ヒット判定距離
 
 //==========================================
 //  コンストラクタ
@@ -21,7 +27,8 @@
 CBullet::CBullet()
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_nLife = 0;
+	m_nLife = BULLET_LIFE;
+	m_nHomingCounter = 0;
 }
 
 //==========================================
@@ -61,18 +68,42 @@ void CBullet::Uninit(void)
 //==========================================
 void CBullet::Update(void)
 {
-	//寿命を減らす
-	m_nLife--;
+	//ホーミングターゲットの位置を保存する変数
+	D3DXVECTOR3 Target;
 
-	//寿命がなくなったら削除する
-	if (m_nLife <= 0)
+	//ホーミング処理
+	if (Collision::CollisionEnemy(m_pos, HOMING_LENGTH, false, &Target))
 	{
-		this->Release();
+		if (m_nHomingCounter <= HOMING_TIMER)
+		{
+			//ホーミングムーブ
+			D3DXVECTOR3 move = Target - m_pos;
+
+			//移動量の正規化
+			D3DXVec3Normalize(&move, &move);
+
+			//移動量の適応
+			D3DXVECTOR3 moveDiff = m_move - move;
+			m_move -= moveDiff * HOMING_POWER;
+
+			//時間を加算する
+			m_nHomingCounter++;
+		}
+	}
+
+	//消滅条件
+	if (m_nLife <= 0 || Collision::CollisionEnemy(m_pos, HIT_LENGTH, true))
+	{
+		Uninit();
 		return;
 	}
 
+	//寿命を減らす
+	m_nLife--;
+
 	//移動量を加算する
-	m_pos += m_move;
+	D3DXVec3Normalize(&m_move, &m_move);
+	m_pos += m_move * BULLET_SPEED;
 
 	//エフェクトを呼ぶ
 	CEffect::Create(m_pos, m_size, m_rot, D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 10);
@@ -117,7 +148,6 @@ CBullet * CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move)
 	pBullet->m_move.x = move.x * BULLET_SPEED;
 	pBullet->m_move.z = move.z * BULLET_SPEED;
 	pBullet->m_rot.x = D3DX_PI * 0.5f;
-	pBullet->m_nLife = BULLET_LIFE;
 
 	//初期化
 	pBullet->Init();

@@ -24,6 +24,7 @@
     <ClCompile Include="source\collision.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\effect.cpp" />
+    <ClCompile Include="source\enemy.cpp" />
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\light.cpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="source\collision.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\effect.h" />
+    <ClInclude Include="source\enemy.h" />
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\light.h" />
@@ -158,7 +160,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
@@ -190,7 +192,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>

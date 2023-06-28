@@ -32,6 +32,7 @@ private:
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
 	int m_nLife;
+	int m_nHomingCounter;
 
 };
 

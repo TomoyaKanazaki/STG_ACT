@@ -13,21 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{9fc06a1b-5312-4665-88df-b4438542d25b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\debugproc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\effect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\manager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\number.cpp">
@@ -48,13 +39,7 @@
     <ClCompile Include="source\pause.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\renderer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\score.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\sound.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\timer.cpp">
@@ -75,9 +60,6 @@
     <ClCompile Include="source\player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\model.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -93,30 +75,42 @@
     <ClCompile Include="source\collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\precompile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\target.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\bullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="source\debugproc.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\input.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\manager.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\precompile.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\renderer.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\texture.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\debugproc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\effect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\manager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\number.h">
@@ -140,13 +134,7 @@
     <ClInclude Include="source\player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\renderer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\score.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\sound.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\timer.h">
@@ -164,9 +152,6 @@
     <ClInclude Include="source\field.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\model.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -182,13 +167,37 @@
     <ClInclude Include="source\collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\precompile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\target.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\bullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\debugproc.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\main.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\manager.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\precompile.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\renderer.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\texture.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

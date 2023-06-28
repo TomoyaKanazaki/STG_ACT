@@ -25,6 +25,7 @@ CObject_Mesh::CObject_Mesh(int nPriority) : CObject(nPriority)
 	m_Mesh.nNumVtx_U = 0;
 	m_Mesh.nNumVtx_V = 0;
 	m_mtxWorld = {};
+	m_pTexture = NULL;
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
@@ -117,9 +118,6 @@ void CObject_Mesh::Draw(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	//ワイヤーフレームを有効化
-	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
 	//ライティングを無効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
@@ -162,9 +160,6 @@ void CObject_Mesh::Draw(void)
 		0,
 		m_Mesh.nNumMesh //プリミティブ数
 	);
-
-	//ワイヤーフレームを無効化
-	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	//ライティングを有効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -287,6 +282,10 @@ void CObject_Mesh::CalcData(void)
 	m_Mesh.nNumVtx_V = m_Mesh.nNumMesh_V + 1;
 	m_Mesh.nNumVtx = m_Mesh.nNumVtx_U * m_Mesh.nNumVtx_V;
 	m_Mesh.nNumIdx = (m_Mesh.nNumVtx * 2) - (2 * (abs(m_Mesh.nNumMesh_U - m_Mesh.nNumMesh_V)) + 4);
+	if (m_Mesh.nNumMesh_U < m_Mesh.nNumMesh_V)
+	{
+		m_Mesh.nNumIdx += (m_Mesh.nNumMesh_V - m_Mesh.nNumMesh_U) * 4;
+	}
 	m_Mesh.nNumMesh = m_Mesh.nNumIdx - 2;
 }
 

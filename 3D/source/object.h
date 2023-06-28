@@ -50,12 +50,12 @@ public:
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
-	CObject *GetObject(int nPriority, int nID) { return m_apObject[nPriority][nID]; }
 	int GetID(void) { return m_nID; }
 	void SetType(TYPE type) { m_type = type; }
 	TYPE GetType(void) { return m_type; }
 
 	//ê√ìIÉÅÉìÉoä÷êî
+	static CObject *GetObject(int nPriority, int nID) { return m_apObject[nPriority][nID]; }
 	static void ReleaseAll(void);
 	static void UpdateAll(void);
 	static void DrawAll(void);

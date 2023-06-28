@@ -72,7 +72,7 @@ void CEffect::Update(void)
 	//õ–½‚ª‚È‚­‚È‚Á‚½‚çíœ‚·‚é
 	if (m_nLife <= 0)
 	{
-		this->Release();
+		Uninit();
 		return;
 	}
 

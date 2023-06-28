@@ -14,6 +14,7 @@
 namespace Collision
 {
 	D3DXVECTOR3 GetRevisionVec(const D3DXVECTOR3 vecMove, const D3DXVECTOR3 vecLine, const D3DXVECTOR3 vecToPos); //“ñ’¼ü‚ÌŒğ“_‚Ìæ“¾
+	bool CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3DXVECTOR3 *pPos = NULL); //“G‚Æ‚Ì‹——£”»’è
 }
 
 #endif

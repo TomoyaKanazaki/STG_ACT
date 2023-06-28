@@ -22,6 +22,7 @@
 #include "texture.h"
 #include "model.h"
 #include "object_mesh.h"
+#include "enemy.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -202,6 +203,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
+
+	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), CEnemy::TYPE_NORMAL);
+
 	//カメラの生成
 	if (m_pCamera == NULL)
 	{
@@ -210,7 +214,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	//メッシュフィールドの生成
-	m_pMesh = CObject_Mesh::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(128.0f, 128.0f));
+	m_pMesh = CObject_Mesh::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(10.0f, 10.0f));
 
 	//BGMの再生
 	m_pSound->Play(CSound::SOUND_LABEL_BGM001);
