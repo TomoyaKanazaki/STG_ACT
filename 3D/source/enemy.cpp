@@ -19,7 +19,6 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define PLAYER_SPEED (1.0f) //プレイヤーの移動速度(キーボード)
 #define TXTFILENAME_ENEMY "data\\TXT\\EnemyData.txt" //エネミー情報を持ったテキストファイルのパス
 
 //==========================================
@@ -65,15 +64,23 @@ HRESULT CEnemy::Init(void)
 //==========================================
 void CEnemy::Uninit(void)
 {
-	if (m_apModel != NULL)
+	//メモリを開放する
+	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
 	{
-		for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+		if (m_apModel != NULL)
 		{
-			m_apModel[nCnt]->Uninit();
+			if (m_apModel[nCnt] != NULL)
+			{
+				m_apModel[nCnt]->Uninit();
+			}
+
+			delete m_apModel;
+			m_apModel = NULL;
 		}
-		delete m_apModel;
-		m_apModel = NULL;
 	}
+
+	//影の削除
+	m_pShadow->Uninit();
 
 	//自分自身の破棄
 	Release();
@@ -86,9 +93,6 @@ void CEnemy::Update(void)
 {
 	//移動量の適用
 	m_pos += m_move;
-
-	//エフェクトを呼び出す
-	//CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 30);
 
 	//実体を動かす
 	m_apModel[0]->SetTransform(m_pos, m_rot);
@@ -145,7 +149,7 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 }
 
 //==========================================
-//  プレイヤー情報の読み込み
+//  エネミー情報の読み込み
 //==========================================
 void CEnemy::Load(void)
 {

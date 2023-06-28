@@ -6,6 +6,7 @@
 //==========================================
 #include "bullet.h"
 #include "manager.h"
+#include "renderer.h"
 #include "debugproc.h"
 #include "texture.h"
 #include "effect.h"
@@ -24,7 +25,7 @@
 //==========================================
 //  コンストラクタ
 //==========================================
-CBullet::CBullet()
+CBullet::CBullet(int nPriority) : CObject3D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nLife = BULLET_LIFE;
@@ -117,8 +118,17 @@ void CBullet::Update(void)
 //==========================================
 void CBullet::Draw(void)
 {
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//ライティングを無効化
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	//描画
 	CObject3D::Draw();
+
+	//ライティングを無効化
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //==========================================

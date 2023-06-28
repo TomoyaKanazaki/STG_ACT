@@ -203,8 +203,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
-
-	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), CEnemy::TYPE_NORMAL);
+	//エネミーの生成
+	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 100.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), CEnemy::TYPE_NORMAL);
 
 	//カメラの生成
 	if (m_pCamera == NULL)

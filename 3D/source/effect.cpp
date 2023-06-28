@@ -136,7 +136,7 @@ void CEffect::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, D3DXCOLOR col, int nLife)
+CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLOR col, int nLife)
 {
 	//インスタンス生成
 	CEffect *pEffect = NULL;
@@ -156,7 +156,6 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 	//各種情報を設定する
 	pEffect->m_pos = pos;
 	pEffect->m_size = size;
-	pEffect->m_rot = rot;
 
 	//初期化
 	pEffect->Init();
@@ -181,10 +180,10 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 //==========================================
 //  生成処理
 //==========================================
-CEffect * CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, D3DXVECTOR3 move, D3DXCOLOR col, int nLife)
+CEffect * CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXVECTOR3 move, D3DXCOLOR col, int nLife)
 {
 	//インスタンス生成
-	CEffect *pEffect = Create(pos, size, rot, col, nLife);
+	CEffect *pEffect = Create(pos, size, col, nLife);
 
 	//移動量を設定
 	pEffect->m_move = move;

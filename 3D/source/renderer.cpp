@@ -9,7 +9,6 @@
 #include "object.h"
 #include "manager.h"
 #include "debugproc.h"
-#include "debugUI.h"
 
 //==========================================
 //  コンストラクタ

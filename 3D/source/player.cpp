@@ -21,6 +21,7 @@
 #include "target.h"
 #include "bullet.h"
 #include "motion.h"
+#include "collision.h"
 
 //==========================================
 //  マクロ定義
@@ -74,10 +75,18 @@ HRESULT CPlayer::Init(void)
 //==========================================
 void CPlayer::Uninit(void)
 {
-	if (m_apModel != NULL)
+	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
 	{
-		delete m_apModel;
-		m_apModel = NULL;
+		if (m_apModel != NULL)
+		{
+			if (m_apModel[nCnt] != NULL)
+			{
+				m_apModel[nCnt]->Uninit();
+			}
+
+			delete m_apModel;
+			m_apModel = NULL;
+		}
 	}
 
 	//自分自身の破棄
@@ -134,9 +143,6 @@ void CPlayer::Update(void)
 	//回転処理
 	Rotate();
 
-	//エフェクトを呼び出す
-	CEffect::Create(m_pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), m_rot, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 30);
-
 	//弾を撃つ
 	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
@@ -152,13 +158,14 @@ void CPlayer::Update(void)
 		CBullet::Create(m_pos, m_size * 0.5f, BulletMove);
 	}
 
+	//実体に情報を与える
 	m_apModel[0]->SetTransform(m_pos, m_rot);
 
 	//影の情報を更新する
 	m_pShadow->SetTransform(m_pos, m_rot);
 	
 	//死亡判定
-	if (m_pos.y < -500.0f)
+	if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
 	{
 		m_nLife--;
 		m_bDead = true;

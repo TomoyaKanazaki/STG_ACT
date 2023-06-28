@@ -230,7 +230,8 @@ bool CKeyboard::GetTrigger(int nKey)
 //==========================================
 CMouse::CMouse()
 {
-
+	m_MouseState = {};
+	m_MouseStateTrigger = {};
 }
 
 //==========================================

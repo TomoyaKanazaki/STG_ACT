@@ -30,7 +30,7 @@ public:
 		D3DXMATRIX mtxWorld; //ワールドマトリックス
 	}MODEL;
 
-	CModel(int nPriority = 3); //コンストラクタ
+	CModel(int nPriority = 7); //コンストラクタ
 	~CModel(); //デストラクタ
 
 	//メンバ関数

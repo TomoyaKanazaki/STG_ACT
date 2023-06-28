@@ -118,10 +118,15 @@ void CObject::DrawAll(void)
 void CObject::Release(void)
 {
 	//優先順位を保存
-	int nPriority = m_nPriority;
+	int nPriority = this->m_nPriority;
 
 	//インデックスを保存
-	int nIdx = m_nID;
+	int nIdx = this->m_nID;
+
+	if (nIdx == 0 || nIdx == 2)
+	{
+		nIdx = nIdx;
+	}
 
 	if (m_apObject[nPriority][nIdx] != NULL)
 	{

@@ -61,7 +61,7 @@ HRESULT CModel::Init(void)
 void CModel::Uninit(void)
 {
 	//Ž©•ªŽ©g‚Ì”jŠü
-	Release();
+	this->Release();
 }
 
 //==========================================
