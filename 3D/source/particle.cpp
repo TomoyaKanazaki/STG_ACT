@@ -44,7 +44,7 @@ HRESULT CParticle::Init(void)
 		m_range.y *= m_nMove;
 
 		//エフェクトを生成
-		if (FAILED(CEffect::Create(m_pos, m_size, m_range, m_col, m_nEffectLife)))
+		if (FAILED(CEffect::Create(m_pos, m_size, m_col, m_nEffectLife, m_range)))
 		{
 			return E_FAIL;
 		}
@@ -87,7 +87,7 @@ void CParticle::Update(void)
 		m_range.y *= m_nMove;
 
 		//エフェクトを生成
-		if (FAILED(CEffect::Create(m_pos, m_size, m_range, m_col, m_nEffectLife)))
+		if (FAILED(CEffect::Create(m_pos, m_size, m_col, m_nEffectLife, m_range)))
 		{
 			return;
 		}

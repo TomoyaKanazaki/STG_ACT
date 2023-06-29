@@ -6,6 +6,7 @@
 //==========================================
 #include "effect.h"
 #include "manager.h"
+#include "debugproc.h"
 #include "renderer.h"
 #include "texture.h"
 
@@ -180,7 +181,7 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLO
 //==========================================
 //  生成処理
 //==========================================
-CEffect * CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXVECTOR3 move, D3DXCOLOR col, int nLife)
+CEffect * CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLOR col, int nLife, D3DXVECTOR3 move)
 {
 	//インスタンス生成
 	CEffect *pEffect = Create(pos, size, col, nLife);

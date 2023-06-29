@@ -43,6 +43,8 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_apModel = NULL;
 	m_bRand = true;
 	m_bDead = false;
+	m_apModel = NULL;
+	m_pShadow = NULL;
 }
 
 //==========================================
@@ -65,7 +67,10 @@ HRESULT CPlayer::Init(void)
 	Load();
 
 	//影を生成
-	m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
+	if (m_pShadow == NULL)
+	{
+		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
+	}
 
 	return S_OK;
 }
@@ -87,6 +92,13 @@ void CPlayer::Uninit(void)
 			delete m_apModel;
 			m_apModel = NULL;
 		}
+	}
+
+	//影の削除
+	if (m_pShadow != NULL)
+	{
+		m_pShadow->Uninit();
+		m_pShadow = NULL;
 	}
 
 	//自分自身の破棄
@@ -111,6 +123,10 @@ void CPlayer::Update(void)
 			m_nDeadCounter = 0;
 			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			if (m_pShadow == NULL)
+			{
+				m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
+			}
 		}
 		else
 		{
@@ -134,6 +150,11 @@ void CPlayer::Update(void)
 	{
 		//落下
 		m_move.y += -0.5f;
+		if (m_pShadow != NULL)
+		{
+			m_pShadow->Uninit();
+			m_pShadow = NULL;
+		}
 		CManager::GetDebugProc()->Print("\n\n\n外に出ている\n");
 	}
 
@@ -150,7 +171,7 @@ void CPlayer::Update(void)
 		D3DXVECTOR3 BulletMove = D3DXVECTOR3
 		(
 			-sinf(m_rot.y),
-			0.0f, 
+			0.0f,
 			-cosf(m_rot.y)
 		);
 
@@ -158,11 +179,20 @@ void CPlayer::Update(void)
 		CBullet::Create(m_pos, m_size * 0.5f, BulletMove);
 	}
 
+	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_RIGHT))
+	{
+		//弾の生成
+		CEffect::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(100.0f, 0.0f, 100.0f), D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 1000);
+	}
+
 	//実体に情報を与える
 	m_apModel[0]->SetTransform(m_pos, m_rot);
 
 	//影の情報を更新する
-	m_pShadow->SetTransform(m_pos, m_rot);
+	if (m_pShadow != NULL)
+	{
+		m_pShadow->SetTransform(m_pos, m_rot);
+	}
 	
 	//死亡判定
 	if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
@@ -172,7 +202,7 @@ void CPlayer::Update(void)
 	}
 
 	//デバッグ表示
-	CManager::GetDebugProc()->Print("\n\n\nプレイヤー座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
+	CManager::GetDebugProc()->Print("プレイヤー座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
 	CManager::GetDebugProc()->Print("プレイヤー方向 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
 	CManager::GetDebugProc()->Print("プレイヤー移動量 : ( %f, %f, %f )\n", m_move.x, m_move.y, m_move.z);
 	CManager::GetDebugProc()->Print("プレイヤー体力 : %d\n", m_nLife);

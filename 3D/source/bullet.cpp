@@ -107,7 +107,7 @@ void CBullet::Update(void)
 	m_pos += m_move * BULLET_SPEED;
 
 	//エフェクトを呼ぶ
-	CEffect::Create(m_pos, m_size, m_rot, D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 10);
+	CEffect::Create(m_pos, m_size, D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 10);
 
 	//更新
 	CObject3D::Update();

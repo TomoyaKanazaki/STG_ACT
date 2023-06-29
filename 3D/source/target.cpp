@@ -74,7 +74,7 @@ void CTarget::Update(void)
 	);
 
 	//デバッグ表示
-	CManager::GetDebugProc()->Print("ターゲット座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
+	CManager::GetDebugProc()->Print("\n\n\nターゲット座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
 	CManager::GetDebugProc()->Print("ターゲット方向 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
 
 	//更新

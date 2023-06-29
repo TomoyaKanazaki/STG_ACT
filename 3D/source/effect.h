@@ -26,7 +26,7 @@ public:
 
 	//ê√ìIÉÅÉìÉoä÷êî
 	static CEffect *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLOR col, int nLife);
-	static CEffect *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXVECTOR3 move, D3DXCOLOR col, int nLife);
+	static CEffect *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLOR col, int nLife, D3DXVECTOR3 move);
 	static int GetNum(void) { return m_nNum; }
 
 private:
