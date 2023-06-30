@@ -37,7 +37,7 @@
     <ClCompile Include="source\object2D.cpp" />
     <ClCompile Include="source\object2D_Anim.cpp" />
     <ClCompile Include="source\object3D.cpp" />
-    <ClCompile Include="source\object_mesh.cpp" />
+    <ClCompile Include="source\object_fan.cpp" />
     <ClCompile Include="source\particle.cpp" />
     <ClCompile Include="source\pause.cpp" />
     <ClCompile Include="source\player.cpp" />
@@ -72,7 +72,7 @@
     <ClInclude Include="source\object2D.h" />
     <ClInclude Include="source\object2D_Anim.h" />
     <ClInclude Include="source\object3D.h" />
-    <ClInclude Include="source\object_mesh.h" />
+    <ClInclude Include="source\object_fan.h" />
     <ClInclude Include="source\particle.h" />
     <ClInclude Include="source\pause.h" />
     <ClInclude Include="source\player.h" />

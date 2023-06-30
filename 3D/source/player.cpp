@@ -16,7 +16,7 @@
 #include "model.h"
 #include "shadow.h"
 #include "field.h"
-#include "object_mesh.h"
+#include "object_fan.h"
 #include "collision.h"
 #include "target.h"
 #include "bullet.h"
@@ -135,7 +135,7 @@ void CPlayer::Update(void)
 	}
 
 	//’…’nó‘Ô‚ğæ“¾
-	m_bRand = CManager::GetMesh()->OnMesh(m_pos);
+	m_bRand = CManager::GetFan()->OnMesh(m_pos);
 
 	//‘O‰ñÀ•W‚Ì•Û‘¶
 	D3DXVECTOR3 m_oldPos = m_pos;

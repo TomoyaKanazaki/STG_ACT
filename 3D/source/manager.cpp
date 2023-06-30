@@ -23,6 +23,7 @@
 #include "model.h"
 #include "object_mesh.h"
 #include "enemy.h"
+#include "object_fan.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -41,7 +42,7 @@ CLight *CManager::m_pLight = NULL;
 CPlayer *CManager::m_pPlayer = NULL;
 CTexture *CManager::m_pTexture = NULL;
 CField *CManager::m_pField = NULL;
-CObject_Mesh *CManager::m_pMesh = NULL;
+CObject_Fan *CManager::m_pFan = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -213,8 +214,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pCamera->Init();
 	}
 
-	//メッシュフィールドの生成
-	m_pMesh = CObject_Mesh::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(10.0f, 10.0f));
+	//床の生成
+	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 12, 500.0f);
 
 	//BGMの再生
 	m_pSound->Play(CSound::SOUND_LABEL_BGM001);

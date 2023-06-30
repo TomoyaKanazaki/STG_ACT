@@ -30,7 +30,7 @@ class CLight;
 class CPlayer;
 class CTexture;
 class CField;
-class CObject_Mesh;
+class CObject_Fan;
 
 //==========================================
 //  マネージャクラス定義
@@ -62,7 +62,7 @@ public:
 	static CPlayer *GetPlayer(void) { return m_pPlayer; }
 	static CTexture *GetTexture(void) { return m_pTexture; }
 	static CField *GetField(void) { return m_pField; }
-	static CObject_Mesh *GetMesh(void) { return m_pMesh; }
+	static CObject_Fan *GetFan(void) { return m_pFan; }
 
 private:
 
@@ -81,7 +81,7 @@ private:
 	static CPlayer *m_pPlayer;
 	static CTexture *m_pTexture;
 	static CField *m_pField;
-	static CObject_Mesh *m_pMesh;
+	static CObject_Fan *m_pFan;
 
 };
 

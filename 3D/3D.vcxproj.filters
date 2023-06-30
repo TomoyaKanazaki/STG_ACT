@@ -69,9 +69,6 @@
     <ClCompile Include="source\shadow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\object_mesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -106,6 +103,9 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="source\enemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\object_fan.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,9 +161,6 @@
     <ClInclude Include="source\shadow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\object_mesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -198,6 +195,9 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="source\enemy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\object_fan.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
