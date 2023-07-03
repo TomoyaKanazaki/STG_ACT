@@ -35,6 +35,7 @@ public:
 		TYPE_FIELD, //床
 		TYPE_SHADOW, //影
 		TYPE_TARGET, //目標
+		TYPE_ITEM, //アイテム
 		METHOD_MAX
 	}TYPE;
 

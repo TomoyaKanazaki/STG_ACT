@@ -46,6 +46,9 @@ public:
 	static HRESULT Load(void);
 	static void UnLoad(void);
 	static bool GetLoadState(void) { return m_bLoad; }
+	static int m_nNum;
+
+
 
 private:
 
@@ -61,7 +64,6 @@ private:
 	static MODEL *m_pModel;
 	static char m_sFilePass[MAX_MODEL][128];
 	static bool m_bLoad;
-	static int m_nNum;
 
 };
 

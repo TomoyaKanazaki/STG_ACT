@@ -9,6 +9,8 @@
 #include "object.h"
 #include "manager.h"
 #include "debugproc.h"
+#include "enemy.h"
+#include "model.h"
 
 //==========================================
 //  コンストラクタ
@@ -171,6 +173,9 @@ void CRenderer::Draw(void)
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
 		CObject::DrawAll();
+
+		CManager::GetDebugProc()->Print("敵数 : %d", CEnemy::m_nCntEnemy);
+		CManager::GetDebugProc()->Print("モデル数 : %d", CModel::m_nNum);
 
 		if (CManager::GetDebugProc() != NULL)
 		{

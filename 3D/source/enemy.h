@@ -41,6 +41,8 @@ public:
 	//静的メンバ変数
 	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type);
 
+	static int m_nCntEnemy;
+
 private:
 
 	//メンバ関数
@@ -49,7 +51,6 @@ private:
 	//メンバ変数
 	D3DXVECTOR3 m_move;
 	D3DXVECTOR3 m_oldPos;
-	int m_nLife;
 	int m_nNumModel;
 	float m_fSpeed;
 	bool m_bRand;

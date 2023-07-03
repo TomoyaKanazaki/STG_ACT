@@ -15,11 +15,14 @@
 #include "model.h"
 #include "shadow.h"
 #include "motion.h"
+#include "item.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
 #define TXTFILENAME_ENEMY "data\\TXT\\EnemyData.txt" //エネミー情報を持ったテキストファイルのパス
+
+int CEnemy::m_nCntEnemy = 0;
 
 //==========================================
 //  コンストラクタ
@@ -28,10 +31,10 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nNumModel = 0;
-	m_nLife = 10;
 	m_fSpeed = 0.0f;
 	m_apModel = NULL;
 	m_bRand = true;
+	m_nCntEnemy++;
 }
 
 //==========================================
@@ -39,7 +42,7 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 //==========================================
 CEnemy::~CEnemy()
 {
-
+	m_nCntEnemy--;
 }
 
 //==========================================
@@ -64,20 +67,21 @@ HRESULT CEnemy::Init(void)
 //==========================================
 void CEnemy::Uninit(void)
 {
-	//メモリを開放する
+	//アイテムをドロップする
+	CItem::Create(m_pos, CItem::ENERGY);
+
+	//各モデルを開放する
 	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
 	{
-		if (m_apModel != NULL)
+		if (m_apModel[nCnt] != NULL)
 		{
-			if (m_apModel[nCnt] != NULL)
-			{
-				m_apModel[nCnt]->Uninit();
-			}
-
-			delete m_apModel;
-			m_apModel = NULL;
+			m_apModel[nCnt]->Uninit();
 		}
 	}
+
+	//モデルを開放する
+	delete m_apModel;
+	m_apModel = NULL;
 
 	//影の削除
 	m_pShadow->Uninit();
@@ -99,13 +103,6 @@ void CEnemy::Update(void)
 
 	//影の情報を更新する
 	m_pShadow->SetTransform(m_pos, m_rot);
-
-	//死亡判定
-	if (m_nLife <= 0)
-	{
-		Uninit();
-		return;
-	}
 }
 
 //==========================================

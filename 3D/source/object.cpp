@@ -46,7 +46,7 @@ CObject::CObject(int nPriority)
 //==========================================
 CObject::~CObject()
 {
-
+	m_nNumObject--;
 }
 
 //==========================================
@@ -123,15 +123,10 @@ void CObject::Release(void)
 	//インデックスを保存
 	int nIdx = this->m_nID;
 
-	if (nIdx == 0 || nIdx == 2)
-	{
-		nIdx = nIdx;
-	}
-
+	//破棄
 	if (m_apObject[nPriority][nIdx] != NULL)
 	{
 		delete m_apObject[nPriority][nIdx];
 		m_apObject[nPriority][nIdx] = NULL;
-		m_nNumObject--;
 	}
 }

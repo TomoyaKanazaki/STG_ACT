@@ -80,19 +80,18 @@ HRESULT CPlayer::Init(void)
 //==========================================
 void CPlayer::Uninit(void)
 {
+	//各モデルを開放する
 	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
 	{
-		if (m_apModel != NULL)
+		if (m_apModel[nCnt] != NULL)
 		{
-			if (m_apModel[nCnt] != NULL)
-			{
-				m_apModel[nCnt]->Uninit();
-			}
-
-			delete m_apModel;
-			m_apModel = NULL;
+			m_apModel[nCnt]->Uninit();
 		}
 	}
+
+	//モデルを開放する
+	delete m_apModel;
+	m_apModel = NULL;
 
 	//影の削除
 	if (m_pShadow != NULL)
@@ -155,7 +154,6 @@ void CPlayer::Update(void)
 			m_pShadow->Uninit();
 			m_pShadow = NULL;
 		}
-		CManager::GetDebugProc()->Print("\n\n\n外に出ている\n");
 	}
 
 	//移動量の適用
@@ -165,7 +163,7 @@ void CPlayer::Update(void)
 	Rotate();
 
 	//弾を撃つ
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
+	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
 	{
 		//弾の移動量を算出
 		D3DXVECTOR3 BulletMove = D3DXVECTOR3
