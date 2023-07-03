@@ -24,6 +24,7 @@
 #include "object_mesh.h"
 #include "enemy.h"
 #include "object_fan.h"
+#include "enemy_manager.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -204,8 +205,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
-	//エネミーの生成
-	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 100.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), CEnemy::TYPE_NORMAL);
+	//エネミーマネージャの生成
+	CEnemyManager::Create();
 
 	//カメラの生成
 	if (m_pCamera == NULL)
@@ -215,7 +216,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	//床の生成
-	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 12, 500.0f);
+	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 128, 1000.0f);
 
 	//BGMの再生
 	m_pSound->Play(CSound::SOUND_LABEL_BGM001);

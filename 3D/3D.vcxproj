@@ -25,6 +25,7 @@
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
+    <ClCompile Include="source\enemy_manager.cpp" />
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\light.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
+    <ClInclude Include="source\enemy_manager.h" />
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\light.h" />

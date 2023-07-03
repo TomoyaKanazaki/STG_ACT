@@ -115,12 +115,12 @@ void CObject_Fan::Draw(void)
 	//テクスチャの設定
 	pDevice->SetTexture(0, m_pTexture);
 
-	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, m_nNumPrimitive);
 
-	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
 
 //==========================================

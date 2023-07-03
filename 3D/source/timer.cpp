@@ -222,3 +222,11 @@ void CTimer::CalcPauseTime(int nCurrentTime)
 
 	m_bOldPause = CManager::GetPause()->GetState();
 }
+
+//==========================================
+//  Œ»İŠÔ‚Ìæ“¾
+//==========================================
+int CTimer::GetTime(void)
+{
+	return m_nTime;
+}

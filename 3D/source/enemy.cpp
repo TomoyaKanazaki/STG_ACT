@@ -106,8 +106,6 @@ void CEnemy::Update(void)
 		Uninit();
 		return;
 	}
-
-	CManager::GetDebugProc()->Print("\n\n\nìGç¿ïW : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
 }
 
 //==========================================
