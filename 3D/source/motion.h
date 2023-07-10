@@ -45,10 +45,9 @@ public:
 	void SetType(int Type);
 	int GetType(void);
 	bool IsFinish(void);
-	void SetModel(CModel *ppModel, int nNumAll);
 
 	//Ã“Iƒƒ“ƒoŠÖ”
-	static CMotion *Set(CModel *ppModel, int nNumAll);
+	static CMotion *Set(CModel *pModel, int nNumAll);
 
 private:
 

@@ -25,6 +25,7 @@
 #include "enemy.h"
 #include "object_fan.h"
 #include "enemy_manager.h"
+#include "layer.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -120,6 +121,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		CModel::Load();
 	}
 
+	//階層構造を読み込む
+	CLayer::Load();
+
 	//デバッグ表示の生成
 	if (m_pDebugProc == NULL)
 	{
@@ -189,6 +193,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
+	//床の生成
+	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 128, 1000.0f);
+
 	//スコアの生成
 	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 500.0f, 25.0f, 0.0f), D3DXVECTOR3(500.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
 
@@ -203,7 +210,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	//プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
 	//エネミーマネージャの生成
 	CEnemyManager::Create();
@@ -214,9 +221,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pCamera = new CCamera;
 		m_pCamera->Init();
 	}
-
-	//床の生成
-	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 128, 1000.0f);
 
 	//BGMの再生
 	m_pSound->Play(CSound::SOUND_LABEL_BGM001);
@@ -335,6 +339,9 @@ void CManager::Uninit(void)
 		//モデルを破棄
 		CModel::UnLoad();
 	}
+
+	//階層構造を破棄
+	CLayer::UnLoad();
 }
 
 //==========================================

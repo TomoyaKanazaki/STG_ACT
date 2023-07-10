@@ -22,6 +22,7 @@
 #include "bullet.h"
 #include "motion.h"
 #include "collision.h"
+#include "layer.h"
 
 //==========================================
 //  マクロ定義
@@ -40,10 +41,13 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_nDeadCounter = 0;
 	m_fSpeed = 0.0f;
 	m_fAngle = 0.0f;
-	m_apModel = NULL;
 	m_bRand = true;
 	m_bDead = false;
-	m_apModel = NULL;
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		m_apModel[nCnt] = NULL;
+	}
+	m_pLayer = NULL;
 	m_pShadow = NULL;
 }
 
@@ -63,8 +67,22 @@ HRESULT CPlayer::Init(void)
 	//タイプの設定
 	SetType(TYPE_PLAYER);
 
-	//実体を生成
-	Load();
+	//階層構造情報を生成
+	m_pLayer = CLayer::Set(CLayer::PLAYER_LAYER);
+
+	//必要なモデルを生成
+	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+	{
+		//親が存在しない場合
+		if (m_pLayer->pParentID[nCnt] == -1)
+		{
+			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
+		}
+		else
+		{
+			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_apModel[m_pLayer->pParentID[nCnt]]);
+		}
+	}
 
 	//影を生成
 	if (m_pShadow == NULL)
@@ -80,26 +98,6 @@ HRESULT CPlayer::Init(void)
 //==========================================
 void CPlayer::Uninit(void)
 {
-	//各モデルを開放する
-	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
-	{
-		if (m_apModel[nCnt] != NULL)
-		{
-			m_apModel[nCnt]->Uninit();
-		}
-	}
-
-	//モデルを開放する
-	delete m_apModel;
-	m_apModel = NULL;
-
-	//影の削除
-	if (m_pShadow != NULL)
-	{
-		m_pShadow->Uninit();
-		m_pShadow = NULL;
-	}
-
 	//自分自身の破棄
 	Release();
 }
@@ -159,11 +157,23 @@ void CPlayer::Update(void)
 	//移動量の適用
 	m_pos += m_move;
 
+	//実体を移動する
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		if (m_apModel[nCnt] != NULL)
+		{
+			if (m_apModel[nCnt]->GetParent() == NULL)
+			{
+				m_apModel[nCnt]->SetTransform(m_pos, m_rot);
+			}
+		}
+	}
+
 	//回転処理
 	Rotate();
 
 	//弾を撃つ
-	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
+	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
 		//弾の移動量を算出
 		D3DXVECTOR3 BulletMove = D3DXVECTOR3
@@ -173,30 +183,34 @@ void CPlayer::Update(void)
 			-cosf(m_rot.y)
 		);
 
-		//弾の生成
-		CBullet::Create(m_pos, m_size * 0.5f, BulletMove);
-	}
+		//弾の発射位置を算出
+		D3DXVECTOR3 BulletPos = D3DXVECTOR3
+		(
+			m_pos.x + m_apModel[3]->GetPos().x,
+			m_apModel[0]->GetPos().y + m_apModel[3]->GetPos().y,
+			m_pos.z + m_apModel[3]->GetPos().z
+		);
 
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_RIGHT))
-	{
 		//弾の生成
-		CEffect::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(100.0f, 0.0f, 100.0f), D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 1000);
+		CBullet::Create(BulletPos, m_size * 0.5f, BulletMove);
 	}
-
-	//実体に情報を与える
-	m_apModel[0]->SetTransform(m_pos, m_rot);
 
 	//影の情報を更新する
 	if (m_pShadow != NULL)
 	{
 		m_pShadow->SetTransform(m_pos, m_rot);
 	}
-	
+
 	//死亡判定
 	if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
 	{
 		m_nLife--;
 		m_bDead = true;
+		if (m_pShadow != NULL)
+		{
+			m_pShadow->Uninit();
+			m_pShadow = NULL;
+		}
 	}
 
 	//デバッグ表示
@@ -301,101 +315,4 @@ void CPlayer::Rotate(void)
 
 	//方向を適用する
 	m_rot.y = fRotMove;
-}
-
-//==========================================
-//  プレイヤー情報の読み込み
-//==========================================
-void CPlayer::Load(void)
-{
-	//ローカル変数宣言
-	FILE *pFile; //ファイル名
-	char aStr[256]; //不要な文字列の記録用
-
-	//ファイルを読み取り専用で開く
-	pFile = fopen(TXTFILENAME_PLAYER, "r");
-
-	if (pFile != NULL)
-	{
-		//不要な文字列の読み込み
-		for (int nCntDiscard = 0; nCntDiscard < 13; nCntDiscard++)
-		{
-			fscanf(pFile, "%s", &aStr[0]);
-		}
-
-		//モデル数の取得
-		fscanf(pFile, "%d", &m_nNumModel);
-
-		//モデルが存在する場合
-		if (m_nNumModel > 0)
-		{
-			//必要なメモリを確保する
-			if (m_apModel == NULL)
-			{
-				m_apModel = new CModel*[m_nNumModel];
-			}
-		}
-
-		//メモリを確保した場合
-		if (m_apModel != NULL)
-		{
-			//不要な文字列の読み込み
-			for (int nCntDiscard = 0; nCntDiscard < 4; nCntDiscard++)
-			{
-				fscanf(pFile, "%s", &aStr[0]);
-			}
-
-			//各モデルを生成する
-			for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
-			{
-				//モデル生成用変数
-				D3DXVECTOR3 pos, size = D3DXVECTOR3(0.0f, 5.0f, 0.0f), rot;
-				int nModelID, nParentID;
-
-				//不要な文字列の読み込み
-				for (int nCntDiscard = 0; nCntDiscard < 3; nCntDiscard++)
-				{
-					fscanf(pFile, "%s", &aStr[0]);
-				}
-
-				//位置情報を取得
-				fscanf(pFile, "%f", &pos.x); fscanf(pFile, "%f", &pos.y); fscanf(pFile, "%f", &pos.z);
-
-				//不要な文字列の読み込み
-				fscanf(pFile, "%s", &aStr[0]);
-
-				//角度を取得
-				fscanf(pFile, "%f", &rot.x); fscanf(pFile, "%f", &rot.y); fscanf(pFile, "%f", &rot.z);
-
-				//不要な文字列の読み込み
-				fscanf(pFile, "%s", &aStr[0]);
-
-				//使用するモデルの情報を取得
-				fscanf(pFile, "%d", &nModelID);
-
-				//不要な文字列の読み込み
-				fscanf(pFile, "%s", &aStr[0]);
-
-				//親の情報を取得
-				fscanf(pFile, "%d", &nParentID);
-
-				//取得した情報からモデルを生成
-				if (nParentID == -1)
-				{
-					m_apModel[nCnt] = CModel::Create(pos, size, rot, nModelID);
-				}
-				else
-				{
-					m_apModel[nCnt] = CModel::Create(pos, size, rot, nModelID, m_apModel[nParentID]);
-				}
-			}
-		}
-
-		//ファイルを閉じる
-		fclose(pFile);
-	}
-	else
-	{
-
-	}
 }

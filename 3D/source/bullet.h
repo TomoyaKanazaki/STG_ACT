@@ -15,7 +15,7 @@
 class CBullet : public CObject3D
 {
 public:
-	CBullet(int nPriority = 3); //コンストラクタ
+	CBullet(int nPriority = 4); //コンストラクタ
 	~CBullet(); //デストラクタ
 
 	//メンバ関数

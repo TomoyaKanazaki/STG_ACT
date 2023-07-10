@@ -17,7 +17,7 @@
 //==========================================
 //  コンストラクタ
 //==========================================
-CItem::CItem()
+CItem::CItem(int nPriority) : CObject3D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_type = ITEMS_MAX;
@@ -70,7 +70,8 @@ void CItem::Update(void)
 	D3DXVECTOR3 vecMove = TargetPos - m_pos;
 
 	//プレイヤーとの距離を算出
-	if (D3DXVec3Length(&vecMove) < 5.0f)
+	D3DXVECTOR2 vec2 = D3DXVECTOR2(vecMove.x, vecMove.z);
+	if (D3DXVec2Length(&vec2) < 5.0f)
 	{
 		//近づいたら消す
 		Uninit();
@@ -80,6 +81,7 @@ void CItem::Update(void)
 	//値を補正
 	D3DXVec3Normalize(&vecMove, &vecMove);
 	m_move = vecMove * GET_SPEED;
+	m_move.y = 0.0f;
 
 	//移動
 	m_pos += m_move;

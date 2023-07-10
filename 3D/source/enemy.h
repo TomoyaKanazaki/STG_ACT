@@ -8,6 +8,7 @@
 #define _ENEMY_H_
 #include "main.h"
 #include "object.h"
+#include "layer.h"
 
 //==========================================
 //  前方宣言
@@ -37,6 +38,7 @@ public:
 	void Draw(void) override;
 	D3DXVECTOR3 GetMove(void) { return m_move; }
 	D3DXVECTOR3 GetOldPos(void) { return m_oldPos; }
+	void SetLife(const int nDamage) { if (m_nLife > 0) m_nLife -= nDamage; }
 
 	//静的メンバ変数
 	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type);
@@ -45,18 +47,17 @@ public:
 
 private:
 
-	//メンバ関数
-	void Load(void); //エネミー情報の読み込み
-
 	//メンバ変数
 	D3DXVECTOR3 m_move;
 	D3DXVECTOR3 m_oldPos;
 	int m_nNumModel;
+	int m_nLife;
 	float m_fSpeed;
 	bool m_bRand;
 
 	//モデル情報
-	CModel **m_apModel;
+	CModel *m_apModel[5]; //モデル情報
+	CLayer::LAYERDATA *m_pLayer; //階層構造情報
 	CShadow *m_pShadow;
 
 };

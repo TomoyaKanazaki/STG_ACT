@@ -167,20 +167,8 @@ bool CMotion::IsFinish(void)
 }
 
 //==========================================
-//  使用するモデルの設定
-//==========================================
-void CMotion::SetModel(CModel *pModel, int nNumAll)
-{
-	//モデルを設定
-	m_pModel = pModel;
-
-	//モデル数を設定
-	m_nNumModel = nNumAll;
-}
-
-//==========================================
 //  モーションデータを作成
-CMotion *CMotion::Set(CModel *ppModel, int nNumAll)
+CMotion *CMotion::Set(CModel *pModel, int nNumAll)
 {
 	//インスタンス生成
 	CMotion *pMotion = NULL;
@@ -197,7 +185,9 @@ CMotion *CMotion::Set(CModel *ppModel, int nNumAll)
 		return NULL;
 	}
 
-	pMotion->Set(ppModel, nNumAll);
+	//情報を設定
+	pMotion->m_pModel = pModel;
+	pMotion->m_nNumModel = nNumAll;
 
 	//ポインタを返す
 	return pMotion;

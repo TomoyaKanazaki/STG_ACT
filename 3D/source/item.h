@@ -22,7 +22,7 @@ public:
 		ITEMS_MAX
 	}ITEMS;
 
-	CItem(); //コンストラクタ
+	CItem(int nPriority = 4); //コンストラクタ
 	~CItem(); //デストラクタ
 
 	//メンバ関数

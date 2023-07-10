@@ -22,6 +22,9 @@
 //==========================================
 #define TXTFILENAME_ENEMY "data\\TXT\\EnemyData.txt" //エネミー情報を持ったテキストファイルのパス
 
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
 int CEnemy::m_nCntEnemy = 0;
 
 //==========================================
@@ -32,7 +35,12 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nNumModel = 0;
 	m_fSpeed = 0.0f;
-	m_apModel = NULL;
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		m_apModel[nCnt] = NULL;
+	}
+	m_pLayer = NULL;
+	m_pShadow = NULL;
 	m_bRand = true;
 	m_nCntEnemy++;
 }
@@ -53,11 +61,28 @@ HRESULT CEnemy::Init(void)
 	//タイプの設定
 	SetType(CObject::TYPE_ENEMY);
 
-	//実体を生成
-	Load();
+	//階層構造情報を生成
+	m_pLayer = CLayer::Set(CLayer::PLAYER_LAYER);
+
+	//必要なモデルを生成
+	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+	{
+		//親が存在しない場合
+		if (m_pLayer->pParentID[nCnt] == -1)
+		{
+			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
+		}
+		else
+		{
+			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_apModel[m_pLayer->pParentID[nCnt]]);
+		}
+	}
 
 	//影を生成
-	m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
+	if (m_pShadow == NULL)
+	{
+		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
+	}
 
 	return S_OK;
 }
@@ -67,9 +92,6 @@ HRESULT CEnemy::Init(void)
 //==========================================
 void CEnemy::Uninit(void)
 {
-	//アイテムをドロップする
-	CItem::Create(m_pos, CItem::ENERGY);
-
 	//各モデルを開放する
 	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
 	{
@@ -78,13 +100,6 @@ void CEnemy::Uninit(void)
 			m_apModel[nCnt]->Uninit();
 		}
 	}
-
-	//モデルを開放する
-	delete m_apModel;
-	m_apModel = NULL;
-
-	//影の削除
-	m_pShadow->Uninit();
 
 	//自分自身の破棄
 	Release();
@@ -141,101 +156,4 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 
 	//ポインタを返す
 	return pEnemy;
-}
-
-//==========================================
-//  エネミー情報の読み込み
-//==========================================
-void CEnemy::Load(void)
-{
-	//ローカル変数宣言
-	FILE *pFile; //ファイル名
-	char aStr[256]; //不要な文字列の記録用
-
-	//ファイルを読み取り専用で開く
-	pFile = fopen(TXTFILENAME_ENEMY, "r");
-
-	if (pFile != NULL)
-	{
-		//不要な文字列の読み込み
-		for (int nCntDiscard = 0; nCntDiscard < 13; nCntDiscard++)
-		{
-			fscanf(pFile, "%s", &aStr[0]);
-		}
-
-		//モデル数の取得
-		fscanf(pFile, "%d", &m_nNumModel);
-
-		//モデルが存在する場合
-		if (m_nNumModel > 0)
-		{
-			//必要なメモリを確保する
-			if (m_apModel == NULL)
-			{
-				m_apModel = new CModel*[m_nNumModel];
-			}
-		}
-
-		//メモリを確保した場合
-		if (m_apModel != NULL)
-		{
-			//不要な文字列の読み込み
-			for (int nCntDiscard = 0; nCntDiscard < 4; nCntDiscard++)
-			{
-				fscanf(pFile, "%s", &aStr[0]);
-			}
-
-			//各モデルを生成する
-			for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
-			{
-				//モデル生成用変数
-				D3DXVECTOR3 pos, size = D3DXVECTOR3(0.0f, 5.0f, 0.0f), rot;
-				int nModelID, nParentID;
-
-				//不要な文字列の読み込み
-				for (int nCntDiscard = 0; nCntDiscard < 3; nCntDiscard++)
-				{
-					fscanf(pFile, "%s", &aStr[0]);
-				}
-
-				//位置情報を取得
-				fscanf(pFile, "%f", &pos.x); fscanf(pFile, "%f", &pos.y); fscanf(pFile, "%f", &pos.z);
-
-				//不要な文字列の読み込み
-				fscanf(pFile, "%s", &aStr[0]);
-
-				//角度を取得
-				fscanf(pFile, "%f", &rot.x); fscanf(pFile, "%f", &rot.y); fscanf(pFile, "%f", &rot.z);
-
-				//不要な文字列の読み込み
-				fscanf(pFile, "%s", &aStr[0]);
-
-				//使用するモデルの情報を取得
-				fscanf(pFile, "%d", &nModelID);
-
-				//不要な文字列の読み込み
-				fscanf(pFile, "%s", &aStr[0]);
-
-				//親の情報を取得
-				fscanf(pFile, "%d", &nParentID);
-
-				//取得した情報からモデルを生成
-				if (nParentID == -1)
-				{
-					m_apModel[nCnt] = CModel::Create(pos, size, rot, nModelID);
-				}
-				else
-				{
-					m_apModel[nCnt] = CModel::Create(pos, size, rot, nModelID, m_apModel[nParentID]);
-				}
-			}
-		}
-
-		//ファイルを閉じる
-		fclose(pFile);
-	}
-	else
-	{
-
-	}
 }

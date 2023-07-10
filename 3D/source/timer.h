@@ -25,7 +25,7 @@ class CNumber;
 class CTimer : public CObject
 {
 public:
-	CTimer(int nPriority = 5); //コンストラクタ
+	CTimer(int nPriority = 7); //コンストラクタ
 	~CTimer(); //デストラクタ
 
 	//メンバ関数

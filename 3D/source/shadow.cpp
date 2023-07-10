@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "texture.h"
+#include "object_fan.h"
 
 //==========================================
 //  コンストラクタ
@@ -30,13 +31,17 @@ CShadow::~CShadow()
 //==========================================
 HRESULT CShadow::Init(void)
 {
-	//タイプの設定
-	SetType(TYPE_SHADOW);
-
+	//初期化
 	if (FAILED(CObject3D::Init()))
 	{
 		return E_FAIL;
 	}
+
+	//タイプの設定
+	SetType(TYPE_SHADOW);
+
+	//床に貼り付ける
+	m_pos.y = 0.01f;
 
 	return S_OK;
 }
@@ -54,6 +59,8 @@ void CShadow::Uninit(void)
 //==========================================
 void CShadow::Update(void)
 {
+	m_pos.y = CManager::GetFan()->GetPos().y + 0.5f;
+
 	//更新
 	CObject3D::Update();
 }

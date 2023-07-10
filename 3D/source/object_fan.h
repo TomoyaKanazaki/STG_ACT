@@ -15,7 +15,7 @@
 class CObject_Fan : public CObject
 {
 public:
-	CObject_Fan(); //コンストラクタ
+	CObject_Fan(int nPriority = 1); //コンストラクタ
 	~CObject_Fan(); //デストラクタ
 
 	//メンバ関数

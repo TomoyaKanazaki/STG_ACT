@@ -156,6 +156,7 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLO
 
 	//ŠeŽíî•ñ‚ðÝ’è‚·‚é
 	pEffect->m_pos = pos;
+	pEffect->m_pos.y -= 0.01f;
 	pEffect->m_size = size;
 
 	//‰Šú‰»

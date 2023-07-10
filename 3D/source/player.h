@@ -8,6 +8,7 @@
 #define _PLAYER_H_
 #include "main.h"
 #include "object.h"
+#include "layer.h"
 
 //==========================================
 //  前方宣言
@@ -40,7 +41,6 @@ private:
 	//メンバ関数
 	void Move(void);
 	void Rotate(void);
-	void Load(void); //プレイヤー情報の読み込み
 
 	//メンバ変数
 	D3DXVECTOR3 m_move;
@@ -54,8 +54,9 @@ private:
 	bool m_bDead;
 
 	//モデル情報
-	CModel **m_apModel;
-	CShadow *m_pShadow;
+	CModel *m_apModel[5]; //モデル情報
+	CLayer::LAYERDATA *m_pLayer; //階層構造情報
+	CShadow *m_pShadow; //影の情報
 
 };
 

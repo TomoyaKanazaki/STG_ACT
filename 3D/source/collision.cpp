@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "debugproc.h"
 #include "object.h"
+#include "item.h"
 
 //==========================================
 //  二直線の交点の取得
@@ -75,6 +76,8 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 				//死ぬ
 				if (bRelease)
 				{
+					//アイテムをドロップする
+					CItem::Create(pObj->GetPos(), CItem::ENERGY);
 					pObj->Uninit();
 				}
 

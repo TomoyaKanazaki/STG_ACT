@@ -15,7 +15,8 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define DISTANCE (1300.0f) //視点と注視点の距離
+#define DISTANCE (500.0f) //視点と注視点の距離
+#define DISTANCE_LEVEL (0.4f) //xzの割合
 #define SPEED (0.05f) //カメラのスピード
 #define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
 #define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
@@ -70,11 +71,12 @@ void CCamera::Uninit(void)
 void CCamera::Update(void)
 {
 	//位置の更新
-	CalcPos();
+	CalcPos(SLIP_ON);
 	//ThirdPerson();
 
 	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
 	CManager::GetDebugProc()->Print("視点 : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
+	CManager::GetDebugProc()->Print("角度 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
 }
 
 //==========================================
@@ -265,5 +267,5 @@ void CCamera::CalcPos(SLIP slipFlag)
 	D3DXVECTOR3 slip = D3DXVECTOR3(sinf(m_rot.y) * -100.0f, 0.0f, cosf(m_rot.y) * -100.0f);
 
 	m_posR += slip;
-	m_posV = D3DXVECTOR3(m_posR.x, DISTANCE, m_posR.z - 200.0f);
+	m_posV = D3DXVECTOR3(m_posR.x, DISTANCE, m_posR.z - DISTANCE * DISTANCE_LEVEL);
 }

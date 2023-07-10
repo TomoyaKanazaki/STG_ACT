@@ -29,6 +29,7 @@
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\item.cpp" />
+    <ClCompile Include="source\layer.cpp" />
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\manager.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\item.h" />
+    <ClInclude Include="source\layer.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\manager.h" />

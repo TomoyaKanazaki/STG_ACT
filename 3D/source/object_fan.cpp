@@ -11,7 +11,7 @@
 //==========================================
 //  コンストラクタ
 //==========================================
-CObject_Fan::CObject_Fan()
+CObject_Fan::CObject_Fan(int nPriority) : CObject(nPriority)
 {
 	m_pVtxBuff = NULL;
 	m_mtxWorld = {};

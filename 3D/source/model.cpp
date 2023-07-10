@@ -18,7 +18,7 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-CModel::MODEL *CModel::m_pModel = NULL;
+CModel::MODEL CModel::m_Model[64] = {};
 int CModel::m_nNumAll = 0;
 char CModel::m_sFilePass[MAX_MODEL][128] = {};
 bool CModel::m_bLoad = false;
@@ -113,10 +113,6 @@ void CModel::Draw(void)
 			&mtxParent
 		);
 	}
-	else
-	{
-		pDevice->GetTransform(D3DTS_WORLD, &mtxParent);
-	}
 
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_Info.mtxWorld);
@@ -143,7 +139,7 @@ void CModel::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CModel *CModel::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nModelID, CModel *m_pParent)
+CModel *CModel::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nModelID, CModel *m_pParent)
 {
 	//インスタンス生成
 	CModel *pModel = NULL;
@@ -156,16 +152,14 @@ CModel *CModel::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int n
 	}
 
 	//各種情報の保存
-
 	pModel->m_pParent = m_pParent;
 	pModel->m_nSelfID = nModelID;
 
 	//各種情報の設定
 	if (m_nNumAll > pModel->m_nSelfID)
 	{
-		pModel->m_Info = m_pModel[pModel->m_nSelfID];
+		pModel->m_Info = m_Model[pModel->m_nSelfID];
 		pModel->m_pos = pos;
-		pModel->m_size = size;
 		pModel->m_rot = rot;
 	}
 
@@ -208,23 +202,14 @@ HRESULT CModel::Load(void)
 		//テクスチャ数の読み込み
 		fscanf(pFile, "%d", &nNumModel);
 
-		//必要数のメモリを確保する
-		if (m_pModel == NULL)
+		//情報を格納する
+		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 		{
-			m_pModel = new MODEL[nNumModel];
-
-			for (int nCnt = 0; nCnt < nNumModel; nCnt++)
-			{
-				m_pModel[nCnt].pTexture = NULL;
-				m_pModel[nCnt].pMesh = NULL;
-				m_pModel[nCnt].pBuffMat = NULL;
-				m_pModel[nCnt].dwNumMat = 0;
-				m_pModel[nCnt].mtxWorld = {};
-			}
-		}
-		else
-		{
-			return E_FAIL;
+			m_Model[nCnt].pTexture = NULL;
+			m_Model[nCnt].pMesh = NULL;
+			m_Model[nCnt].pBuffMat = NULL;
+			m_Model[nCnt].dwNumMat = 0;
+			m_Model[nCnt].mtxWorld = {};
 		}
 
 		//1種類以上のモデルがある場合
@@ -267,16 +252,16 @@ HRESULT CModel::Load(void)
 					D3DXMESH_SYSTEMMEM,
 					pDevice,
 					NULL,
-					&m_pModel[nCnt].pBuffMat,
+					&m_Model[nCnt].pBuffMat,
 					NULL,
-					&m_pModel[nCnt].dwNumMat,
-					&m_pModel[nCnt].pMesh
+					&m_Model[nCnt].dwNumMat,
+					&m_Model[nCnt].pMesh
 				);
 
 				//マテリアル数分のポインタを確保する
-				if (m_pModel[nCnt].pTexture == NULL)
+				if (m_Model[nCnt].pTexture == NULL)
 				{
-					m_pModel[nCnt].pTexture = new LPDIRECT3DTEXTURE9[m_pModel[nCnt].dwNumMat];
+					m_Model[nCnt].pTexture = new LPDIRECT3DTEXTURE9[m_Model[nCnt].dwNumMat];
 				}
 				else
 				{
@@ -284,9 +269,9 @@ HRESULT CModel::Load(void)
 				}
 
 				//マテリアルデータへのポインタを取得
-				D3DXMATERIAL *pMat = (D3DXMATERIAL*)m_pModel[nCnt].pBuffMat->GetBufferPointer();
+				D3DXMATERIAL *pMat = (D3DXMATERIAL*)m_Model[nCnt].pBuffMat->GetBufferPointer();
 
-				for (int nCntMat = 0; nCntMat < (int)m_pModel[nCnt].dwNumMat; nCntMat++)
+				for (int nCntMat = 0; nCntMat < (int)m_Model[nCnt].dwNumMat; nCntMat++)
 				{
 					if (pMat[nCntMat].pTextureFilename != NULL)
 					{
@@ -294,18 +279,18 @@ HRESULT CModel::Load(void)
 						int nNumTexID = CManager::GetTexture()->Regist(pMat[nCntMat].pTextureFilename);
 
 						//テクスチャを割り当てる
-						m_pModel[nCnt].pTexture[nCntMat] = CManager::GetTexture()->GetAddress(nNumTexID);
+						m_Model[nCnt].pTexture[nCntMat] = CManager::GetTexture()->GetAddress(nNumTexID);
 
 						D3DXCreateTextureFromFile
 						(
 							pDevice,
 							pMat[nCntMat].pTextureFilename,
-							&m_pModel[nCnt].pTexture[nCntMat]
+							&m_Model[nCnt].pTexture[nCntMat]
 						);
 					}
 					else
 					{
-						m_pModel[nCnt].pTexture[nCntMat] = NULL;
+						m_Model[nCnt].pTexture[nCntMat] = NULL;
 					}
 				}
 
@@ -340,39 +325,32 @@ void CModel::UnLoad(void)
 	for (int nCnt = 0; nCnt < m_nNumAll; nCnt++)
 	{
 		//メッシュの破棄
-		if (m_pModel[nCnt].pMesh != NULL)
+		if (m_Model[nCnt].pMesh != NULL)
 		{
-			m_pModel[nCnt].pMesh->Release();
-			m_pModel[nCnt].pMesh = NULL;
+			m_Model[nCnt].pMesh->Release();
+			m_Model[nCnt].pMesh = NULL;
 		}
 
 		//マテリアルの破棄
-		if (m_pModel[nCnt].pBuffMat != NULL)
+		if (m_Model[nCnt].pBuffMat != NULL)
 		{
-			m_pModel[nCnt].pBuffMat->Release();
-			m_pModel[nCnt].pBuffMat = NULL;
+			m_Model[nCnt].pBuffMat->Release();
+			m_Model[nCnt].pBuffMat = NULL;
 		}
 
 		//テクスチャの破棄
-		if (m_pModel[nCnt].pTexture != NULL)
+		if (m_Model[nCnt].pTexture != NULL)
 		{
-			for (int nCntMat = 0; nCntMat < (int)m_pModel[nCnt].dwNumMat; nCntMat++)
+			for (int nCntMat = 0; nCntMat < (int)m_Model[nCnt].dwNumMat; nCntMat++)
 			{
-				if (m_pModel[nCnt].pTexture[nCntMat] != NULL)
+				if (m_Model[nCnt].pTexture[nCntMat] != NULL)
 				{
-					m_pModel[nCnt].pTexture[nCntMat]->Release();
-					m_pModel[nCnt].pTexture[nCntMat] = NULL;
+					m_Model[nCnt].pTexture[nCntMat]->Release();
+					m_Model[nCnt].pTexture[nCntMat] = NULL;
 				}
 			}
-			delete[] m_pModel[nCnt].pTexture;
-			m_pModel[nCnt].pTexture = NULL;
+			delete[] m_Model[nCnt].pTexture;
+			m_Model[nCnt].pTexture = NULL;
 		}
-	}
-
-	//モデル情報の破棄
-	if (m_pModel != NULL)
-	{
-		delete m_pModel;
-		m_pModel = NULL;
 	}
 }

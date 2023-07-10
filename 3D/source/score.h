@@ -25,7 +25,7 @@ class CNumber;
 class CScore : public CObject
 {
 public:
-	CScore(int nPriority = 5); //コンストラクタ
+	CScore(int nPriority = 7); //コンストラクタ
 	~CScore(); //デストラクタ
 
 	//メンバ関数

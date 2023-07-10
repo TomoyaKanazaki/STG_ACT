@@ -38,32 +38,30 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	void SetTransform(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot) { m_pos = pos; m_rot = rot; }
-	static int GetNum(void) { return m_nNum; }
+	void SetTransform(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot) { m_pos.x = pos.x; m_pos.z = pos.z; m_rot = rot; }
+	CModel *GetParent(void) { return m_pParent; }
+	D3DXMATRIX GetMtx(void) { return m_Info.mtxWorld; }
 
 	//静的メンバ関数
-	static CModel *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nModelID, CModel *m_pParent = NULL);
+	static CModel *Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nModelID, CModel *m_pParent = NULL);
 	static HRESULT Load(void);
 	static void UnLoad(void);
 	static bool GetLoadState(void) { return m_bLoad; }
-	static int m_nNum;
-
-
+	static int GetNum(void) { return m_nNum; }
 
 private:
 
 	//メンバ変数
 	MODEL m_Info;
-	D3DXVECTOR3 m_pos;
-	D3DXVECTOR3 m_rot;
 	CModel *m_pParent; //親モデルへのポインタ
 	int m_nSelfID;
 
 	//静的メンバ変数
 	static int m_nNumAll; 
-	static MODEL *m_pModel;
+	static MODEL m_Model[64];
 	static char m_sFilePass[MAX_MODEL][128];
 	static bool m_bLoad;
+	static int m_nNum;
 
 };
 
