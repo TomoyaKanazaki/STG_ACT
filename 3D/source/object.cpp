@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "debugproc.h"
 #include "effect.h"
+#include "gamemanager.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -92,7 +93,7 @@ void CObject::UpdateAll(void)
 void CObject::DrawAll(void)
 {
 	//カメラの取得
-	CCamera *pCamera = CManager::GetCamera();
+	CCamera *pCamera = CGameManager::GetCamera();
 
 	//カメラの設定
 	pCamera->SetCamera();

@@ -22,15 +22,9 @@ class CMouse;
 class CJoyPad;
 class CDebugProc;
 class CPause;
-class CScore;
-class CTimer;
 class CSound;
-class CCamera;
-class CLight;
-class CPlayer;
 class CTexture;
-class CField;
-class CObject_Fan;
+class CGameManager;
 
 //==========================================
 //  マネージャクラス定義
@@ -54,15 +48,9 @@ public:
 	static CJoyPad *GetJoyPad(void) { return m_pJoyPad; }
 	static CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
 	static CPause *GetPause(void) { return m_pPause; }
-	static CScore *GetScore(void) { return m_pScore; }
-	static CTimer *GetTimer(void) { return m_pTimer; }
 	static CSound *GetSound(void) { return m_pSound; }
-	static CCamera *GetCamera(void) { return m_pCamera; }
-	static CLight *GetLight(void) { return m_pLight; }
-	static CPlayer *GetPlayer(void) { return m_pPlayer; }
 	static CTexture *GetTexture(void) { return m_pTexture; }
-	static CField *GetField(void) { return m_pField; }
-	static CObject_Fan *GetFan(void) { return m_pFan; }
+	static CGameManager *GetGameManager(void) { return m_pGameManager; }
 
 private:
 
@@ -73,15 +61,9 @@ private:
 	static CJoyPad *m_pJoyPad;
 	static CDebugProc *m_pDebugProc;
 	static CPause *m_pPause;
-	static CScore *m_pScore;
-	static CTimer *m_pTimer;
 	static CSound *m_pSound;
-	static CCamera *m_pCamera;
-	static CLight *m_pLight;
-	static CPlayer *m_pPlayer;
 	static CTexture *m_pTexture;
-	static CField *m_pField;
-	static CObject_Fan *m_pFan;
+	static CGameManager *m_pGameManager;
 
 };
 

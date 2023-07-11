@@ -40,12 +40,6 @@ public:
 	CLayer(); //コンストラクタ
 	~CLayer(); //デストラクタ
 
-	//メンバ関数
-	void Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
-
 	//静的メンバ関数
 	static LAYERDATA *Set(LAYERS type);
 	static void Load(void);
@@ -54,7 +48,7 @@ public:
 private:
 
 	//静的メンバ変数
-	static 	int m_nNumLayer; //階層構造情報数
+	static int m_nNumLayer; //階層構造情報数
 	static LAYERDATA *m_pData; //階層構造情報
 
 };

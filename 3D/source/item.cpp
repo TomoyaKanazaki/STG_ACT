@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "player.h"
+#include "gamemanager.h"
 
 //==========================================
 //  マクロ定義
@@ -64,7 +65,7 @@ void CItem::Uninit(void)
 void CItem::Update(void)
 {
 	//プレイヤーの位置を取得
-	D3DXVECTOR3 TargetPos = CManager::GetPlayer()->GetPos();
+	D3DXVECTOR3 TargetPos = CGameManager::GetPlayer()->GetPos();
 
 	//移動先へのベクトルを算出
 	D3DXVECTOR3 vecMove = TargetPos - m_pos;

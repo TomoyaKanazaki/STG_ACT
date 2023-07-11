@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "texture.h"
 #include "object_fan.h"
+#include "gamemanager.h"
 
 //==========================================
 //  コンストラクタ
@@ -59,7 +60,7 @@ void CShadow::Uninit(void)
 //==========================================
 void CShadow::Update(void)
 {
-	m_pos.y = CManager::GetFan()->GetPos().y + 0.5f;
+	m_pos.y = CGameManager::GetFan()->GetPos().y + 0.5f;
 
 	//更新
 	CObject3D::Update();
@@ -75,6 +76,10 @@ void CShadow::Draw(void)
 
 	//ライティングを無効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+	//Zテストの無効化
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	//アルファテストの有効化
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -98,6 +103,10 @@ void CShadow::Draw(void)
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+
+	//Zテストの有効化
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	//ライティングを有効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);

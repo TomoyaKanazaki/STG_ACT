@@ -10,6 +10,7 @@
 #include "player.h"
 #include "renderer.h"
 #include "debugproc.h"
+#include "gamemanager.h"
 
 //==========================================
 //  マクロ定義
@@ -65,12 +66,12 @@ void CTarget::Uninit(void)
 void CTarget::Update(void)
 {
 	//情報を更新
-	m_rot = CManager::GetPlayer()->GetRot();
+	m_rot = CGameManager::GetPlayer()->GetRot();
 	m_pos = D3DXVECTOR3
 	(
-		CManager::GetPlayer()->GetPos().x + sinf(m_rot.y) * TARGET_RANGE,
+		CGameManager::GetPlayer()->GetPos().x + sinf(m_rot.y) * TARGET_RANGE,
 		10.0f,
-		CManager::GetPlayer()->GetPos().z + cosf(m_rot.y) * TARGET_RANGE
+		CGameManager::GetPlayer()->GetPos().z + cosf(m_rot.y) * TARGET_RANGE
 	);
 
 	//デバッグ表示
@@ -131,12 +132,12 @@ CTarget *CTarget::Create(const D3DXVECTOR3 size)
 
 	//値を設定
 	pTarget->m_size = size;
-	pTarget->m_rot = CManager::GetPlayer()->GetRot();
+	pTarget->m_rot = CGameManager::GetPlayer()->GetRot();
 	pTarget->m_pos = D3DXVECTOR3
 	(
-		CManager::GetPlayer()->GetPos().x + sinf(pTarget->m_rot.y) * TARGET_RANGE,
+		CGameManager::GetPlayer()->GetPos().x + sinf(pTarget->m_rot.y) * TARGET_RANGE,
 		10.0f,
-		CManager::GetPlayer()->GetPos().z + cosf(pTarget->m_rot.y) * TARGET_RANGE
+		CGameManager::GetPlayer()->GetPos().z + cosf(pTarget->m_rot.y) * TARGET_RANGE
 	);
 
 	//初期化

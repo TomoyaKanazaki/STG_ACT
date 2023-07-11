@@ -8,24 +8,15 @@
 #include "renderer.h"
 #include "input.h"
 #include "object2D.h"
-#include "player.h"
 #include "debugproc.h"
-#include "effect.h"
-#include "score.h"
-#include "timer.h"
-#include "number.h"
 #include "pause.h"
 #include "sound.h"
 #include "camera.h"
 #include "light.h"
-#include "field.h"
 #include "texture.h"
 #include "model.h"
-#include "object_mesh.h"
-#include "enemy.h"
-#include "object_fan.h"
-#include "enemy_manager.h"
 #include "layer.h"
+#include "gamemanager.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -36,15 +27,9 @@ CMouse *CManager::m_pMouse = NULL;
 CJoyPad *CManager::m_pJoyPad = NULL;
 CDebugProc *CManager::m_pDebugProc = NULL;
 CPause *CManager::m_pPause = NULL;
-CScore *CManager::m_pScore = NULL;
-CTimer *CManager::m_pTimer = NULL;
 CSound *CManager::m_pSound = NULL;
-CCamera *CManager::m_pCamera = NULL;
-CLight *CManager::m_pLight = NULL;
-CPlayer *CManager::m_pPlayer = NULL;
 CTexture *CManager::m_pTexture = NULL;
-CField *CManager::m_pField = NULL;
-CObject_Fan *CManager::m_pFan = NULL;
+CGameManager *CManager::m_pGameManager = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -193,33 +178,19 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
-	//床の生成
-	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 128, 1000.0f);
-
-	//スコアの生成
-	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 500.0f, 25.0f, 0.0f), D3DXVECTOR3(500.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
-
-	//タイマーの生成
-	m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 120);
-
-	//ライトの生成
-	if (m_pLight == NULL)
+	//ゲームマネージャの生成
+	if (m_pGameManager == NULL)
 	{
-		m_pLight = new CLight;
-		m_pLight->Init();
+		m_pGameManager = new CGameManager;
 	}
 
-	//プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-
-	//エネミーマネージャの生成
-	CEnemyManager::Create();
-
-	//カメラの生成
-	if (m_pCamera == NULL)
+	//ポーズの初期化
+	if (m_pGameManager != NULL)
 	{
-		m_pCamera = new CCamera;
-		m_pCamera->Init();
+		if (FAILED(m_pGameManager->Init()))
+		{
+			return E_FAIL;
+		}
 	}
 
 	//BGMの再生
@@ -293,38 +264,6 @@ void CManager::Uninit(void)
 		m_pPause = NULL;
 	}
 
-	//スコアの終了、破棄
-	if (m_pScore != NULL)
-	{
-		m_pScore->Uninit();
-		delete m_pScore;
-		m_pScore = NULL;
-	}
-
-	//タイマーの終了、破棄
-	if (m_pTimer != NULL)
-	{
-		m_pTimer->Uninit();
-		delete m_pTimer;
-		m_pTimer = NULL;
-	}
-
-	//カメラの終了、破棄
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Uninit();
-		delete m_pCamera;
-		m_pCamera = NULL;
-	}
-
-	//ライトの終了、破棄
-	if (m_pLight != NULL)
-	{
-		m_pLight->Uninit();
-		delete m_pLight;
-		m_pLight = NULL;
-	}
-
 	//テクスチャの破棄
 	if (m_pTexture != NULL)
 	{
@@ -342,6 +281,14 @@ void CManager::Uninit(void)
 
 	//階層構造を破棄
 	CLayer::UnLoad();
+
+	//ゲームマネージャの終了、破棄
+	if (m_pGameManager != NULL)
+	{
+		m_pGameManager->Uninit();
+		delete m_pGameManager;
+		m_pGameManager = NULL;
+	}
 }
 
 //==========================================
@@ -385,16 +332,10 @@ void CManager::Update(void)
 		m_pDebugProc->Update();
 	}
 
-	//カメラの更新
-	if (m_pCamera != NULL)
+	//ゲームマネージャの更新
+	if (m_pGameManager != NULL)
 	{
-		m_pCamera->Update();
-	}
-
-	//ライトの更新
-	if (m_pLight != NULL)
-	{
-		m_pLight->Update();
+		m_pGameManager->Update();
 	}
 }
 

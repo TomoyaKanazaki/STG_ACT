@@ -63,15 +63,7 @@ HRESULT CScore::Init(void)
 //==========================================
 void CScore::Uninit(void)
 {
-	//ƒƒ‚ƒŠ‚ğŠJ•ú‚·‚é
-	for (int nCnt = 0; nCnt < SCORE_DIGIT; nCnt++)
-	{
-		if (m_apNumber[nCnt] != NULL)
-		{
-			m_apNumber[nCnt]->Uninit();
-			m_apNumber[nCnt] = NULL;
-		}
-	}
+
 }
 
 //==========================================

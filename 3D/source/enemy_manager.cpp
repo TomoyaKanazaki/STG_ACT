@@ -9,6 +9,7 @@
 #include "manager.h"
 #include "timer.h"
 #include "input.h"
+#include "gamemanager.h"
 
 //==========================================
 //  コンストラクタ
@@ -82,37 +83,11 @@ void CEnemyManager::Uninit(void)
 void CEnemyManager::Update(void)
 {
 	//現在の時間を取得
-	int nTime = CManager::GetTimer()->GetTime();
+	int nTime = CGameManager::GetTimer()->GetTime();
 
-	//for (int nCnt = 0; nCnt < 24; nCnt++)
-	//{
-	//	if (m_nPopCounter[nCnt] == nTime && m_bPop[nCnt] == false)
-	//	{
-	//		//生成中心座標を生成
-	//		m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
-	//		D3DXVec3Normalize(&m_pos, &m_pos);
-	//		m_pos = D3DXVECTOR3(m_pos.x * 800.0f, 0.0f, m_pos.z * 800.0f);
-
-	//		for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
-	//		{
-	//			//生成座標を生成
-	//			D3DXVECTOR3 PopPos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
-	//			D3DXVec3Normalize(&PopPos, &PopPos);
-	//			PopPos = D3DXVECTOR3(m_pos.x + (PopPos.x * m_vecError.x), 0.0f, m_pos.z + (PopPos.z * m_vecError.z));
-
-	//			//敵を生成
-	//			CEnemy::Create(PopPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
-	//		}
-
-	//		//生成完了フラグを立てる
-	//		m_bPop[nCnt] = true;
-	//		break;
-	//	}
-	//}
-
-	if (CManager::GetKeyboard()->GetPress(DIK_E))
+	for (int nCnt = 0; nCnt < 24; nCnt++)
 	{
-		if (m_nPopCounter[0])
+		if (m_nPopCounter[nCnt] == nTime && m_bPop[nCnt] == false)
 		{
 			//生成中心座標を生成
 			m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
@@ -129,6 +104,10 @@ void CEnemyManager::Update(void)
 				//敵を生成
 				CEnemy::Create(PopPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
 			}
+
+			//生成完了フラグを立てる
+			m_bPop[nCnt] = true;
+			break;
 		}
 	}
 }

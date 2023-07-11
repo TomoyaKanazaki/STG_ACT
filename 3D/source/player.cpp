@@ -23,6 +23,7 @@
 #include "motion.h"
 #include "collision.h"
 #include "layer.h"
+#include "gamemanager.h"
 
 //==========================================
 //  マクロ定義
@@ -132,7 +133,7 @@ void CPlayer::Update(void)
 	}
 
 	//着地状態を取得
-	m_bRand = CManager::GetFan()->OnMesh(m_pos);
+	m_bRand = CGameManager::GetFan()->OnMesh(m_pos);
 
 	//前回座標の保存
 	D3DXVECTOR3 m_oldPos = m_pos;

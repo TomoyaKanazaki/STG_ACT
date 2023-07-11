@@ -27,6 +27,7 @@
     <ClCompile Include="source\enemy.cpp" />
     <ClCompile Include="source\enemy_manager.cpp" />
     <ClCompile Include="source\field.cpp" />
+    <ClCompile Include="source\gamemanager.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\item.cpp" />
     <ClCompile Include="source\layer.cpp" />
@@ -65,6 +66,7 @@
     <ClInclude Include="source\enemy.h" />
     <ClInclude Include="source\enemy_manager.h" />
     <ClInclude Include="source\field.h" />
+    <ClInclude Include="source\gamemanager.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\item.h" />
     <ClInclude Include="source\layer.h" />

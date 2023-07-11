@@ -11,6 +11,7 @@
 #include "player.h"
 #include "debugproc.h"
 #include "target.h"
+#include "gamemanager.h"
 
 //==========================================
 //  ƒ}ƒNƒ’è‹`
@@ -216,12 +217,12 @@ void CCamera::Move(void)
 //==========================================
 void CCamera::CalcPos(SLIP slipFlag)
 {
-	m_posR = CManager::GetPlayer()->GetPos();
+	m_posR = CGameManager::GetPlayer()->GetPos();
 	m_rot.x = atan2f(m_posR.x - m_posV.x, m_posR.z - m_posV.z);
 	m_rot.z = tanf(m_posR.y - m_posV.y);
 
 	//ˆÚ“®—Ê‚ðŽæ“¾
-	D3DXVECTOR3 rot = CManager::GetPlayer()->GetRot();
+	D3DXVECTOR3 rot = CGameManager::GetPlayer()->GetRot();
 
 	if (slipFlag == SLIP_ON)
 	{
