@@ -38,12 +38,17 @@ public:
 	//静的メンバ関数
 	static CScore *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nScoreDeff);
 
+	//演算子のオーバーロード
+	CScore &operator++(void);
+	CScore &operator--(void);
+
 private:
 	
 	//メンバ変数
 	CNumber *m_apNumber[SCORE_DIGIT];
 	int m_aScore[SCORE_DIGIT]; //表示する値
 	int m_nScore; //スコアの値
+	float m_fScale; //スコアの倍率
 
 	//メンバ関数
 	void CalcScore(void);

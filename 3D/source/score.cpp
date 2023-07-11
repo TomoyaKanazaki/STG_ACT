@@ -6,6 +6,8 @@
 //==========================================
 #include "score.h"
 #include "number.h"
+#include "manager.h"
+#include "debugproc.h"
 
 //==========================================
 //  コンストラクタ
@@ -18,6 +20,7 @@ CScore::CScore(int nPriority) : CObject(nPriority)
 		m_aScore[nCnt] = 0;
 	}
 	m_nScore = 0;
+	m_fScale = 1.0f;
 }
 
 //==========================================
@@ -71,7 +74,7 @@ void CScore::Uninit(void)
 //==========================================
 void CScore::Update(void)
 {
-
+	CManager::GetDebugProc()->Print("スコア倍率 : %f\n", m_fScale);
 }
 
 //==========================================
@@ -135,7 +138,7 @@ void CScore::CalcScore(void)
 void CScore::AddScore(const int nAdd)
 {
 	//スコアを加算する
-	m_nScore += nAdd;
+	m_nScore += (int)((float)nAdd * m_fScale);
 
 	//計算処理
 	CalcScore();
@@ -163,4 +166,34 @@ D3DXVECTOR3 CScore::CalcPos(int nCnt)
 
 	//値を返す
 	return NumPos;
+}
+
+//==========================================
+//  前置インクリメントのオーバーロード
+//==========================================
+CScore &CScore::operator++(void)
+{
+	//値を代入する
+	m_fScale += 0.1f;
+
+	//自分自身のアドレスを返す
+	return *this;
+}
+
+//==========================================
+//  前置デクリメントのオーバーロード
+//==========================================
+CScore &CScore::operator--(void)
+{
+	//値を代入する
+	m_fScale -= 0.01f;
+
+	//値を補正する
+	if (m_fScale <= 1.0f)
+	{
+		m_fScale = 1.0f;
+	}
+
+	//自分自身のアドレスを返す
+	return *this;
 }

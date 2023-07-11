@@ -134,6 +134,7 @@ void CGameManager::Update(void)
 			}
 			CManager::GetDebugProc()->Print("\nƒGƒlƒ‹ƒM[MAX\n");
 		}
+		--*m_pScore;
 	}
 	else if (m_state == BLADE)
 	{

@@ -110,6 +110,27 @@ void CEnemyManager::Update(void)
 			break;
 		}
 	}
+
+#ifdef _DEBUG
+	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
+	{
+		//ê∂ê¨íÜêSç¿ïWÇê∂ê¨
+		m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
+		D3DXVec3Normalize(&m_pos, &m_pos);
+		m_pos = D3DXVECTOR3(m_pos.x * 800.0f, 0.0f, m_pos.z * 800.0f);
+
+		for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
+		{
+			//ê∂ê¨ç¿ïWÇê∂ê¨
+			D3DXVECTOR3 PopPos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
+			D3DXVec3Normalize(&PopPos, &PopPos);
+			PopPos = D3DXVECTOR3(m_pos.x + (PopPos.x * m_vecError.x), 0.0f, m_pos.z + (PopPos.z * m_vecError.z));
+
+			//ìGÇê∂ê¨
+			CEnemy::Create(PopPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
+		}
+	}
+#endif
 }
 
 //==========================================

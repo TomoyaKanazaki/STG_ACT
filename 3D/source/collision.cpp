@@ -9,6 +9,8 @@
 #include "debugproc.h"
 #include "object.h"
 #include "item.h"
+#include "score.h"
+#include "gamemanager.h"
 
 //==========================================
 //  二直線の交点の取得
@@ -77,7 +79,21 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 				if (bRelease)
 				{
 					//アイテムをドロップする
-					CItem::Create(pObj->GetPos(), CItem::ENERGY);
+					switch (CGameManager::GetState())
+					{
+					case CGameManager::SHOT:
+						CItem::Create(pObj->GetPos(), CItem::ENERGY);
+						break;
+					case CGameManager::BLADE:
+						CItem::Create(pObj->GetPos(), CItem::SCORE);
+						break;
+					default:
+						break;
+					}
+
+					//スコアを加算する
+					CGameManager::GetScore()->AddScore(100);
+
 					pObj->Uninit();
 				}
 

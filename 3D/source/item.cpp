@@ -10,6 +10,7 @@
 #include "player.h"
 #include "gamemanager.h"
 #include "energy.h"
+#include "score.h"
 
 //==========================================
 //  マクロ定義
@@ -76,13 +77,16 @@ void CItem::Update(void)
 	if (D3DXVec2Length(&vec2) < 5.0f)
 	{
 		//値を加算する
-		if (CGameManager::GetState() == CGameManager::SHOT)
+		switch (m_type)
 		{
-			++(*CGameManager::GetEnergy());
-		}
-		else
-		{
-
+		case ENERGY:
+			++*CGameManager::GetEnergy();
+			break;
+		case SCORE:
+			++*CGameManager::GetScore();
+			break;
+		default:
+			break;
 		}
 
 		//近づいたら消す
