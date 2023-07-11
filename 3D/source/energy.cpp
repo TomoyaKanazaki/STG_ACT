@@ -9,6 +9,12 @@
 #include "debugproc.h"
 
 //==========================================
+//  静的メンバ変数宣言
+//==========================================
+const float CEnergy::m_fMax = 650.0f;
+const float CEnergy::m_fAdd = CEnergy::m_fMax * 0.05f;
+
+//==========================================
 //  コンストラクタ
 //==========================================
 CEnergy::CEnergy()
@@ -109,12 +115,12 @@ CEnergy *CEnergy::Create(const D3DXVECTOR3 pos, const float fWidth)
 CEnergy &CEnergy::operator++(void)
 {
 	//値を代入する
-	m_fEnergy += 100.0f;
+	m_fEnergy += m_fAdd;
 
 	//値を補正する
-	if (m_fEnergy >= 700.0f)
+	if (m_fEnergy >= m_fMax)
 	{
-		m_fEnergy = 700.0f;
+		m_fEnergy = m_fMax;
 	}
 
 	//自分自身のアドレスを返す

@@ -23,7 +23,7 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	bool IsMax(void) { return m_fEnergy >= 700.0f ? true : false; }
+	bool IsMax(void) { return m_fEnergy >= m_fMax ? true : false; }
 	bool IsMin(void) { return m_fEnergy <= 0.0f ? true : false; }
 
 	//静的メンバ関数
@@ -38,6 +38,10 @@ private:
 	//メンバ変数
 	float m_fEnergy;
 	float m_fBaseHight; //基準位置
+
+	//静的メンバ関数
+	const static float m_fMax;
+	const static float m_fAdd;
 
 };
 

@@ -18,6 +18,11 @@
 #define GET_SPEED (10.0f) //プレイヤーに近づく速度
 
 //==========================================
+//  静的メンバ変数宣言
+//==========================================
+const float CItem::m_fGetLength = 8.0f;
+
+//==========================================
 //  コンストラクタ
 //==========================================
 CItem::CItem(int nPriority) : CObject3D(nPriority)
@@ -74,7 +79,7 @@ void CItem::Update(void)
 
 	//プレイヤーとの距離を算出
 	D3DXVECTOR2 vec2 = D3DXVECTOR2(vecMove.x, vecMove.z);
-	if (D3DXVec2Length(&vec2) < 5.0f)
+	if (D3DXVec2Length(&vec2) < m_fGetLength)
 	{
 		//値を加算する
 		switch (m_type)

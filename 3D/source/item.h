@@ -40,6 +40,9 @@ private:
 	D3DXVECTOR3 m_move;
 	ITEMS m_type;
 
+	//Ã“Iƒƒ“ƒo•Ï”
+	const static float m_fGetLength;
+
 };
 
 #endif
