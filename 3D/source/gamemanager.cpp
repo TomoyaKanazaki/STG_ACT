@@ -12,23 +12,29 @@
 #include "enemy_manager.h"
 #include "light.h"
 #include "camera.h"
+#include "energy.h"
+#include "debugproc.h"
+#include "manager.h"
+#include "input.h"
 
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
+CGameManager::STATE CGameManager::m_state = SHOT;
 CScore *CGameManager::m_pScore = NULL;
 CTimer *CGameManager::m_pTimer = NULL;
 CPlayer *CGameManager::m_pPlayer = NULL;
 CObject_Fan *CGameManager::m_pFan = NULL;
 CCamera *CGameManager::m_pCamera = NULL;
 CLight *CGameManager::m_pLight = NULL;
+CEnergy *CGameManager::m_pEnergy = NULL;
 
 //==========================================
 //  コンストラクタ
 //==========================================
 CGameManager::CGameManager()
 {
-	m_state = SHOT;
+
 }
 
 //==========================================
@@ -46,12 +52,6 @@ HRESULT CGameManager::Init(void)
 {
 	//床の生成
 	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 128, 1000.0f);
-
-	//スコアの生成
-	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 500.0f, 25.0f, 0.0f), D3DXVECTOR3(500.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
-
-	//タイマーの生成
-	m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 120);
 
 	//プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
@@ -73,6 +73,15 @@ HRESULT CGameManager::Init(void)
 		m_pCamera->Init();
 	}
 
+	//スコアの生成
+	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 500.0f, 25.0f, 0.0f), D3DXVECTOR3(500.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
+
+	//タイマーの生成
+	m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 120);
+
+	//エネルギーの生成
+	m_pEnergy = CEnergy::Create(D3DXVECTOR3(1200.0f, SCREEN_HEIGHT * 0.5f, 0.0f), 20.0f);
+
 	return S_OK;
 }
 
@@ -81,22 +90,6 @@ HRESULT CGameManager::Init(void)
 //==========================================
 void CGameManager::Uninit(void)
 {
-	//スコアの終了、破棄
-	if (m_pScore != NULL)
-	{
-		m_pScore->Uninit();
-		delete m_pScore;
-		m_pScore = NULL;
-	}
-
-	//タイマーの終了、破棄
-	if (m_pTimer != NULL)
-	{
-		m_pTimer->Uninit();
-		delete m_pTimer;
-		m_pTimer = NULL;
-	}
-
 	//カメラの終了、破棄
 	if (m_pCamera != NULL)
 	{
@@ -129,6 +122,26 @@ void CGameManager::Update(void)
 	if (m_pLight != NULL)
 	{
 		m_pLight->Update();
+	}
+
+	if (m_state == SHOT)
+	{
+		if (m_pEnergy->IsMax())
+		{
+			if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
+			{
+				m_state = BLADE;
+			}
+			CManager::GetDebugProc()->Print("\nエネルギーMAX\n");
+		}
+	}
+	else if (m_state == BLADE)
+	{
+		if (m_pEnergy->IsMin())
+		{
+			m_state = SHOT;
+		}
+		--*m_pEnergy;
 	}
 }
 

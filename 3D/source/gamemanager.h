@@ -17,6 +17,7 @@ class CObject_Fan;
 class CPlayer;
 class CCamera;
 class CLight;
+class CEnergy;
 
 //==========================================
 //  ゲームマネージャクラス定義
@@ -42,25 +43,28 @@ public:
 	void Draw(void);
 
 	//静的メンバ関数
+	static STATE GetState(void) { return m_state; }
 	static CScore *GetScore(void) { return m_pScore; }
 	static CTimer *GetTimer(void) { return m_pTimer; }
 	static CObject_Fan *GetFan(void) { return m_pFan; }
 	static CPlayer *GetPlayer(void) { return m_pPlayer; }
 	static CCamera *GetCamera(void) { return m_pCamera; }
 	static CLight *GetLight(void) { return m_pLight; }
+	static CEnergy *GetEnergy(void) { return m_pEnergy; }
 
 private:
 
 	//メンバ変数
-	STATE m_state; //ゲームの状態
 
 	//静的メンバ変数
+	static STATE m_state; //ゲームの状態
 	static CScore *m_pScore;
 	static CTimer *m_pTimer;
 	static CObject_Fan *m_pFan;
 	static CPlayer *m_pPlayer;
 	static CCamera *m_pCamera;
 	static CLight *m_pLight;
+	static CEnergy *m_pEnergy;
 
 };
 

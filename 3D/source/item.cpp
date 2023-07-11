@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "player.h"
 #include "gamemanager.h"
+#include "energy.h"
 
 //==========================================
 //  マクロ定義
@@ -74,6 +75,16 @@ void CItem::Update(void)
 	D3DXVECTOR2 vec2 = D3DXVECTOR2(vecMove.x, vecMove.z);
 	if (D3DXVec2Length(&vec2) < 5.0f)
 	{
+		//値を加算する
+		if (CGameManager::GetState() == CGameManager::SHOT)
+		{
+			++(*CGameManager::GetEnergy());
+		}
+		else
+		{
+
+		}
+
 		//近づいたら消す
 		Uninit();
 		return;

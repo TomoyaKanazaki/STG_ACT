@@ -36,6 +36,7 @@ public:
 		TYPE_SHADOW, //影
 		TYPE_TARGET, //目標
 		TYPE_ITEM, //アイテム
+		TYPE_ENERGY, //エネルギー
 		METHOD_MAX
 	}TYPE;
 

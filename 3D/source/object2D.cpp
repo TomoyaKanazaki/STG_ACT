@@ -131,6 +131,7 @@ void CObject2D::Update(void)
 {
 	//対角線 / 2の計算
 	m_fLength = sqrtf(m_size.x * m_size.x + m_size.y * m_size.y) * 0.5f;
+	m_fAngle = atan2f(m_size.x, m_size.y);
 
 	//頂点バッファの呼び出し
 	VERTEX_2D *pVtx;

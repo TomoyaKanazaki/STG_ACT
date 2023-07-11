@@ -35,7 +35,10 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nNumModel = 0;
 	m_fSpeed = 0.0f;
-	m_apModel = NULL;
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		m_apModel[nCnt] = NULL;
+	}
 	m_pLayer = NULL;
 	m_pShadow = NULL;
 	m_bRand = true;
@@ -64,13 +67,14 @@ HRESULT CEnemy::Init(void)
 	//必要なモデルを生成
 	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
 	{
+		//親が存在しない場合
 		if (m_pLayer->pParentID[nCnt] == -1)
 		{
-			m_apModel[nCnt] = *CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
+			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
 		}
 		else
 		{
-			m_apModel[nCnt] = *CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], &m_apModel[m_pLayer->pParentID[nCnt]]);
+			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_apModel[m_pLayer->pParentID[nCnt]]);
 		}
 	}
 
@@ -88,14 +92,6 @@ HRESULT CEnemy::Init(void)
 //==========================================
 void CEnemy::Uninit(void)
 {
-	//各モデルを開放する
-	if (m_apModel != NULL)
-	{
-		m_apModel->Uninit();
-		delete[] m_apModel;
-		m_apModel = NULL;
-	}
-
 	//自分自身の破棄
 	Release();
 }
@@ -108,8 +104,17 @@ void CEnemy::Update(void)
 	//移動量の適用
 	m_pos += m_move;
 
-	//実体を動かす
-	m_apModel[0].SetTransform(m_pos, m_rot);
+	//実体を移動する
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		if (m_apModel[nCnt] != NULL)
+		{
+			if (m_apModel[nCnt]->GetParent() == NULL)
+			{
+				m_apModel[nCnt]->SetTransform(m_pos, m_rot);
+			}
+		}
+	}
 
 	//影の情報を更新する
 	m_pShadow->SetTransform(m_pos, m_rot);
