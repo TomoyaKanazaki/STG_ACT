@@ -29,10 +29,16 @@ public:
 
 private:
 
+	typedef struct
+	{
+		int aInfo[2]; // 0 : Priority, 1 : ID
+		int nCounter;
+	}Homing;
+
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
 	int m_nLife;
-	int m_nHomingCounter;
+	Homing m_Target;
 
 };
 

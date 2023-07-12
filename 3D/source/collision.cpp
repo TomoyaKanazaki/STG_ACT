@@ -105,3 +105,103 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 	//当たっていない
 	return false;
 }
+
+//==========================================
+//  敵との当たり判定
+//==========================================
+bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3DXVECTOR3 *pPos, int aInfo[2])
+{
+	//指定フラグ
+	bool bObj = false;
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+		{
+			//オブジェクトの指定
+			if (aInfo[0] != 0 && aInfo[1] != 0)
+			{
+				nCntPriority = aInfo[0];
+				nCntObj = aInfo[1];
+				bObj = true;
+			}
+
+			//オブジェクトを取得
+			CObject *pObj = CObject::GetObject(nCntPriority, nCntObj);
+
+			//NULLチェック
+			if (pObj == NULL)
+			{
+				if (bObj)
+				{
+					return false;
+				}
+				continue;
+			}
+
+			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
+			{
+				if (bObj)
+				{
+					return false;
+				}
+				continue;
+			}
+
+			//敵の各情報を取得する
+			D3DXVECTOR3 enemyPos = pObj->GetPos();
+			D3DXVECTOR3 size = pObj->GetSize();
+
+			//敵と弾の距離を取得
+			float fLength = (enemyPos.x - pos.x) * (enemyPos.x - pos.x) + (enemyPos.z - pos.z) * (enemyPos.z - pos.z);
+
+			if (fLength < fLange * fLange)
+			{
+				//位置を保存
+				if (pPos != NULL)
+				{
+					*pPos = pObj->GetPos();
+				}
+
+				//情報を保存
+				if (aInfo[0] == 0 && aInfo[1] == 0)
+				{
+					aInfo[0] = nCntPriority;
+					aInfo[1] = nCntObj;
+				}
+
+				//死ぬ
+				if (bRelease)
+				{
+					//アイテムをドロップする
+					switch (CGameManager::GetState())
+					{
+					case CGameManager::SHOT:
+						CItem::Create(pObj->GetPos(), CItem::ENERGY);
+						break;
+					case CGameManager::BLADE:
+						CItem::Create(pObj->GetPos(), CItem::SCORE);
+						break;
+					default:
+						break;
+					}
+
+					//スコアを加算する
+					CGameManager::GetScore()->AddScore(100);
+
+					pObj->Uninit();
+				}
+
+				return true;
+			}
+
+			if (bObj)
+			{
+				return false;
+			}
+		}
+	}
+
+	//当たっていない
+	return false;
+}

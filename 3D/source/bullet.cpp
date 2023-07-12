@@ -29,7 +29,9 @@ CBullet::CBullet(int nPriority) : CObject3D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nLife = BULLET_LIFE;
-	m_nHomingCounter = 0;
+	m_Target.aInfo[0] = 0;
+	m_Target.aInfo[1] = 0;
+	m_Target.nCounter = 0;
 }
 
 //==========================================
@@ -73,9 +75,9 @@ void CBullet::Update(void)
 	D3DXVECTOR3 Target;
 
 	//ホーミング処理
-	if (Collision::CollisionEnemy(m_pos, HOMING_LENGTH, false, &Target))
+	if (Collision::HomingEnemy(m_pos, HOMING_LENGTH, false, &Target, &m_Target.aInfo[0]))
 	{
-		if (m_nHomingCounter <= HOMING_TIMER)
+		if (m_Target.nCounter <= HOMING_TIMER)
 		{
 			//ホーミングムーブ
 			D3DXVECTOR3 move = Target - m_pos;
@@ -88,7 +90,7 @@ void CBullet::Update(void)
 			m_move -= moveDiff * HOMING_POWER;
 
 			//時間を加算する
-			m_nHomingCounter++;
+			m_Target.nCounter++;
 		}
 	}
 

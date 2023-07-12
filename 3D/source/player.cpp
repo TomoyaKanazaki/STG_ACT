@@ -44,12 +44,10 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_fAngle = 0.0f;
 	m_bRand = true;
 	m_bDead = false;
-	for (int nCnt = 0; nCnt < 5; nCnt++)
-	{
-		m_apModel[nCnt] = NULL;
-	}
+	m_ppModel = NULL;
 	m_pLayer = NULL;
 	m_pShadow = NULL;
+	m_pMotion = NULL;
 }
 
 //==========================================
@@ -71,19 +69,34 @@ HRESULT CPlayer::Init(void)
 	//階層構造情報を生成
 	m_pLayer = CLayer::Set(CLayer::PLAYER_LAYER);
 
+	if (m_ppModel == NULL)
+	{
+		m_ppModel = new CModel*[m_pLayer->nNumModel];
+	}
+
 	//必要なモデルを生成
 	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
 	{
+		//空にする
+		m_ppModel[nCnt] = NULL;
+
 		//親が存在しない場合
 		if (m_pLayer->pParentID[nCnt] == -1)
 		{
-			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
 		}
 		else
 		{
-			m_apModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_apModel[m_pLayer->pParentID[nCnt]]);
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_ppModel[m_pLayer->pParentID[nCnt]]);
 		}
 	}
+
+	//if (m_pMotion == NULL)
+	//{
+	//	m_pMotion = new CMotion;
+	//}
+	//
+	//m_pMotion->Set(0);
 
 	//影を生成
 	if (m_pShadow == NULL)
@@ -99,6 +112,21 @@ HRESULT CPlayer::Init(void)
 //==========================================
 void CPlayer::Uninit(void)
 {
+	//モデルのポインタを破棄
+	if (m_ppModel != NULL)
+	{
+		for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+		{
+			if (m_ppModel[nCnt] != NULL)
+			{
+				m_ppModel[nCnt]->Uninit();
+				m_ppModel[nCnt] = NULL;
+			}
+		}
+		delete[] m_ppModel;
+		m_ppModel = NULL;
+	}
+
 	//自分自身の破棄
 	Release();
 }
@@ -159,13 +187,13 @@ void CPlayer::Update(void)
 	m_pos += m_move;
 
 	//実体を移動する
-	for (int nCnt = 0; nCnt < 5; nCnt++)
+	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
 	{
-		if (m_apModel[nCnt] != NULL)
+		if (m_ppModel[nCnt] != NULL)
 		{
-			if (m_apModel[nCnt]->GetParent() == NULL)
+			if (m_ppModel[nCnt]->GetParent() == NULL)
 			{
-				m_apModel[nCnt]->SetTransform(m_pos, m_rot);
+				m_ppModel[nCnt]->SetTransform(m_pos, m_rot);
 			}
 		}
 	}
@@ -173,8 +201,11 @@ void CPlayer::Update(void)
 	//回転処理
 	Rotate();
 
+	//傾ける
+	Slop();
+
 	//弾を撃つ
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
+	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
 	{
 		//弾の移動量を算出
 		D3DXVECTOR3 BulletMove = D3DXVECTOR3
@@ -187,9 +218,9 @@ void CPlayer::Update(void)
 		//弾の発射位置を算出
 		D3DXVECTOR3 BulletPos = D3DXVECTOR3
 		(
-			m_pos.x + m_apModel[3]->GetPos().x,
-			m_apModel[0]->GetPos().y + m_apModel[3]->GetPos().y,
-			m_pos.z + m_apModel[3]->GetPos().z
+			m_pos.x + m_ppModel[3]->GetPos().x,
+			m_ppModel[0]->GetPos().y + m_ppModel[3]->GetPos().y,
+			m_pos.z + m_ppModel[3]->GetPos().z
 		);
 
 		//弾の生成
@@ -316,4 +347,32 @@ void CPlayer::Rotate(void)
 
 	//方向を適用する
 	m_rot.y = fRotMove;
+}
+
+//==========================================
+//  移動方向に傾ける
+//==========================================
+void CPlayer::Slop(void)
+{
+	//計算用変数宣言
+	D3DXVECTOR3 move = m_move;
+	D3DXVECTOR3 ratio;
+	ratio.y = atan2f(-move.x, move.y);
+
+	//移動量の正規化
+	D3DXVec3Normalize(&move, &move);
+
+	//角度を算出
+	if (move.z != 0.0f)
+	{
+		//m_rot.x = (((30.0f * 30.0f) + (move.z * move.z) - (30.0f * 30.0f) + (move.z * move.z)) / (2.0f * 30.0f * move.z)) * sinf(m_rot.y);
+		ratio.x = atan2f(5.0f, move.z) - D3DX_PI * 0.5f;
+		m_rot.x = ratio.x;
+	}
+	if (move.x != 0.0f)
+	{
+		//m_rot.z = -(((30.0f * 30.0f) + (move.x * move.x) - (30.0f * 30.0f) + (move.x * move.x)) / (2.0f * 30.0f * move.x)) * cosf(m_rot.y);
+		ratio.z = -atan2f(5.0f, move.x) + D3DX_PI * 0.5f;
+		m_rot.z = ratio.z;
+	}
 }

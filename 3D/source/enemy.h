@@ -56,7 +56,7 @@ private:
 	bool m_bRand;
 
 	//モデル情報
-	CModel *m_apModel[5]; //モデル情報
+	CModel **m_ppModel; //モデル情報
 	CLayer::LAYERDATA *m_pLayer; //階層構造情報
 	CShadow *m_pShadow;
 

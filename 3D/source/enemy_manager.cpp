@@ -112,7 +112,7 @@ void CEnemyManager::Update(void)
 	}
 
 #ifdef _DEBUG
-	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
+	if (CManager::GetKeyboard()->GetPress(DIK_E))
 	{
 		//¶¬’†SÀ•W‚ğ¶¬
 		m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
