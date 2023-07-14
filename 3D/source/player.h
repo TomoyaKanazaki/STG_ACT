@@ -16,6 +16,7 @@
 class CModel;
 class CShadow;
 class CMotion;
+class COrbit;
 
 //==========================================
 //  プレイヤークラスの定義
@@ -68,6 +69,8 @@ private:
 	CLayer::LAYERDATA *m_pLayer; //階層構造情報
 	CShadow *m_pShadow; //影の情報
 	CMotion *m_pMotion;
+
+	COrbit *orbit;
 
 };
 

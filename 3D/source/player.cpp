@@ -24,6 +24,7 @@
 #include "collision.h"
 #include "layer.h"
 #include "gamemanager.h"
+#include "orbit.h"
 
 //==========================================
 //  マクロ定義
@@ -48,6 +49,7 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_pLayer = NULL;
 	m_pShadow = NULL;
 	m_pMotion = NULL;
+	orbit = NULL;
 }
 
 //==========================================
@@ -91,12 +93,14 @@ HRESULT CPlayer::Init(void)
 		}
 	}
 
-	//if (m_pMotion == NULL)
-	//{
-	//	m_pMotion = new CMotion;
-	//}
-	//
-	//m_pMotion->Set(0);
+	orbit = COrbit::Create(m_ppModel[3], D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 50.0f, 50);
+
+	if (m_pMotion == NULL)
+	{
+		m_pMotion = new CMotion;
+	}
+	
+	m_pMotion->Set(0);
 
 	//影を生成
 	if (m_pShadow == NULL)
@@ -125,6 +129,14 @@ void CPlayer::Uninit(void)
 		}
 		delete[] m_ppModel;
 		m_ppModel = NULL;
+	}
+
+	//モーションのポインタを破棄
+	if (m_pMotion != NULL)
+	{
+		m_pMotion->Uninit();
+		delete m_pMotion;
+		m_pMotion = NULL;
 	}
 
 	//自分自身の破棄
@@ -205,7 +217,7 @@ void CPlayer::Update(void)
 	Slop();
 
 	//弾を撃つ
-	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
+	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
 		//弾の移動量を算出
 		D3DXVECTOR3 BulletMove = D3DXVECTOR3
@@ -218,9 +230,9 @@ void CPlayer::Update(void)
 		//弾の発射位置を算出
 		D3DXVECTOR3 BulletPos = D3DXVECTOR3
 		(
-			m_pos.x + m_ppModel[3]->GetPos().x,
-			m_ppModel[0]->GetPos().y + m_ppModel[3]->GetPos().y,
-			m_pos.z + m_ppModel[3]->GetPos().z
+			m_ppModel[3]->GetPos().x,
+			10.0f,
+			m_ppModel[3]->GetPos().z
 		);
 
 		//弾の生成

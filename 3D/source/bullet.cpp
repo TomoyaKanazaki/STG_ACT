@@ -81,6 +81,7 @@ void CBullet::Update(void)
 		{
 			//ホーミングムーブ
 			D3DXVECTOR3 move = Target - m_pos;
+			move.y = 0.0f;
 
 			//移動量の正規化
 			D3DXVec3Normalize(&move, &move);
