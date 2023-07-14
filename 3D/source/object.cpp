@@ -16,7 +16,8 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-CObject *CObject::m_apObject[PRIORITY_NUM][MAX_OBJECT] = {};
+CObject *CObject::m_apTop[PRIORITY_NUM] = {};
+CObject *CObject::m_apCur[PRIORITY_NUM] = {};
 int CObject::m_nNumObject = 0;
 
 //==========================================
@@ -24,15 +25,20 @@ int CObject::m_nNumObject = 0;
 //==========================================
 CObject::CObject(int nPriority)
 {
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+	//先頭オブジェクトの判定
+	if (m_apTop[nPriority] == NULL)
 	{
-		if (m_apObject[nPriority][nCntObject] == NULL)
-		{
-			m_apObject[nPriority][nCntObject] = this;
-			m_nID = nCntObject;
-			m_nNumObject++;
-			break;
-		}
+		m_apTop[nPriority] = this;
+		m_apCur[nPriority] = this;
+		this->m_pNext = NULL;
+		this->m_pPrev = NULL;
+	}
+	else //先頭でない場合、最後尾オブジェクトの次に設定する
+	{
+		this->m_pPrev = m_apCur[nPriority];
+		m_apCur[nPriority] = this;
+		this->m_pPrev->m_pNext = this;
+		this->m_pNext = NULL;
 	}
 
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -40,6 +46,7 @@ CObject::CObject(int nPriority)
 	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nPriority = nPriority;
 	m_type = TYPE_NONE;
+	m_nNumObject++;
 }
 
 //==========================================
@@ -47,6 +54,35 @@ CObject::CObject(int nPriority)
 //==========================================
 CObject::~CObject()
 {
+	//オブジェクト位置の判定
+	if (this == m_apTop[m_nPriority]) //先頭の場合
+	{
+		//自身の次のオブジェクトを先頭にする
+		m_apTop[m_nPriority] = this->m_pNext;
+
+		//NULLチェック
+		if (m_apTop[m_nPriority] != NULL)
+		{
+			//先頭オブジェクトの前はNULL
+			m_apTop[m_nPriority]->m_pPrev = NULL;
+		}
+	}
+	else if (this == m_apCur[m_nPriority]) //最後尾の場合
+	{
+		//自身の前のオブジェクトを最後尾にする
+		m_apCur[m_nPriority] = this->m_pPrev;
+
+		//最後尾オブジェクトの次はNULL
+		m_apCur[m_nPriority]->m_pNext = NULL;
+	}
+	else
+	{
+		//自身の次のオブジェクトの前のオブジェクトを自身の前のオブジェクトに設定する
+		this->m_pNext->m_pPrev = this->m_pPrev;
+
+		//自身の前のオブジェクトの次のオブジェクトを自身の次のオブジェクトに設定する
+		this->m_pPrev->m_pNext = this->m_pNext;
+	}
 	m_nNumObject--;
 }
 
@@ -55,14 +91,23 @@ CObject::~CObject()
 //==========================================
 void CObject::ReleaseAll(void)
 {
+	//描画優先順位
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		//先頭オブジェクトを取得
+		CObject *pObj = m_apTop[nCntPriority];
+
+		//NULLになるまで続ける
+		while (pObj != NULL)
 		{
-			if (m_apObject[nCntPriority][nCntObject] != NULL)
-			{
-				m_apObject[nCntPriority][nCntObject]->Uninit();
-			}
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			//現在のオブジェクトを終了
+			pObj->Uninit();
+
+			//アドレスを次のアドレスにずらす
+			pObj = pNext;
 		}
 	}
 }
@@ -72,17 +117,23 @@ void CObject::ReleaseAll(void)
 //==========================================
 void CObject::UpdateAll(void)
 {
+	//描画優先順位
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		//先頭オブジェクトを取得
+		CObject *pObj = m_apTop[nCntPriority];
+
+		//NULLになるまで続ける
+		while (pObj != NULL)
 		{
-			if (m_apObject[nCntPriority][nCntObject] != NULL)
-			{
-				if (CManager::GetPause()->GetState() == false || m_apObject[nCntPriority][nCntObject]->m_type == CObject::TYPE_TIMER)
-				{
-					m_apObject[nCntPriority][nCntObject]->Update();
-				}
-			}
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			//現在のオブジェクトを更新
+			pObj->Update();
+
+			//アドレスを次のアドレスにずらす
+			pObj = pNext;
 		}
 	}
 }
@@ -101,14 +152,23 @@ void CObject::DrawAll(void)
 	CManager::GetDebugProc()->Print("オブジェクト数 : %d\n", m_nNumObject);
 	CManager::GetDebugProc()->Print("エフェクト数 : %d\n", CEffect::GetNum());
 
+	//描画優先順位
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		//先頭オブジェクトを取得
+		CObject *pObj = m_apTop[nCntPriority];
+
+		//NULLになるまで続ける
+		while (pObj != NULL)
 		{
-			if (m_apObject[nCntPriority][nCntObject] != NULL)
-			{
-				m_apObject[nCntPriority][nCntObject]->Draw();
-			}
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			//現在のオブジェクトを描画
+			pObj->Draw();
+
+			//アドレスを次のアドレスにずらす
+			pObj = pNext;
 		}
 	}
 }
@@ -118,16 +178,13 @@ void CObject::DrawAll(void)
 //==========================================
 void CObject::Release(void)
 {
-	//優先順位を保存
-	int nPriority = this->m_nPriority;
-
-	//インデックスを保存
-	int nIdx = this->m_nID;
+	//オブジェクトのアドレスを保存
+	CObject *pAddress = this;
 
 	//破棄
-	if (m_apObject[nPriority][nIdx] != NULL)
+	if (this != NULL)
 	{
-		delete m_apObject[nPriority][nIdx];
-		m_apObject[nPriority][nIdx] = NULL;
+		delete this;
+		pAddress = NULL;
 	}
 }

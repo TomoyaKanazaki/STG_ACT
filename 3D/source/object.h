@@ -49,15 +49,15 @@ public:
 	virtual void Update(void) = 0;
 	virtual void Draw(void) = 0;
 
+	CObject *GetNext(void) { return m_pNext; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
-	int GetID(void) { return m_nID; }
 	void SetType(TYPE type) { m_type = type; }
 	TYPE GetType(void) { return m_type; }
 
 	//静的メンバ関数
-	static CObject *GetObject(int nPriority, int nID) { return m_apObject[nPriority][nID]; }
+	static CObject *GetTop(int nPriority) { return m_apTop[nPriority]; }
 	static void ReleaseAll(void);
 	static void UpdateAll(void);
 	static void DrawAll(void);
@@ -74,14 +74,16 @@ protected:
 
 private:
 
-	//静的メンバ変数
-	static CObject *m_apObject[PRIORITY_NUM][MAX_OBJECT]; //オブジェクトのポインタ
-	static int m_nNumObject; //オブジェクトの総数
-
 	//メンバ変数
-	int m_nID; //自分自身のインデックス
+	CObject *m_pNext; //次のオブジェクトのポインタ
+	CObject *m_pPrev; //前のオブジェクトのポインタ
 	int m_nPriority; //描画優先順位
 	TYPE m_type; //種類
+
+	//静的メンバ変数
+	static int m_nNumObject; //オブジェクトの総数
+	static CObject *m_apTop[PRIORITY_NUM]; //先頭オブジェクトのポインタ配列
+	static CObject *m_apCur[PRIORITY_NUM]; //最後尾オブジェクトのポインタ配列
 
 };
 

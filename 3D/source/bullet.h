@@ -31,8 +31,9 @@ private:
 
 	typedef struct
 	{
-		int aInfo[2]; // 0 : Priority, 1 : ID
+		CObject *pObj; // 0 : Priority, 1 : ID
 		int nCounter;
+		bool bHoming;
 	}Homing;
 
 	//ƒƒ“ƒo•Ï”

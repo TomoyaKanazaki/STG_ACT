@@ -11,6 +11,7 @@
 #include "texture.h"
 #include "effect.h"
 #include "collision.h"
+#include "object.h"
 
 //==========================================
 //  マクロ定義
@@ -29,9 +30,9 @@ CBullet::CBullet(int nPriority) : CObject3D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nLife = BULLET_LIFE;
-	m_Target.aInfo[0] = 0;
-	m_Target.aInfo[1] = 0;
+	m_Target.pObj = NULL;
 	m_Target.nCounter = 0;
+	m_Target.bHoming = false;
 }
 
 //==========================================
@@ -71,28 +72,52 @@ void CBullet::Uninit(void)
 //==========================================
 void CBullet::Update(void)
 {
-	//ホーミングターゲットの位置を保存する変数
-	D3DXVECTOR3 Target;
-
 	//ホーミング処理
-	if (Collision::HomingEnemy(m_pos, HOMING_LENGTH, false, &Target, &m_Target.aInfo[0]))
+	if (m_Target.bHoming)
 	{
 		if (m_Target.nCounter <= HOMING_TIMER)
 		{
-			//ホーミングムーブ
-			D3DXVECTOR3 move = Target - m_pos;
-			move.y = 0.0f;
+			if (m_Target.pObj != NULL)
+			{
+				//ホーミングムーブ
+				D3DXVECTOR3 move = m_Target.pObj->GetPos() - m_pos;
+				move.y = 0.0f;
 
-			//移動量の正規化
-			D3DXVec3Normalize(&move, &move);
+				//移動量の正規化
+				D3DXVec3Normalize(&move, &move);
 
-			//移動量の適応
-			D3DXVECTOR3 moveDiff = m_move - move;
-			m_move -= moveDiff * HOMING_POWER;
+				//移動量の適応
+				D3DXVECTOR3 moveDiff = m_move - move;
+				m_move -= moveDiff * HOMING_POWER;
 
-			//時間を加算する
-			m_Target.nCounter++;
+				//時間を加算する
+				m_Target.nCounter++;
+			}
+
+			if (&m_Target.pObj == NULL)
+			{
+				m_Target.bHoming = false;
+			}
 		}
+	}
+	else if (Collision::HomingEnemy(m_pos, HOMING_LENGTH, false, &m_Target.pObj) && m_Target.bHoming == false)
+	{
+		//ホーミングムーブ
+		D3DXVECTOR3 move = m_Target.pObj->GetPos() - m_pos;
+		move.y = 0.0f;
+
+		//移動量の正規化
+		D3DXVec3Normalize(&move, &move);
+
+		//移動量の適応
+		D3DXVECTOR3 moveDiff = m_move - move;
+		m_move -= moveDiff * HOMING_POWER;
+
+		//ホーミング時間のリセット
+		m_Target.nCounter = 0;
+
+		//ホーミング済フラグを立てる
+		m_Target.bHoming = true;
 	}
 
 	//消滅条件

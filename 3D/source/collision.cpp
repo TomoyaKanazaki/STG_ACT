@@ -44,19 +44,20 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 {
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+		//オブジェクトを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
+
+		//NULLチェック
+		while (pObj != NULL)
 		{
-			//オブジェクトを取得
-			CObject *pObj = CObject::GetObject(nCntPriority, nCntObj);
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
 
-			//NULLチェック
-			if (pObj == NULL)
+			//敵の場合
+			if (pObj->GetType() != CObject::TYPE_ENEMY)
 			{
-				continue;
-			}
-
-			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
-			{
+				//次のアドレスにずらす
+				pObj = pNext;
 				continue;
 			}
 
@@ -99,6 +100,9 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 
 				return true;
 			}
+
+			//次のアドレスにずらす
+			pObj = pNext;
 		}
 	}
 
@@ -109,42 +113,21 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 //==========================================
 //  敵との当たり判定
 //==========================================
-bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3DXVECTOR3 *pPos, int aInfo[2])
+bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, CObject **pObject)
 {
-	//指定フラグ
-	bool bObj = false;
-
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
-		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
+		//オブジェクトを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
 		{
-			//オブジェクトの指定
-			if (aInfo[0] != 0 && aInfo[1] != 0)
-			{
-				nCntPriority = aInfo[0];
-				nCntObj = aInfo[1];
-				bObj = true;
-			}
-
-			//オブジェクトを取得
-			CObject *pObj = CObject::GetObject(nCntPriority, nCntObj);
-
-			//NULLチェック
-			if (pObj == NULL)
-			{
-				if (bObj)
-				{
-					return false;
-				}
-				continue;
-			}
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
 
 			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
 			{
-				if (bObj)
-				{
-					return false;
-				}
+				pObj = pNext;
 				continue;
 			}
 
@@ -157,18 +140,8 @@ bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3DXVE
 
 			if (fLength < fLange * fLange)
 			{
-				//位置を保存
-				if (pPos != NULL)
-				{
-					*pPos = pObj->GetPos();
-				}
-
 				//情報を保存
-				if (aInfo[0] == 0 && aInfo[1] == 0)
-				{
-					aInfo[0] = nCntPriority;
-					aInfo[1] = nCntObj;
-				}
+				*pObject = pObj;
 
 				//死ぬ
 				if (bRelease)
@@ -186,19 +159,11 @@ bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3DXVE
 						break;
 					}
 
-					//スコアを加算する
-					CGameManager::GetScore()->AddScore(100);
-
 					pObj->Uninit();
 				}
-
 				return true;
 			}
-
-			if (bObj)
-			{
-				return false;
-			}
+			pObj = pNext;
 		}
 	}
 

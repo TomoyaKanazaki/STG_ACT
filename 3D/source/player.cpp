@@ -217,7 +217,7 @@ void CPlayer::Update(void)
 	Slop();
 
 	//’e‚ğŒ‚‚Â
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
+	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
 	{
 		//’e‚ÌˆÚ“®—Ê‚ğZo
 		D3DXVECTOR3 BulletMove = D3DXVECTOR3
@@ -230,9 +230,9 @@ void CPlayer::Update(void)
 		//’e‚Ì”­ËˆÊ’u‚ğZo
 		D3DXVECTOR3 BulletPos = D3DXVECTOR3
 		(
-			m_ppModel[3]->GetPos().x,
+			m_pos.x + m_ppModel[3]->GetPos().x,
 			10.0f,
-			m_ppModel[3]->GetPos().z
+			m_pos.z + m_ppModel[3]->GetPos().z
 		);
 
 		//’e‚Ì¶¬
