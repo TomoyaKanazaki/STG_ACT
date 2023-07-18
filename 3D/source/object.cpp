@@ -47,6 +47,7 @@ CObject::CObject(int nPriority)
 	m_nPriority = nPriority;
 	m_type = TYPE_NONE;
 	m_nNumObject++;
+	m_bDeath = false;
 }
 
 //==========================================
@@ -91,7 +92,7 @@ CObject::~CObject()
 //==========================================
 void CObject::ReleaseAll(void)
 {
-	//描画優先順位
+	//各オブジェクトのフラグを立てる
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
 		//先頭オブジェクトを取得
@@ -110,6 +111,30 @@ void CObject::ReleaseAll(void)
 			pObj = pNext;
 		}
 	}
+
+	//死亡フラグの確認
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//先頭オブジェクトを取得
+		CObject *pObj = m_apTop[nCntPriority];
+
+		//NULLになるまで続ける
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			//現在のオブジェクトを終了
+			if (pObj->m_bDeath)
+			{
+				delete pObj;
+				pObj = NULL;
+			}
+
+			//アドレスを次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
 }
 
 //==========================================
@@ -117,7 +142,7 @@ void CObject::ReleaseAll(void)
 //==========================================
 void CObject::UpdateAll(void)
 {
-	//描画優先順位
+	//各オブジェクトの更新
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
 		//先頭オブジェクトを取得
@@ -136,6 +161,30 @@ void CObject::UpdateAll(void)
 			pObj = pNext;
 		}
 	}
+
+	//死亡フラグの確認
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//先頭オブジェクトを取得
+		CObject *pObj = m_apTop[nCntPriority];
+
+		//NULLになるまで続ける
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			//現在のオブジェクトを終了
+			if (pObj->m_bDeath)
+			{
+				delete pObj;
+				pObj = NULL;
+			}
+
+			//アドレスを次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
 }
 
 //==========================================
@@ -148,9 +197,6 @@ void CObject::DrawAll(void)
 
 	//カメラの設定
 	pCamera->SetCamera();
-
-	CManager::GetDebugProc()->Print("オブジェクト数 : %d\n", m_nNumObject);
-	CManager::GetDebugProc()->Print("エフェクト数 : %d\n", CEffect::GetNum());
 
 	//描画優先順位
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
@@ -178,13 +224,6 @@ void CObject::DrawAll(void)
 //==========================================
 void CObject::Release(void)
 {
-	//オブジェクトのアドレスを保存
-	CObject *pAddress = this;
-
-	//破棄
-	if (this != NULL)
-	{
-		delete this;
-		pAddress = NULL;
-	}
+	//死亡フラグを立てる
+	m_bDeath = true;
 }

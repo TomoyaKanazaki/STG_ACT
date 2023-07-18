@@ -15,7 +15,7 @@
 //==========================================
 class CModel;
 class CShadow;
-class CMotion;
+//class CMotion;
 class COrbit;
 
 //==========================================
@@ -24,13 +24,6 @@ class COrbit;
 class CPlayer : public CObject
 {
 public:
-	typedef enum
-	{
-		MOTION_NONE = 0, //なし
-		NU, //弾を撃つ
-		WALK,
-		MOTION_MAX
-	}MOTIONS;
 
 	CPlayer(int nPriority = 4); //コンストラクタ
 	~CPlayer(); //デストラクタ
@@ -68,7 +61,7 @@ private:
 	CModel **m_ppModel; //モデル情報
 	CLayer::LAYERDATA *m_pLayer; //階層構造情報
 	CShadow *m_pShadow; //影の情報
-	CMotion *m_pMotion;
+	//CMotion *m_pMotion;
 
 	COrbit *orbit;
 

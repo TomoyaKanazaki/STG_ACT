@@ -12,7 +12,6 @@
 //  マクロ定義
 //==========================================
 #define PRIORITY_NUM (8) //優先順位の最大数
-#define MAX_OBJECT (4096) //オブジェクトの最大数
 
 //==========================================
 //  オブジェクトクラス生成
@@ -79,6 +78,7 @@ private:
 	CObject *m_pPrev; //前のオブジェクトのポインタ
 	int m_nPriority; //描画優先順位
 	TYPE m_type; //種類
+	bool m_bDeath; //死亡フラグ
 
 	//静的メンバ変数
 	static int m_nNumObject; //オブジェクトの総数
