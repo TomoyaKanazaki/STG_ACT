@@ -36,6 +36,7 @@ public:
 		TYPE_TARGET, //目標
 		TYPE_ITEM, //アイテム
 		TYPE_ENERGY, //エネルギー
+		TYPE_FADE, //フェード
 		METHOD_MAX
 	}TYPE;
 
@@ -52,6 +53,9 @@ public:
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
+	void SetPos(const D3DXVECTOR3 pos) { m_pos = pos; }
+	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
+	void SetSize(const D3DXVECTOR3 size) { m_size = size; }
 	void SetType(TYPE type) { m_type = type; }
 	TYPE GetType(void) { return m_type; }
 
@@ -60,6 +64,7 @@ public:
 	static void ReleaseAll(void);
 	static void UpdateAll(void);
 	static void DrawAll(void);
+	static int GetNum(void) { return m_nNumObject; }
 
 protected:
 

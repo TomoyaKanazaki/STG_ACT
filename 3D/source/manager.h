@@ -24,7 +24,7 @@ class CDebugProc;
 class CPause;
 class CSound;
 class CTexture;
-class CGameManager;
+class CSceneManager;
 
 //==========================================
 //  マネージャクラス定義
@@ -50,7 +50,9 @@ public:
 	static CPause *GetPause(void) { return m_pPause; }
 	static CSound *GetSound(void) { return m_pSound; }
 	static CTexture *GetTexture(void) { return m_pTexture; }
-	static CGameManager *GetGameManager(void) { return m_pGameManager; }
+	static CSceneManager *GetSceneManager(void) { return m_pSceneManager; }
+	static int GetFPS(void) { return m_nFPS; }
+	static void SetFPS(int nFPS) { m_nFPS = nFPS; }
 
 private:
 
@@ -63,7 +65,11 @@ private:
 	static CPause *m_pPause;
 	static CSound *m_pSound;
 	static CTexture *m_pTexture;
-	static CGameManager *m_pGameManager;
+	static CSceneManager *m_pSceneManager;
+	static int m_nFPS;
+
+	//メンバ変数
+	HINSTANCE m_Instance; HWND m_Wnd; BOOL m_Window;
 
 };
 

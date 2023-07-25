@@ -16,7 +16,8 @@
 #include "texture.h"
 #include "model.h"
 #include "layer.h"
-#include "gamemanager.h"
+#include "motion.h"
+#include "scenemanager.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -29,7 +30,8 @@ CDebugProc *CManager::m_pDebugProc = NULL;
 CPause *CManager::m_pPause = NULL;
 CSound *CManager::m_pSound = NULL;
 CTexture *CManager::m_pTexture = NULL;
-CGameManager *CManager::m_pGameManager = NULL;
+CSceneManager *CManager::m_pSceneManager = NULL;
+int CManager::m_nFPS = 0;
 
 //==========================================
 //  コンストラクタ
@@ -52,6 +54,11 @@ CManager::~CManager()
 //==========================================
 HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 {
+	//変数の保存
+	m_Instance = hInstance;
+	m_Wnd = hWnd;
+	m_Window = bWindow;
+
 	//レンダラーの生成
 	if (m_pRenderer == NULL)
 	{
@@ -108,6 +115,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//階層構造を読み込む
 	CLayer::Load();
+
+	//モーション情報を読み込む
+	CMotion::Load();
 
 	//デバッグ表示の生成
 	if (m_pDebugProc == NULL)
@@ -178,19 +188,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
-	//ゲームマネージャの生成
-	if (m_pGameManager == NULL)
+	//シーンマネージャの生成
+	if (m_pSceneManager == NULL)
 	{
-		m_pGameManager = new CGameManager;
-	}
-
-	//ポーズの初期化
-	if (m_pGameManager != NULL)
-	{
-		if (FAILED(m_pGameManager->Init()))
-		{
-			return E_FAIL;
-		}
+		m_pSceneManager = CSceneManager::Create(CSceneManager::GAME);
 	}
 
 	//BGMの再生
@@ -206,6 +207,14 @@ void CManager::Uninit(void)
 {
 	//オブジェクトの終了
 	CObject::ReleaseAll();
+
+	//シーンマネージャの終了
+	if (m_pSceneManager != NULL)
+	{
+		m_pSceneManager->Uninit();
+		delete m_pSceneManager;
+		m_pSceneManager = NULL;
+	}
 
 	//レンダラーの終了、破棄
 	if (m_pRenderer != NULL)
@@ -282,13 +291,8 @@ void CManager::Uninit(void)
 	//階層構造を破棄
 	CLayer::UnLoad();
 
-	//ゲームマネージャの終了、破棄
-	if (m_pGameManager != NULL)
-	{
-		m_pGameManager->Uninit();
-		delete m_pGameManager;
-		m_pGameManager = NULL;
-	}
+	//モーション情報の破棄
+	CMotion::UnLoad();
 }
 
 //==========================================
@@ -332,10 +336,10 @@ void CManager::Update(void)
 		m_pDebugProc->Update();
 	}
 
-	//ゲームマネージャの更新
-	if (m_pGameManager != NULL)
+	//シーンマネージャの更新
+	if (m_pSceneManager != NULL)
 	{
-		m_pGameManager->Update();
+		m_pSceneManager->Update();
 	}
 }
 

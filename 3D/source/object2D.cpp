@@ -234,10 +234,34 @@ void CObject2D::SetCol(const D3DXCOLOR col)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//設定した色の適用
-	pVtx[0].col = m_col;
-	pVtx[1].col = m_col;
-	pVtx[2].col = m_col;
-	pVtx[3].col = m_col;
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		pVtx[nCnt].col = m_col;
+	}
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+}
+
+//==========================================
+//  透明度の変更
+//==========================================
+void CObject2D::AddAlpah(float fDiff)
+{
+	//透明度を加算
+	m_col.a += fDiff;
+
+	//頂点バッファの呼び出し
+	VERTEX_2D *pVtx;
+
+	//頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//設定した色の適用
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		pVtx[nCnt].col = m_col;
+	}
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();

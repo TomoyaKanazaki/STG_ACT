@@ -26,6 +26,8 @@ public:
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
 	void SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max);
 	void SetCol(const D3DXCOLOR col);
+	D3DXCOLOR GetCol(void) { return m_col; }
+	void AddAlpah(float fDiff);
 
 private:
 

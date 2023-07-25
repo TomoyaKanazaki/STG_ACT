@@ -117,8 +117,10 @@ HRESULT CTexture::Load(void)
 		}
 		else
 		{
+			fclose(pFile);
 			return E_FAIL;
 		}
+		fclose(pFile);
 	}
 	else
 	{

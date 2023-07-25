@@ -8,8 +8,8 @@
 #include <time.h>
 #include "object.h"
 #include "manager.h"
+#include "scenemanager.h"
 #include "debugproc.h"
-#include "enemy.h"
 #include "model.h"
 
 //==========================================
@@ -172,12 +172,21 @@ void CRenderer::Draw(void)
 	//描画開始
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
+		//オブジェクト群の描画
 		CObject::DrawAll();
 
-		CManager::GetDebugProc()->Print("モデル数 : %d", CModel::GetNum());
+		//シーンマネージャを描画
+		if (CManager::GetSceneManager() != NULL)
+		{
+			CManager::GetSceneManager()->Draw();
+		}
 
+		//デバッグ表示
 		if (CManager::GetDebugProc() != NULL)
 		{
+			CManager::GetDebugProc()->Print("オブジェクト数 : %d\n", CObject::GetNum());
+			CManager::GetDebugProc()->Print("モデル数 : %d\n", CModel::GetNum());
+			CManager::GetDebugProc()->Print("FPS : %d\n", CManager::GetFPS());
 			CManager::GetDebugProc()->Draw();
 		}
 

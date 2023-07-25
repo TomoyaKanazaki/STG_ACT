@@ -20,7 +20,7 @@
 #include "collision.h"
 #include "target.h"
 #include "bullet.h"
-//#include "motion.h"
+#include "motion.h"
 #include "collision.h"
 #include "layer.h"
 #include "gamemanager.h"
@@ -48,8 +48,8 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_ppModel = NULL;
 	m_pLayer = NULL;
 	m_pShadow = NULL;
-	//m_pMotion = NULL;
-	orbit = NULL;
+	m_pMotion = NULL;
+	m_orbit = NULL;
 }
 
 //==========================================
@@ -93,16 +93,14 @@ HRESULT CPlayer::Init(void)
 		}
 	}
 
-	//orbit = COrbit::Create(m_ppModel[3], D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 50.0f, 50);
-
-	////モーション情報の生成
-	//if (m_pMotion == NULL)
-	//{
-	//	m_pMotion = new CMotion;
-	//}
+	//モーション情報の生成
+	if (m_pMotion == NULL)
+	{
+		m_pMotion = new CMotion;
+	}
 	
 	//モーション情報にモデルを追加する
-	//m_pMotion->SetModel(m_ppModel, m_nNumModel);
+	m_pMotion->SetModel(m_ppModel, m_pLayer->nNumModel, CMotion::PLAYER_SHOT);
 
 	//影を生成
 	if (m_pShadow == NULL)
@@ -133,13 +131,12 @@ void CPlayer::Uninit(void)
 		m_ppModel = NULL;
 	}
 
-	////モーションのポインタを破棄
-	//if (m_pMotion != NULL)
-	//{
-	//	m_pMotion->Uninit();
-	//	delete m_pMotion;
-	//	m_pMotion = NULL;
-	//}
+	//モーションのポインタを破棄
+	if (m_pMotion != NULL)
+	{
+		delete m_pMotion;
+		m_pMotion = NULL;
+	}
 
 	//自分自身の破棄
 	Release();
@@ -201,13 +198,16 @@ void CPlayer::Update(void)
 	m_pos += m_move;
 
 	//実体を移動する
-	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+	if (m_ppModel != NULL)
 	{
-		if (m_ppModel[nCnt] != NULL)
+		for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
 		{
-			if (m_ppModel[nCnt]->GetParent() == NULL)
+			if (m_ppModel[nCnt] != NULL)
 			{
-				m_ppModel[nCnt]->SetTransform(m_pos, m_rot);
+				if (m_ppModel[nCnt]->GetParent() == NULL)
+				{
+					m_ppModel[nCnt]->SetTransform(m_pos, m_rot);
+				}
 			}
 		}
 	}
@@ -218,28 +218,39 @@ void CPlayer::Update(void)
 	//傾ける
 	Slop();
 
-	//弾を撃つ
+	//攻撃
 	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
 	{
-		//弾の移動量を算出
-		D3DXVECTOR3 BulletMove = D3DXVECTOR3
-		(
-			-sinf(m_rot.y),
-			0.0f,
-			-cosf(m_rot.y)
-		);
-
-		//弾の発射位置を算出
-		D3DXVECTOR3 BulletPos = D3DXVECTOR3
-		(
-			m_pos.x + m_ppModel[3]->GetPos().x,
-			10.0f,
-			m_pos.z + m_ppModel[3]->GetPos().z
-		);
-
-		//弾の生成
-		CBullet::Create(BulletPos, m_size * 0.5f, BulletMove);
+		switch (CGameManager::GetState())
+		{
+		case CGameManager::SHOT:
+			Shot();
+			break;
+		case CGameManager::BLADE:
+			break;
+		default:
+			break;
+		}
 	}
+
+	//軌跡の生成、削除
+	if (CGameManager::GetState() == CGameManager::BLADE)
+	{
+		if (m_orbit == NULL)
+		{
+			m_orbit = COrbit::Create(m_ppModel[3], D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(100.0f, 0.0f, 100.0f), 100);
+		}
+	}
+	else if (CGameManager::GetState() == CGameManager::SHOT)
+	{
+		//if (m_orbit != NULL)
+		//{
+		//	m_orbit->Uninit();
+		//	m_orbit = NULL;
+		//}
+	}
+	//モーションを更新する
+	m_pMotion->Update();
 
 	//影の情報を更新する
 	if (m_pShadow != NULL)
@@ -379,4 +390,29 @@ void CPlayer::Slop(void)
 	//角度を算出
 	m_rot.x = atan2f(-move.x, 30.0f);
 	m_rot.z = atan2f(-move.z, 30.0f);
+}
+
+//==========================================
+//  射撃
+//==========================================
+void CPlayer::Shot(void)
+{
+	//弾の移動量を算出
+	D3DXVECTOR3 BulletMove = D3DXVECTOR3
+	(
+		-sinf(m_rot.y),
+		0.0f,
+		-cosf(m_rot.y)
+	);
+
+	//弾の発射位置を算出
+	D3DXVECTOR3 BulletPos = D3DXVECTOR3
+	(
+		m_pos.x + m_ppModel[3]->GetPos().x,
+		10.0f,
+		m_pos.z + m_ppModel[3]->GetPos().z
+	);
+
+	//弾の生成
+	CBullet::Create(BulletPos, m_size * 0.5f, BulletMove);
 }

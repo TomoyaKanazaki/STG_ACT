@@ -64,7 +64,7 @@ HRESULT CEnemyManager::Init(void)
 	m_nPopCounter[21] = 10;
 	m_nPopCounter[22] = 5;
 	m_nPopCounter[23] = 0;
-	m_nNumEnemy = 5;
+	m_nNumEnemy = 100;
 
 	return S_OK;
 }

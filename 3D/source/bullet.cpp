@@ -19,7 +19,7 @@
 #define BULLET_SPEED (10.0f) //弾速
 #define BULLET_LIFE (256) //寿命
 #define HOMING_LENGTH (200.0f) //ホーミング判定距離
-#define HOMING_POWER (0.2f) //ホーミングの強さ
+#define HOMING_POWER (0.3f) //ホーミングの強さ
 #define HOMING_TIMER (30) //ホーミング時間
 #define HIT_LENGTH (20.0f) //ヒット判定距離
 
@@ -77,7 +77,13 @@ void CBullet::Update(void)
 	{
 		if (m_Target.nCounter <= HOMING_TIMER)
 		{
-			if (m_Target.pObj != NULL)
+			if 
+				(
+					m_Target.pObj->GetPos().x > -500.0f &&
+					m_Target.pObj->GetPos().x < 500.0f &&
+					m_Target.pObj->GetPos().z > -500.0f &&
+					m_Target.pObj->GetPos().z < 500.0f
+				)
 			{
 				//ホーミングムーブ
 				D3DXVECTOR3 move = m_Target.pObj->GetPos() - m_pos;
@@ -88,13 +94,21 @@ void CBullet::Update(void)
 
 				//移動量の適応
 				D3DXVECTOR3 moveDiff = m_move - move;
-				m_move -= moveDiff * HOMING_POWER;
+
+				//一定時間経過していたら直撃する
+				if (m_Target.nCounter > 20)
+				{
+					m_move -= moveDiff;
+				}
+				else
+				{
+					m_move -= moveDiff * HOMING_POWER;
+				}
 
 				//時間を加算する
 				m_Target.nCounter++;
 			}
-
-			if (&m_Target.pObj == NULL)
+			else
 			{
 				m_Target.bHoming = false;
 			}

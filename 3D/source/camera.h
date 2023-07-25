@@ -44,9 +44,11 @@ private:
 	D3DXMATRIX m_mtxProjection; //プロジェクションマトリックス
 	D3DXMATRIX m_mtxView; //ビューマトリックス
 	D3DXVECTOR3 m_rot; //Xの計算に使用する角度
+	float m_FOV; //視野角
 
 	//メンバ関数
 	void CalcPos(SLIP slipFlag = SLIP_ON);
+	void CalcFOV(void);
 
 };
 

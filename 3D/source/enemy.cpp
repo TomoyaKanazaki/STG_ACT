@@ -16,6 +16,7 @@
 #include "shadow.h"
 #include "motion.h"
 #include "item.h"
+#include "motion.h"
 
 //==========================================
 //  マクロ定義
@@ -38,6 +39,7 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 	m_ppModel = NULL;
 	m_pLayer = NULL;
 	m_pShadow = NULL;
+	m_pMotion = NULL;
 	m_bRand = true;
 	m_nCntEnemy++;
 }
@@ -83,6 +85,22 @@ HRESULT CEnemy::Init(void)
 		}
 	}
 
+	//モーション情報の生成
+	while (1)
+	{
+		if (m_pMotion == NULL)
+		{
+			m_pMotion = new CMotion;
+
+			//モーション情報にモデルを追加する
+			m_pMotion->SetModel(m_ppModel, m_pLayer->nNumModel, CMotion::PLAYER_SHOT);
+		}
+		else
+		{
+			break;
+		}
+	}
+
 	//影を生成
 	if (m_pShadow == NULL)
 	{
@@ -112,6 +130,13 @@ void CEnemy::Uninit(void)
 		m_ppModel = NULL;
 	}
 
+	//モーションのポインタを破棄
+	if (m_pMotion != NULL)
+	{
+		delete m_pMotion;
+		m_pMotion = NULL;
+	}
+
 	//自分自身の破棄
 	Release();
 }
@@ -125,20 +150,36 @@ void CEnemy::Update(void)
 	m_pos += m_move;
 
 	//実体を移動する
-	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+	if (m_ppModel != NULL)
 	{
-		if (m_ppModel[nCnt] != NULL)
+		for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
 		{
-			if (m_ppModel[nCnt]->GetParent() == NULL)
+			if (m_ppModel[nCnt] != NULL)
 			{
-				m_ppModel[nCnt]->SetTransform(m_pos, m_rot);
+				if (m_ppModel[nCnt]->GetParent() == NULL)
+				{
+					m_ppModel[nCnt]->SetTransform(m_pos, m_rot);
+				}
 			}
 		}
 	}
 
+	//モーションを更新する
+	if (m_pMotion != NULL)
+	{
+		m_pMotion->Update();
+	}
 
 	//影の情報を更新する
-	m_pShadow->SetTransform(m_pos, m_rot);
+	if (m_pShadow != NULL)
+	{
+		m_pShadow->SetTransform(m_pos, m_rot);
+	}
+	else
+	{
+		//再生成
+		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
+	}
 }
 
 //==========================================

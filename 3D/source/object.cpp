@@ -196,7 +196,10 @@ void CObject::DrawAll(void)
 	CCamera *pCamera = CGameManager::GetCamera();
 
 	//ƒJƒƒ‰‚Ìİ’è
-	pCamera->SetCamera();
+	if (pCamera != NULL)
+	{
+		pCamera->SetCamera();
+	}
 
 	//•`‰æ—Dæ‡ˆÊ
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)

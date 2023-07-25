@@ -7,6 +7,7 @@
 #ifndef _GAMEMANAGER_H_
 #define _GAMEMANAGER_H_
 #include "main.h"
+#include "scene.h"
 
 //==========================================
 //  前方宣言
@@ -22,7 +23,7 @@ class CEnergy;
 //==========================================
 //  ゲームマネージャクラス定義
 //==========================================
-class CGameManager
+class CGameManager : public CScene
 {
 public:
 	typedef enum
@@ -37,13 +38,13 @@ public:
 	~CGameManager(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
 
 	//静的メンバ関数
-	static STATE GetState(void) { return m_state; }
+	static STATE GetState(void) { return m_State; }
 	static CScore *GetScore(void) { return m_pScore; }
 	static CTimer *GetTimer(void) { return m_pTimer; }
 	static CObject_Fan *GetFan(void) { return m_pFan; }
@@ -57,7 +58,7 @@ private:
 	//メンバ変数
 
 	//静的メンバ変数
-	static STATE m_state; //ゲームの状態
+	static STATE m_State; //ゲームの状態
 	static CScore *m_pScore;
 	static CTimer *m_pTimer;
 	static CObject_Fan *m_pFan;

@@ -7,6 +7,7 @@
 #include <time.h>
 #include "main.h"
 #include "manager.h"
+#include "input.h"
 
 //==========================================
 //  プロトタイプ宣言
@@ -131,10 +132,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hInstancePrev*/, LPSTR /*lpC
 			//DirectXの処理
 			dwCurrentTime = timeGetTime(); //現在時刻を取得
 
+			if ((dwCurrentTime - dwFPSLastTime) >= 500)
+			{
+				//0.5秒経過
+				int nFPS = (dwFrameCount * 1000) / (dwCurrentTime - dwFPSLastTime);
+				CManager::SetFPS(nFPS);
+				dwFPSLastTime = dwCurrentTime; //FPSを測定した時間
+				dwFrameCount = 0; //フレームカウントをクリア
+			}
+
 			if ((dwCurrentTime - dwExecLastTime) >= (1000 / 60))
 			{
 				//60分の1秒経過
 				dwExecLastTime = dwCurrentTime;
+				dwFrameCount++;
 
 				if (pManager != NULL)
 				{
@@ -143,6 +154,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hInstancePrev*/, LPSTR /*lpC
 
 					//描画処理
 					pManager->Draw();
+
+#if _DEBUG
+					if (pManager->GetKeyboard()->GetTrigger(DIK_R))
+					{
+						pManager->Uninit();
+						delete pManager;
+						pManager = NULL;
+					}
+#endif
+				}
+				else
+				{
+					pManager = new CManager;
+					pManager->Init(hInstance, hWnd, TRUE);
 				}
 			}
 		}

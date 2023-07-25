@@ -38,7 +38,7 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	void SetTransform(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot) { m_pos.x = pos.x; m_pos.z = pos.z; m_rot = rot; }
+	void SetTransform(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot) { m_pos = pos; m_pos.z = pos.z; m_rot = rot; }
 	CModel *GetParent(void) { return m_pParent; }
 	D3DXMATRIX GetMtx(void) { return m_Info.mtxWorld; }
 
@@ -58,7 +58,7 @@ private:
 
 	//ê√ìIÉÅÉìÉoïœêî
 	static int m_nNumAll; 
-	static MODEL m_Model[64];
+	static MODEL m_Model[MAX_MODEL];
 	static char m_sFilePass[MAX_MODEL][128];
 	static bool m_bLoad;
 	static int m_nNum;

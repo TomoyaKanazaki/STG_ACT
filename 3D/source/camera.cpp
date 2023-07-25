@@ -21,6 +21,8 @@
 #define SPEED (0.05f) //カメラのスピード
 #define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
 #define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
+#define FOV_MIN (45.0f) //視野角の最低値
+#define FOV_MAX (54.0f) //視野角の最大値
 
 //==========================================
 //  コンストラクタ
@@ -31,6 +33,7 @@ CCamera::CCamera()
 	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_FOV = FOV_MIN;
 }
 
 //==========================================
@@ -75,6 +78,9 @@ void CCamera::Update(void)
 	CalcPos(SLIP_ON);
 	//ThirdPerson();
 
+	//視野角の更新
+	CalcFOV();
+
 	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
 	CManager::GetDebugProc()->Print("視点 : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
 	CManager::GetDebugProc()->Print("角度 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
@@ -95,7 +101,7 @@ void CCamera::SetCamera(void)
 	D3DXMatrixPerspectiveFovLH
 	(
 		&m_mtxProjection,
-		D3DXToRadian(54.0f),
+		D3DXToRadian(m_FOV),
 		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
 		10.0f,
 		10000.0f
@@ -269,4 +275,27 @@ void CCamera::CalcPos(SLIP slipFlag)
 
 	m_posR += slip;
 	m_posV = D3DXVECTOR3(m_posR.x, DISTANCE, m_posR.z - DISTANCE * DISTANCE_LEVEL);
+}
+
+//==========================================
+//  視野角の計算
+//==========================================
+void CCamera::CalcFOV(void)
+{
+	//ローカル変数宣言
+	float fDeff = FOV_MIN;
+
+	//場合分け
+	switch (CGameManager::GetState())
+	{
+	case CGameManager::SHOT:
+		fDeff = FOV_MIN;
+		break;
+	case CGameManager::BLADE:
+		fDeff = FOV_MAX;
+		break;
+	}
+
+	//目標の視野角まで拡縮する
+	m_FOV += (fDeff - m_FOV) * 0.08f;
 }

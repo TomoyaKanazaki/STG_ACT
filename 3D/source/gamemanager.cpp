@@ -16,11 +16,12 @@
 #include "debugproc.h"
 #include "manager.h"
 #include "input.h"
+#include "scenemanager.h"
 
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-CGameManager::STATE CGameManager::m_state = SHOT;
+CGameManager::STATE CGameManager::m_State = SHOT;
 CScore *CGameManager::m_pScore = NULL;
 CTimer *CGameManager::m_pTimer = NULL;
 CPlayer *CGameManager::m_pPlayer = NULL;
@@ -112,6 +113,15 @@ void CGameManager::Uninit(void)
 //==========================================
 void CGameManager::Update(void)
 {
+#if _DEBUG
+	//画面遷移テスト
+	//if (CManager::GetKeyboard()->GetTrigger(DIK_0))
+	{
+		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
+		return;
+	}
+#endif
+
 	//カメラの更新
 	if (m_pCamera != NULL)
 	{
@@ -124,23 +134,23 @@ void CGameManager::Update(void)
 		m_pLight->Update();
 	}
 
-	if (m_state == SHOT)
+	if (m_State == SHOT)
 	{
 		if (m_pEnergy->IsMax())
 		{
 			if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
 			{
-				m_state = BLADE;
+				m_State = BLADE;
 			}
 			CManager::GetDebugProc()->Print("\nエネルギーMAX\n");
 		}
 		--*m_pScore;
 	}
-	else if (m_state == BLADE)
+	else if (m_State == BLADE)
 	{
 		if (m_pEnergy->IsMin())
 		{
-			m_state = SHOT;
+			m_State = SHOT;
 		}
 		--*m_pEnergy;
 	}

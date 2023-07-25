@@ -15,7 +15,7 @@
 //==========================================
 class CModel;
 class CShadow;
-//class CMotion;
+class CMotion;
 class COrbit;
 
 //==========================================
@@ -45,6 +45,7 @@ private:
 	void Move(void);
 	void Rotate(void);
 	void Slop(void);
+	void Shot(void);
 
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
@@ -61,9 +62,8 @@ private:
 	CModel **m_ppModel; //ƒ‚ƒfƒ‹î•ñ
 	CLayer::LAYERDATA *m_pLayer; //ŠK‘w\‘¢î•ñ
 	CShadow *m_pShadow; //‰e‚Ìî•ñ
-	//CMotion *m_pMotion;
-
-	COrbit *orbit;
+	CMotion *m_pMotion;
+	COrbit *m_orbit;
 
 };
 

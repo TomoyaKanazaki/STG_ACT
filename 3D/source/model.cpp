@@ -18,7 +18,7 @@
 //==========================================
 //  ê√ìIÉÅÉìÉoïœêîêÈåæ
 //==========================================
-CModel::MODEL CModel::m_Model[64] = {};
+CModel::MODEL CModel::m_Model[MAX_MODEL] = {};
 int CModel::m_nNumAll = 0;
 char CModel::m_sFilePass[MAX_MODEL][128] = {};
 bool CModel::m_bLoad = false;
@@ -306,8 +306,10 @@ HRESULT CModel::Load(void)
 		}
 		else
 		{
+			fclose(pFile);
 			return E_FAIL;
 		}
+		fclose(pFile);
 	}
 	else
 	{
@@ -353,4 +355,5 @@ void CModel::UnLoad(void)
 			m_Model[nCnt].pTexture = NULL;
 		}
 	}
+	m_bLoad = false;
 }

@@ -21,9 +21,8 @@ class CMotion
 public:
 	typedef enum
 	{
-		MOTION_NONE = 0, //なし
-		PLAYER_SHOT, //弾を撃つ
-		MOTION_MAX
+		PLAYER_SHOT = 0, //弾を撃つ
+		MOTION_NONE
 	}CHARA;
 
 	typedef struct
@@ -34,7 +33,7 @@ public:
 
 	typedef struct
 	{
-		int nframe; //フレーム数
+		int nFrame; //フレーム数
 		KEY *pKey; //キー情報
 	}KEY_INFO;
 
@@ -42,6 +41,7 @@ public:
 	{
 		bool bLoop; //ループの有無
 		int nNumKey; //キー数
+		int nNumModel; //モデル数
 		KEY_INFO *pKeyInfo; //キー情報
 	}INFO;
 
@@ -51,7 +51,7 @@ public:
 	//メンバ関数
 	void Update(void);
 	void SetModel(CModel **ppModel, int nNum, CHARA type);
-	void Set(int type);
+	void Set(CHARA type);
 	
 	//静的メンバ関数
 	static void Load(void);
@@ -61,9 +61,12 @@ private:
 
 	//メンバ変数
 	CModel **m_ppModel;
-	CHARA m_Chara;
+	int m_nMotion;
 	INFO m_Info;
+	KEY m_oldKey;
 	int m_nNumModel;
+	int m_nCntFrame;
+	int m_nCntKey;
 
 	//静的メンバ変数
 	static INFO *m_pInfo;
