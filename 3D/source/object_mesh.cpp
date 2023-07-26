@@ -121,6 +121,9 @@ void CObject_Mesh::Draw(void)
 	//ライティングを無効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
+	//カリングを無効化
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
 	//ローカル変数宣言
 	D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
 
@@ -160,6 +163,9 @@ void CObject_Mesh::Draw(void)
 		0,
 		m_Mesh.nNumMesh //プリミティブ数
 	);
+
+	//カリングを有効化
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	//ライティングを有効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
@@ -477,6 +483,55 @@ bool CObject_Mesh::OnMesh(const D3DXVECTOR3 pos, const D3DXVECTOR3 oldpos, D3DXV
 	return true;
 }
 
+//==========================================
+//  頂点座標の更新
+//==========================================
+void CObject_Mesh::SetVtxPos(const D3DXVECTOR3 pos, const int nIdx)
+{
+	//インデックスをチェック
+	if (nIdx < m_Mesh.nNumVtx)
+	{
+		//頂点バッファの呼び出し
+		VERTEX_3D *pVtx;
+
+		//頂点バッファをロック
+		m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+		//インデックスを指定して頂点座標を変更する
+		pVtx[nIdx].pos = pos;
+
+		//頂点バッファをアンロック
+		m_pVtxBuff->Unlock();
+	}
+}
+
+//==========================================
+//  色の設定
+//==========================================
+void CObject_Mesh::SetColor(D3DXCOLOR col)
+{
+	//色を保存
+	m_Color = col;
+
+	//頂点バッファの呼び出し
+	VERTEX_3D *pVtx;
+
+	//頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (int nCntVtx = 0; nCntVtx < m_Mesh.nNumVtx; nCntVtx++)
+	{
+		//頂点カラーの設定
+		pVtx[nCntVtx].col = m_Color;
+	}
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+}
+
+//==========================================
+//  判定
+//==========================================
 bool CObject_Mesh::CheckOnMesh(const D3DXVECTOR3 &posJudge, const D3DXVECTOR3 &posStart, const D3DXVECTOR3 &posEnd) const
 {
 	return (posEnd.z - posStart.z) * (posJudge.x - posStart.x) - (posEnd.x - posStart.x) * (posJudge.z - posStart.z) < 0.0f;

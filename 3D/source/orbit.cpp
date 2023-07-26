@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "model.h"
 #include "debugproc.h"
+#include "object_mesh.h"
 
 //==========================================
 //  コンストラクタ
@@ -16,7 +17,6 @@
 COrbit::COrbit()
 {
 	m_parent = NULL;
-	m_pVtxBuff = NULL;
 	m_nLife = 0;
 	m_nNumVtx = 0;
 	for (int nCnt = 0; nCnt < 2; nCnt++)
@@ -25,7 +25,8 @@ COrbit::COrbit()
 		m_offset[nCnt].col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
 		m_offset[nCnt].mtxWorld = {};
 	}
-	m_mtxWorld = {};
+	m_pMesh = NULL;
+	m_pVtxPos = NULL;
 }
 
 //==========================================
@@ -42,10 +43,16 @@ COrbit::~COrbit()
 HRESULT COrbit::Init(void)
 {
 	//値の算出
-	m_nNumVtx = m_nLife * 2;
+	m_nNumVtx = (m_nLife + 1) * 2;
 
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	//メッシュを生成
+	m_pMesh = CObject_Mesh::Create(m_parent->GetPos(), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(1.0f, (float)m_nLife));
+
+	//色を適用
+	m_pMesh->SetColor(m_colDef);
+
+	//頂点数分のメモリを確保
+	m_pVtxPos = new D3DXVECTOR3[m_nNumVtx];
 
 	//オフセットの位置を算出
 	for (int nCnt = 0; nCnt < 2; nCnt++)
@@ -76,47 +83,17 @@ HRESULT COrbit::Init(void)
 			&mtxParent
 		);
 
-		//ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &m_offset[nCnt].mtxWorld);
+		//頂点座標を抽出
+		m_pVtxPos[nCnt] =
+			D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43)
+			/*- D3DXVECTOR3(mtxParent._41, mtxParent._42, mtxParent._43)*/;
 	}
 
-	if (m_nLife > 0)
+	//頂点情報を初期化
+	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt += 2)
 	{
-		//頂点バッファの生成
-		pDevice->CreateVertexBuffer
-		(
-			sizeof(VERTEX_3D) * m_nNumVtx,
-			D3DUSAGE_WRITEONLY,
-			FVF_VERTEX_3D,
-			D3DPOOL_MANAGED,
-			&m_pVtxBuff,
-			NULL
-		);
-
-		//頂点バッファの呼び出し
-		VERTEX_3D *pVtx;
-
-		//頂点バッファのロック
-		m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-		//頂点情報を初期化
-		for (int nCntVtx = 0; nCntVtx < m_nNumVtx; nCntVtx++)
-		{
-			//頂点座標の設定
-			pVtx[nCntVtx].pos = D3DXVECTOR3(m_offset[0].mtxWorld._41, m_offset[0].mtxWorld._42, m_offset[0].mtxWorld._43);
-
-			//法線ベクトルの設定
-			pVtx[nCntVtx].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-			//頂点カラーの設定
-			pVtx[nCntVtx].col = m_colDef;
-
-			//テクスチャ座標の設定
-			pVtx[nCntVtx].tex = D3DXVECTOR2(0.0f, 0.0f);
-		}
-
-		//頂点バッファをアンロック
-		m_pVtxBuff->Unlock();
+		m_pVtxPos[nCnt] = m_pVtxPos[0];
+		m_pVtxPos[nCnt + 1] = m_pVtxPos[1];
 	}
 
 	return S_OK;
@@ -127,12 +104,13 @@ HRESULT COrbit::Init(void)
 //==========================================
 void COrbit::Uninit(void)
 {
-	//頂点バッファの破棄
-	if (m_pVtxBuff != NULL)
-	{
-		m_pVtxBuff->Release();
-		m_pVtxBuff = NULL;
-	}
+	//頂点情報を破棄
+	delete[] m_pVtxPos;
+	m_pVtxPos = NULL;
+
+	//メッシュを破棄
+	delete m_pMesh;
+	m_pMesh = NULL;
 
 	//自分自身の破棄
 	Release();
@@ -143,8 +121,22 @@ void COrbit::Uninit(void)
 //==========================================
 void COrbit::Update(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	//現在の頂点座標を保存
+	D3DXVECTOR3 *pOldPos = new D3DXVECTOR3[m_nNumVtx];
+	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt++)
+	{
+		pOldPos[nCnt] = m_pVtxPos[nCnt];
+	}
+
+	//頂点座標を二つずらして保存する
+	for (int nCnt = 2; nCnt < m_nNumVtx; nCnt++)
+	{
+		m_pVtxPos[nCnt] = pOldPos[nCnt - 2];
+	}
+
+	//前回の頂点座標を破棄
+	delete[] pOldPos;
+	pOldPos = NULL;
 
 	//オフセットの位置を算出
 	for (int nCnt = 0; nCnt < 2; nCnt++)
@@ -157,7 +149,7 @@ void COrbit::Update(void)
 		D3DXMatrixIdentity(&m_offset[nCnt].mtxWorld);
 
 		//向きの反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_parent->GetRot().y, m_parent->GetRot().x, m_parent->GetRot().z);
 		D3DXMatrixMultiply(&m_offset[nCnt].mtxWorld, &m_offset[nCnt].mtxWorld, &mtxRot);
 
 		//位置の反映
@@ -175,51 +167,17 @@ void COrbit::Update(void)
 			&mtxParent
 		);
 
-		//ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &m_offset[nCnt].mtxWorld);
+		//頂点座標を抽出
+		m_pVtxPos[nCnt] =
+			D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43)
+			/*- D3DXVECTOR3(mtxParent._41, mtxParent._42, mtxParent._43)*/;
 	}
 
-	//頂点バッファの呼び出し
-	VERTEX_3D *pVtx;
-
-	//頂点バッファのロック
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	//一時保存用変数
-	D3DXVECTOR3 *oldpos = new D3DXVECTOR3[m_nNumVtx];
-	D3DXCOLOR *oldcol = new D3DXCOLOR[m_nNumVtx];
-
-	//前回情報を保存する
+	//頂点座標の適用
 	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt++)
 	{
-		oldpos[nCnt] = pVtx[nCnt].pos;
-		oldcol[nCnt] = pVtx[nCnt].col;
+		m_pMesh->SetVtxPos(m_pVtxPos[nCnt], nCnt);
 	}
-
-	//頂点情報をずらす
-	for (int nCnt = 2; nCnt < m_nNumVtx; nCnt++)
-	{
-		pVtx[nCnt].pos = oldpos[nCnt - 2];
-		pVtx[nCnt].col = oldcol[nCnt - 2];
-	}
-
-	//メモリを開放
-	delete[] oldpos;
-	delete[] oldcol;
-
-	//最新の情報を設定
-	pVtx[0].pos = D3DXVECTOR3(m_offset[0].mtxWorld._41, m_offset[0].mtxWorld._42, m_offset[0].mtxWorld._43);
-	pVtx[0].col = m_offset[0].col;
-	pVtx[1].pos = D3DXVECTOR3(m_offset[1].mtxWorld._41, m_offset[1].mtxWorld._42, m_offset[1].mtxWorld._43);
-	pVtx[1].col = m_offset[1].col;
-
-	for (int nCnt = 0; nCnt < 10; nCnt++)
-	{
-		CManager::GetDebugProc()->Print("軌跡座標 : ( %f, %f, %f )\n", pVtx[nCnt].pos.x, pVtx[nCnt].pos.y, pVtx[nCnt].pos.z);
-	}
-
-	//頂点バッファをアンロック
-	m_pVtxBuff->Unlock();
 }
 
 //==========================================
@@ -227,67 +185,7 @@ void COrbit::Update(void)
 //==========================================
 void COrbit::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	//ローカル変数宣言
-	D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
-
-	//ライティングを無効化
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-
-	//カリングを無効化
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-	//アルファテストの有効化
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 1);
-
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	//向きの反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	//位置の反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-	//親マトリックスの設定
-	D3DXMATRIX mtxParent = m_parent->GetMtx();
-
-	//ワールドマトリックスと親マトリックスをかけ合わせる
-	D3DXMatrixMultiply
-	(
-		&m_mtxWorld,
-		&m_mtxWorld,
-		&mtxParent
-	);
-
-	//ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-	//頂点バッファをデータストリームに設定
-	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D));
-
-	//頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_3D);
-
-	//ポリゴンの描画
-	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, m_nNumVtx - 2);
-
-	//カリングを有効化
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-	//アルファテストの無効化
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
-
-	//ライティングを無効化
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //==========================================

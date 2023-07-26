@@ -48,7 +48,7 @@ void CResultManager::Update(void)
 {
 #if _DEBUG
 	//‰æ–Ê‘JˆÚƒeƒXƒg
-	//if (CManager::GetKeyboard()->GetTrigger(DIK_0))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_0))
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::TITLE);
 		return;

@@ -13,6 +13,7 @@
 //  前方宣言
 //==========================================
 class CModel;
+class CObject_Mesh;
 
 //==========================================
 //  軌跡クラス定義
@@ -44,11 +45,11 @@ private:
 	//メンバ変数
 	CModel *m_parent; //追従するモデル
 	OFFSET m_offset[2]; //オフセット情報
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff; //頂点バッファ
 	D3DXCOLOR m_colDef; //初期カラー
+	D3DXVECTOR3 *m_pVtxPos; //頂点座標
 	int m_nLife; //存在時間
 	int m_nNumVtx; //頂点数
-	D3DXMATRIX m_mtxWorld; //軌跡本体のマトリックス
+	CObject_Mesh *m_pMesh; //メッシュ
 
 };
 

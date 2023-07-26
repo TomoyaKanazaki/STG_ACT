@@ -219,7 +219,7 @@ void CPlayer::Update(void)
 	Slop();
 
 	//攻撃
-	if (CManager::GetMouse()->GetPress(CMouse::BUTTON_LEFT))
+	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
 		switch (CGameManager::GetState())
 		{
@@ -238,17 +238,19 @@ void CPlayer::Update(void)
 	{
 		if (m_orbit == NULL)
 		{
-			m_orbit = COrbit::Create(m_ppModel[3], D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(100.0f, 0.0f, 100.0f), 100);
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 100);
 		}
 	}
-	else if (CGameManager::GetState() == CGameManager::SHOT)
+	else
 	{
-		//if (m_orbit != NULL)
-		//{
-		//	m_orbit->Uninit();
-		//	m_orbit = NULL;
-		//}
+		if (m_orbit != NULL)
+		{
+			m_orbit->Uninit();
+			delete m_orbit;
+			m_orbit = NULL;
+		}
 	}
+
 	//モーションを更新する
 	m_pMotion->Update();
 
@@ -408,9 +410,9 @@ void CPlayer::Shot(void)
 	//弾の発射位置を算出
 	D3DXVECTOR3 BulletPos = D3DXVECTOR3
 	(
-		m_pos.x + m_ppModel[3]->GetPos().x,
-		10.0f,
-		m_pos.z + m_ppModel[3]->GetPos().z
+		m_ppModel[4]->GetMtx()._41,
+		m_ppModel[4]->GetMtx()._42,
+		m_ppModel[4]->GetMtx()._43
 	);
 
 	//弾の生成

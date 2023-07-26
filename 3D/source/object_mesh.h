@@ -37,6 +37,8 @@ public:
 	bool OnMesh(const D3DXVECTOR3 pos);
 	bool OnMesh(const D3DXVECTOR3 pos, const D3DXVECTOR3 oldpos, D3DXVECTOR3 *pVecLine, D3DXVECTOR3 *pVecToPos);
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
+	void SetVtxPos(const D3DXVECTOR3 pos, const int nIdx);
+	void SetColor(D3DXCOLOR col);
 
 	//ê√ìIÉÅÉìÉoä÷êî
 	static CObject_Mesh *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, D3DXVECTOR2 uv);

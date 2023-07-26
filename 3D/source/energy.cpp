@@ -66,6 +66,10 @@ void CEnergy::Update(void)
 	m_size.y += fSizeDiff * 0.1f; //’l‚ğ•â³‚µ‚Ä‰ÁZ‚·‚é
 
 	CObject2D::Update();
+
+#if _DEBUG
+	//m_fEnergy = m_fMax;
+#endif
 }
 
 //==========================================
