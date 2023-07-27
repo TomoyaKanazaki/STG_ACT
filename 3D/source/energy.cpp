@@ -7,6 +7,8 @@
 #include "energy.h"
 #include "manager.h"
 #include "debugproc.h"
+#include "input.h"
+#include "gamemanager.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -60,15 +62,25 @@ void CEnergy::Uninit(void)
 //==========================================
 void CEnergy::Update(void)
 {
-	//ゲージを伸ばす
+	//ゲージの伸縮
 	float fSizeMove = m_size.y, fSizeDest = m_fEnergy, fSizeDiff; //計算用変数
 	fSizeDiff = fSizeDest - fSizeMove; //現在の大きさと目標の大きさの差分を求める
 	m_size.y += fSizeDiff * 0.1f; //値を補正して加算する
 
+	//更新情報の適用
 	CObject2D::Update();
 
+	//エネルギーを減らす
+	if (CGameManager::GetState() == CGameManager::BLADE)
+	{
+		m_fEnergy--;
+	}
+
 #if _DEBUG
-	m_fEnergy = m_fMax;
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F2))
+	{
+		m_fEnergy = m_fMax;
+	}
 #endif
 }
 
@@ -113,38 +125,3 @@ CEnergy *CEnergy::Create(const D3DXVECTOR3 pos, const float fWidth)
 	return pEnergy;
 }
 
-//==========================================
-//  前置インクリメントのオーバーロード
-//==========================================
-CEnergy &CEnergy::operator++(void)
-{
-	//値を代入する
-	m_fEnergy += m_fAdd;
-
-	//値を補正する
-	if (m_fEnergy >= m_fMax)
-	{
-		m_fEnergy = m_fMax;
-	}
-
-	//自分自身のアドレスを返す
-	return *this;
-}
-
-//==========================================
-//  前置デクリメントのオーバーロード
-//==========================================
-CEnergy &CEnergy::operator--(void)
-{
-	//値を代入する
-	m_fEnergy -= 1.0f;
-
-	//値を補正する
-	if (m_fEnergy <= 0.0f)
-	{
-		m_fEnergy = 0.0f;
-	}
-
-	//自分自身のアドレスを返す
-	return *this;
-}

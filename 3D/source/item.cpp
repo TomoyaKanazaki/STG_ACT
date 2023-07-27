@@ -85,10 +85,10 @@ void CItem::Update(void)
 		switch (m_type)
 		{
 		case ENERGY:
-			++*CGameManager::GetEnergy();
+			CGameManager::GetEnergy()->Add();
 			break;
 		case SCORE:
-			++*CGameManager::GetScore();
+			CGameManager::GetScore()->AddScale(0.01f);
 			break;
 		default:
 			break;

@@ -37,7 +37,6 @@ public:
 private:
 
 	//ƒƒ“ƒo•Ï”
-	D3DXVECTOR3 m_move;
 	ITEMS m_type;
 
 	//Ã“Iƒƒ“ƒo•Ï”

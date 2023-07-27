@@ -48,8 +48,10 @@ public:
 
 private:
 
+	//ƒƒ“ƒoŠÖ”
+	void Move(void);
+
 	//ƒƒ“ƒo•Ï”
-	D3DXVECTOR3 m_move;
 	D3DXVECTOR3 m_oldPos;
 	int m_nNumModel;
 	int m_nLife;

@@ -23,15 +23,12 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	bool IsMax(void) { return m_fEnergy >= m_fMax ? true : false; }
-	bool IsMin(void) { return m_fEnergy <= 0.0f ? true : false; }
+	void Add(void) { m_fEnergy += m_fAdd; }
+	bool IsMax(void) { return m_fEnergy >= m_fMax; }
+	bool IsMin(void) { return m_fEnergy <= 0.0f; }
 
 	//静的メンバ関数
 	static CEnergy *Create(const D3DXVECTOR3 pos, const float fWidth);
-
-	//演算子のオーバーロード
-	CEnergy &operator++(void);
-	CEnergy &operator--(void);
 
 private:
 

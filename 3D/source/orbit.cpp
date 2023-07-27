@@ -17,6 +17,11 @@
 #endif
 
 //==========================================
+//  マクロ定義
+//==========================================
+#define WIND_AREA (100.0f) //風圧発生範囲
+
+//==========================================
 //  コンストラクタ
 //==========================================
 COrbit::COrbit()
@@ -59,38 +64,8 @@ HRESULT COrbit::Init(void)
 	//頂点数分のメモリを確保
 	m_pVtxPos = new D3DXVECTOR3[m_nNumVtx];
 
-	//オフセットの位置を算出
-	for (int nCnt = 0; nCnt < 2; nCnt++)
-	{
-		//ローカル変数宣言
-		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
-		D3DXMATRIX mtxParent; //親マトリックス
-
-		//ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&m_offset[nCnt].mtxWorld);
-
-		//向きの反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-		D3DXMatrixMultiply(&m_offset[nCnt].mtxWorld, &m_offset[nCnt].mtxWorld, &mtxRot);
-
-		//位置の反映
-		D3DXMatrixTranslation(&mtxTrans, m_offset[nCnt].pos.x, m_offset[nCnt].pos.y, m_offset[nCnt].pos.z);
-		D3DXMatrixMultiply(&m_offset[nCnt].mtxWorld, &m_offset[nCnt].mtxWorld, &mtxTrans);
-
-		//親マトリックスの設定
-		mtxParent = m_parent->GetMtx();
-
-		//ワールドマトリックスと親マトリックスをかけ合わせる
-		D3DXMatrixMultiply
-		(
-			&m_offset[nCnt].mtxWorld,
-			&m_offset[nCnt].mtxWorld,
-			&mtxParent
-		);
-
-		//頂点座標を抽出
-		m_pVtxPos[nCnt] = D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43);
-	}
+	//オフセット計算処理
+	CalcOffset();
 
 	//頂点情報を初期化
 	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt += 2)
@@ -110,6 +85,14 @@ void COrbit::Uninit(void)
 	//頂点情報を破棄
 	delete[] m_pVtxPos;
 	m_pVtxPos = NULL;
+
+	//メッシュを破棄
+	if (m_pMesh != NULL)
+	{
+		m_pMesh->Uninit();
+		delete m_pMesh;
+		m_pMesh = NULL;
+	}
 
 	//自分自身の破棄
 	Release();
@@ -137,38 +120,8 @@ void COrbit::Update(void)
 	delete[] pOldPos;
 	pOldPos = NULL;
 
-	//オフセットの位置を算出
-	for (int nCnt = 0; nCnt < 2; nCnt++)
-	{
-		//ローカル変数宣言
-		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
-		D3DXMATRIX mtxParent; //親マトリックス
-
-		//ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&m_offset[nCnt].mtxWorld);
-
-		//向きの反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_parent->GetRot().y, m_parent->GetRot().x, m_parent->GetRot().z);
-		D3DXMatrixMultiply(&m_offset[nCnt].mtxWorld, &m_offset[nCnt].mtxWorld, &mtxRot);
-
-		//位置の反映
-		D3DXMatrixTranslation(&mtxTrans, m_offset[nCnt].pos.x, m_offset[nCnt].pos.y, m_offset[nCnt].pos.z);
-		D3DXMatrixMultiply(&m_offset[nCnt].mtxWorld, &m_offset[nCnt].mtxWorld, &mtxTrans);
-
-		//親マトリックスの設定
-		mtxParent = m_parent->GetMtx();
-
-		//ワールドマトリックスと親マトリックスをかけ合わせる
-		D3DXMatrixMultiply
-		(
-			&m_offset[nCnt].mtxWorld,
-			&m_offset[nCnt].mtxWorld,
-			&mtxParent
-		);
-
-		//頂点座標を抽出
-		m_pVtxPos[nCnt] = D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43);
-	}
+	//オフセット計算処理
+	CalcOffset();
 
 	//頂点座標の適用
 	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt++)
@@ -256,4 +209,43 @@ COrbit *COrbit::Create(CModel *pParent, D3DXCOLOR col, D3DXVECTOR3 offset0, D3DX
 
 	//ポインタを返す
 	return pOrbit;
+}
+
+//==========================================
+//  オフセットの計算処理
+//==========================================
+void COrbit::CalcOffset(void)
+{
+	//オフセットの位置を算出
+	for (int nCnt = 0; nCnt < 2; nCnt++)
+	{
+		//ローカル変数宣言
+		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
+		D3DXMATRIX mtxParent; //親マトリックス
+
+							  //ワールドマトリックスの初期化
+		D3DXMatrixIdentity(&m_offset[nCnt].mtxWorld);
+
+		//向きの反映
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+		D3DXMatrixMultiply(&m_offset[nCnt].mtxWorld, &m_offset[nCnt].mtxWorld, &mtxRot);
+
+		//位置の反映
+		D3DXMatrixTranslation(&mtxTrans, m_offset[nCnt].pos.x, m_offset[nCnt].pos.y, m_offset[nCnt].pos.z);
+		D3DXMatrixMultiply(&m_offset[nCnt].mtxWorld, &m_offset[nCnt].mtxWorld, &mtxTrans);
+
+		//親マトリックスの設定
+		mtxParent = m_parent->GetMtx();
+
+		//ワールドマトリックスと親マトリックスをかけ合わせる
+		D3DXMatrixMultiply
+		(
+			&m_offset[nCnt].mtxWorld,
+			&m_offset[nCnt].mtxWorld,
+			&mtxParent
+		);
+
+		//頂点座標を抽出
+		m_pVtxPos[nCnt] = D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43);
+	}
 }

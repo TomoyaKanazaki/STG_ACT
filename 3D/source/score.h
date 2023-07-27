@@ -33,14 +33,11 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	void AddScore(const int nAdd);
+	void Add(const int nAdd);
+	void AddScale(const float fScale) { m_fScale += fScale; }
 
 	//静的メンバ関数
 	static CScore *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nScoreDeff);
-
-	//演算子のオーバーロード
-	CScore &operator++(void);
-	CScore &operator--(void);
 
 private:
 	

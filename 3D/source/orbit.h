@@ -42,9 +42,14 @@ private:
 		D3DXMATRIX mtxWorld;
 	};
 
+	//メンバ関数
+	void CalcOffset(void); //オフセットの計算処理
+
 	//メンバ変数
 	CModel *m_parent; //追従するモデル
 	OFFSET m_offset[2]; //オフセット情報
+	OFFSET m_WindArea; //風圧範囲
+	D3DXVECTOR3 m_posWind[2]; //風圧判定位置
 	D3DXCOLOR m_colDef; //初期カラー
 	D3DXVECTOR3 *m_pVtxPos; //頂点座標
 	int m_nLife; //存在時間

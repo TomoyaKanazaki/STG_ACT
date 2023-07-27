@@ -57,6 +57,7 @@ public:
 	D3DXVECTOR3 GetSize(void) { return m_size; }
 	void SetPos(const D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
+	void SetMove(const D3DXVECTOR3 move) { m_move = move; }
 	void SetSize(const D3DXVECTOR3 size) { m_size = size; }
 	void SetType(TYPE type) { m_type = type; }
 	TYPE GetType(void) { return m_type; }
@@ -76,6 +77,7 @@ protected:
 	//メンバ変数
 	D3DXVECTOR3 m_pos; //オブジェクトの中心座標
 	D3DXVECTOR3 m_rot; //オブジェクトの向き
+	D3DXVECTOR3 m_move; //オブジェクトの移動量
 	D3DXVECTOR3 m_size; //オブジェクトのサイズ
 	D3DXVECTOR3 m_oldPos; //オブジェクトの前回座標
 	D3DXVECTOR3 m_oldRot; //オブジェクトの前回角度

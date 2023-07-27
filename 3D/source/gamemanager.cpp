@@ -144,7 +144,7 @@ void CGameManager::Update(void)
 			}
 			CManager::GetDebugProc()->Print("\nエネルギーMAX\n");
 		}
-		--*m_pScore;
+		//スコアの倍率を下げる処理
 	}
 	else if (m_State == BLADE)
 	{
@@ -152,7 +152,7 @@ void CGameManager::Update(void)
 		{
 			m_State = SHOT;
 		}
-		--*m_pEnergy;
+		//エネルギーを減らす処理
 	}
 
 	//画面遷移

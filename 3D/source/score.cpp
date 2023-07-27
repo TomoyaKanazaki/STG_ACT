@@ -135,7 +135,7 @@ void CScore::CalcScore(void)
 //==========================================
 //  加算処理
 //==========================================
-void CScore::AddScore(const int nAdd)
+void CScore::Add(const int nAdd)
 {
 	//スコアを加算する
 	m_nScore += (int)((float)nAdd * m_fScale);
@@ -166,34 +166,4 @@ D3DXVECTOR3 CScore::CalcPos(int nCnt)
 
 	//値を返す
 	return NumPos;
-}
-
-//==========================================
-//  前置インクリメントのオーバーロード
-//==========================================
-CScore &CScore::operator++(void)
-{
-	//値を代入する
-	m_fScale += 0.1f;
-
-	//自分自身のアドレスを返す
-	return *this;
-}
-
-//==========================================
-//  前置デクリメントのオーバーロード
-//==========================================
-CScore &CScore::operator--(void)
-{
-	//値を代入する
-	m_fScale -= 0.01f;
-
-	//値を補正する
-	if (m_fScale <= 1.0f)
-	{
-		m_fScale = 1.0f;
-	}
-
-	//自分自身のアドレスを返す
-	return *this;
 }
