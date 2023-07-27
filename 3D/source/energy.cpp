@@ -68,7 +68,7 @@ void CEnergy::Update(void)
 	CObject2D::Update();
 
 #if _DEBUG
-	//m_fEnergy = m_fMax;
+	m_fEnergy = m_fMax;
 #endif
 }
 

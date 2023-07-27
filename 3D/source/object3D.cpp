@@ -65,6 +65,12 @@ HRESULT CObject3D::Init(void)
 		pVtx[1].pos = D3DXVECTOR3(m_fLength, 0.0f, m_fLength);
 		pVtx[2].pos = D3DXVECTOR3(-m_fLength, 0.0f, -m_fLength);
 		pVtx[3].pos = D3DXVECTOR3(m_fLength, 0.0f, -m_fLength);
+
+		//法線ベクトルの設定
+		pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	}
 	else
 	{
@@ -73,46 +79,13 @@ HRESULT CObject3D::Init(void)
 		pVtx[1].pos = D3DXVECTOR3(m_fLength, m_fLength, 0.0f);
 		pVtx[2].pos = D3DXVECTOR3(-m_fLength, -m_fLength, 0.0f);
 		pVtx[3].pos = D3DXVECTOR3(m_fLength, -m_fLength, 0.0f);
+
+		//法線ベクトルの設定
+		pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	}
-
-	D3DXVECTOR3 nor0;
-	D3DXVECTOR3 nor1;
-	D3DXVECTOR3 nor2;
-	D3DXVECTOR3 nor3;
-
-	//0
-	D3DXVECTOR3 vecLine01 = pVtx[1].pos - pVtx[0].pos;
-	D3DXVECTOR3 vecLine02 = pVtx[2].pos - pVtx[0].pos;
-
-	D3DXVec3Cross(&nor0, &vecLine01, &vecLine02);
-	D3DXVec3Normalize(&nor0, &nor0);
-
-	//1
-	D3DXVECTOR3 vecLine10 = pVtx[0].pos - pVtx[1].pos;
-	D3DXVECTOR3 vecLine13 = pVtx[3].pos - pVtx[1].pos;
-
-	D3DXVec3Cross(&nor1, &vecLine10, &vecLine13);
-	D3DXVec3Normalize(&nor1, &nor1);
-
-	//2
-	D3DXVECTOR3 vecLine20 = pVtx[0].pos - pVtx[2].pos;
-	D3DXVECTOR3 vecLine23 = pVtx[3].pos - pVtx[2].pos;
-
-	D3DXVec3Cross(&nor2, &vecLine20, &vecLine23);
-	D3DXVec3Normalize(&nor2, &nor2);
-
-	//3
-	D3DXVECTOR3 vecLine31 = pVtx[1].pos - pVtx[3].pos;
-	D3DXVECTOR3 vecLine32 = pVtx[2].pos - pVtx[3].pos;
-
-	D3DXVec3Cross(&nor3, &vecLine31, &vecLine32);
-	D3DXVec3Normalize(&nor3, &nor3);
-
-	//法線ベクトルの設定
-	pVtx[0].nor = nor0;
-	pVtx[1].nor = nor1;
-	pVtx[2].nor = nor2;
-	pVtx[3].nor = nor3;
 
 	//頂点カラーの設定
 	for (int nCnt = 0; nCnt < 4; nCnt++)
@@ -169,6 +142,12 @@ void CObject3D::Update(void)
 		pVtx[1].pos = D3DXVECTOR3(m_fLength, 0.0f, m_fLength);
 		pVtx[2].pos = D3DXVECTOR3(-m_fLength, 0.0f, -m_fLength);
 		pVtx[3].pos = D3DXVECTOR3(m_fLength, 0.0f, -m_fLength);
+
+		//法線ベクトルの設定
+		pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	}
 	else
 	{
@@ -177,46 +156,13 @@ void CObject3D::Update(void)
 		pVtx[1].pos = D3DXVECTOR3(m_fLength, m_fLength, 0.0f);
 		pVtx[2].pos = D3DXVECTOR3(-m_fLength, -m_fLength, 0.0f);
 		pVtx[3].pos = D3DXVECTOR3(m_fLength, -m_fLength, 0.0f);
+
+		//法線ベクトルの設定
+		pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	}
-
-	D3DXVECTOR3 nor0;
-	D3DXVECTOR3 nor1;
-	D3DXVECTOR3 nor2;
-	D3DXVECTOR3 nor3;
-
-	//0
-	D3DXVECTOR3 vecLine01 = pVtx[1].pos - pVtx[0].pos;
-	D3DXVECTOR3 vecLine02 = pVtx[2].pos - pVtx[0].pos;
-
-	D3DXVec3Cross(&nor0, &vecLine01, &vecLine02);
-	D3DXVec3Normalize(&nor0, &nor0);
-
-	//1
-	D3DXVECTOR3 vecLine10 = pVtx[0].pos - pVtx[1].pos;
-	D3DXVECTOR3 vecLine13 = pVtx[3].pos - pVtx[1].pos;
-
-	D3DXVec3Cross(&nor1, &vecLine10, &vecLine13);
-	D3DXVec3Normalize(&nor1, &nor1);
-
-	//2
-	D3DXVECTOR3 vecLine20 = pVtx[0].pos - pVtx[2].pos;
-	D3DXVECTOR3 vecLine23 = pVtx[3].pos - pVtx[2].pos;
-
-	D3DXVec3Cross(&nor2, &vecLine20, &vecLine23);
-	D3DXVec3Normalize(&nor2, &nor2);
-
-	//3
-	D3DXVECTOR3 vecLine31 = pVtx[1].pos - pVtx[3].pos;
-	D3DXVECTOR3 vecLine32 = pVtx[2].pos - pVtx[3].pos;
-
-	D3DXVec3Cross(&nor3, &vecLine31, &vecLine32);
-	D3DXVec3Normalize(&nor3, &nor3);
-
-	//法線ベクトルの設定
-	pVtx[0].nor = nor0;
-	pVtx[1].nor = nor1;
-	pVtx[2].nor = nor2;
-	pVtx[3].nor = nor3;
 
 	//頂点カラーの設定
 	for (int nCnt = 0; nCnt < 4; nCnt++)

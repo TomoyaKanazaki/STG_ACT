@@ -170,3 +170,76 @@ bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, CObjec
 	//当たっていない
 	return false;
 }
+
+//==========================================
+//  矩形の内部のオブジェクトを破棄
+//==========================================
+void Collision::InSquare(D3DXVECTOR3 *pVtx)
+{
+	//判定に利用する4つのベクトルを算出
+	D3DXVECTOR3 vecLine[4] = 
+	{
+		pVtx[1] - pVtx[0],
+		pVtx[2] - pVtx[1],
+		pVtx[3] - pVtx[2],
+		pVtx[0] - pVtx[3]
+	};
+
+	//全描画優先順位を確認
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
+
+		//全てのオブジェクトを確認
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			//対象オブジェクトが敵の場合
+			if (pObj->GetType() == CObject::TYPE_ENEMY)
+			{
+				//判定フラグ
+				bool bIn = true;
+
+				//判定に必要なベクトルを算出
+				D3DXVECTOR3 pos = pObj->GetPos(), vecToPos[4] =
+				{
+					pos - pVtx[0],
+					pos - pVtx[1],
+					pos - pVtx[2],
+					pos - pVtx[3]
+				};
+
+				//4つのベクトルで判定をする
+				for (int nCntVec = 0; nCntVec < 4; nCntVec++)
+				{
+					//外積を算出
+					float fDot = 0.0f;
+					fDot = vecLine[nCntVec].z * vecToPos[nCntVec].x - vecLine[nCntVec].x * vecToPos[nCntVec].z;
+
+					if (fDot > 0.0f)
+					{
+
+					}
+					else
+					{
+						bIn = false;
+						break;
+					}
+				}
+
+				//内部に存在した場合
+				if (bIn)
+				{
+					//対象のオブジェクトを終了
+					pObj->Uninit();
+				}
+			}
+
+			//確認するアドレスをずらす
+			pObj = pNext;
+		}
+	}
+}

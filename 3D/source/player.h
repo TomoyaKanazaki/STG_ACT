@@ -34,7 +34,6 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	D3DXVECTOR3 GetOldPos(void) { return m_oldPos; }
 
 	//Ã“Iƒƒ“ƒo•Ï”
 	static CPlayer *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -49,7 +48,6 @@ private:
 
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_move;
-	D3DXVECTOR3 m_oldPos;
 	int m_nLife;
 	int m_nNumModel;
 	int m_nDeadCounter;

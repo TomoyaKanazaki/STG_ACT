@@ -52,6 +52,8 @@ public:
 	CObject *GetNext(void) { return m_pNext; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXVECTOR3 GetOldPos(void) { return m_oldPos; }
+	D3DXVECTOR3 GetOldRot(void) { return m_oldRot; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
 	void SetPos(const D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
@@ -75,6 +77,8 @@ protected:
 	D3DXVECTOR3 m_pos; //オブジェクトの中心座標
 	D3DXVECTOR3 m_rot; //オブジェクトの向き
 	D3DXVECTOR3 m_size; //オブジェクトのサイズ
+	D3DXVECTOR3 m_oldPos; //オブジェクトの前回座標
+	D3DXVECTOR3 m_oldRot; //オブジェクトの前回角度
 
 private:
 

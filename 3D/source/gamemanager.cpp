@@ -154,6 +154,13 @@ void CGameManager::Update(void)
 		}
 		--*m_pEnergy;
 	}
+
+	//‰æ–Ê‘JˆÚ
+	if (m_pTimer->GetTime() <= 0)
+	{
+		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
+		return;
+	}
 }
 
 //==========================================

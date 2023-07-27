@@ -10,6 +10,11 @@
 #include "model.h"
 #include "debugproc.h"
 #include "object_mesh.h"
+#include "collision.h"
+#ifdef _DEBUG
+#include "gamemanager.h"
+#include "player.h"
+#endif
 
 //==========================================
 //  コンストラクタ
@@ -46,7 +51,7 @@ HRESULT COrbit::Init(void)
 	m_nNumVtx = (m_nLife + 1) * 2;
 
 	//メッシュを生成
-	m_pMesh = CObject_Mesh::Create(m_parent->GetPos(), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(1.0f, (float)m_nLife));
+	m_pMesh = CObject_Mesh::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(1.0f, (float)m_nLife));
 
 	//色を適用
 	m_pMesh->SetColor(m_colDef);
@@ -84,9 +89,7 @@ HRESULT COrbit::Init(void)
 		);
 
 		//頂点座標を抽出
-		m_pVtxPos[nCnt] =
-			D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43)
-			/*- D3DXVECTOR3(mtxParent._41, mtxParent._42, mtxParent._43)*/;
+		m_pVtxPos[nCnt] = D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43);
 	}
 
 	//頂点情報を初期化
@@ -107,10 +110,6 @@ void COrbit::Uninit(void)
 	//頂点情報を破棄
 	delete[] m_pVtxPos;
 	m_pVtxPos = NULL;
-
-	//メッシュを破棄
-	delete m_pMesh;
-	m_pMesh = NULL;
 
 	//自分自身の破棄
 	Release();
@@ -168,9 +167,7 @@ void COrbit::Update(void)
 		);
 
 		//頂点座標を抽出
-		m_pVtxPos[nCnt] =
-			D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43)
-			/*- D3DXVECTOR3(mtxParent._41, mtxParent._42, mtxParent._43)*/;
+		m_pVtxPos[nCnt] = D3DXVECTOR3(m_offset[nCnt].mtxWorld._41, m_offset[nCnt].mtxWorld._42, m_offset[nCnt].mtxWorld._43);
 	}
 
 	//頂点座標の適用
@@ -178,6 +175,45 @@ void COrbit::Update(void)
 	{
 		m_pMesh->SetVtxPos(m_pVtxPos[nCnt], nCnt);
 	}
+
+	//先端ポリゴンを生成する頂点の情報
+	D3DXVECTOR3 aVtx[4];
+
+	//回転方向の判定
+	//if (m_parent->GetOldRot().y - m_parent->GetOldRot().y < 0.0f)
+	//{
+	//	aVtx[0] = m_pVtxPos[0];
+	//	aVtx[1] = m_pVtxPos[1];
+	//	aVtx[2] = m_pVtxPos[3];
+	//	aVtx[3] = m_pVtxPos[2];
+	//}
+	//else if(m_parent->GetOldRot().y - m_parent->GetOldRot().y > 0.0f)
+	//{
+	//	aVtx[0] = m_pVtxPos[2];
+	//	aVtx[1] = m_pVtxPos[3];
+	//	aVtx[2] = m_pVtxPos[1];
+	//	aVtx[3] = m_pVtxPos[0];
+	//}
+
+#ifdef _DEBUG
+	if (CGameManager::GetPlayer()->GetRot().y - CGameManager::GetPlayer()->GetOldRot().y < 0.0f)
+	{
+		aVtx[0] = m_pVtxPos[0];
+		aVtx[1] = m_pVtxPos[1];
+		aVtx[2] = m_pVtxPos[3];
+		aVtx[3] = m_pVtxPos[2];
+	}
+	else if (CGameManager::GetPlayer()->GetRot().y - CGameManager::GetPlayer()->GetOldRot().y > 0.0f)
+	{
+		aVtx[0] = m_pVtxPos[2];
+		aVtx[1] = m_pVtxPos[3];
+		aVtx[2] = m_pVtxPos[1];
+		aVtx[3] = m_pVtxPos[0];
+	}
+#endif
+
+	//先端ポリゴンの当たり判定
+	Collision::InSquare(&aVtx[0]);
 }
 
 //==========================================

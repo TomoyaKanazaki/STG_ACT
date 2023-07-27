@@ -30,7 +30,6 @@
 //  マクロ定義
 //==========================================
 #define PLAYER_SPEED (1.0f) //プレイヤーの移動速度(キーボード)
-#define TXTFILENAME_PLAYER "data\\TXT\\PlayerData.txt" //プレイヤー情報を持ったテキストファイルのパス
 
 //==========================================
 //  コンストラクタ
@@ -138,6 +137,15 @@ void CPlayer::Uninit(void)
 		m_pMotion = NULL;
 	}
 
+	//軌跡を破棄
+	if (m_orbit != NULL)
+	{
+		m_orbit->Uninit();
+		delete m_orbit;
+		m_orbit = NULL;
+	}
+
+
 	//自分自身の破棄
 	Release();
 }
@@ -171,11 +179,26 @@ void CPlayer::Update(void)
 		}
 	}
 
-	//着地状態を取得
-	m_bRand = CGameManager::GetFan()->OnMesh(m_pos);
+	//死亡判定
+	if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
+	{
+		m_nLife--;
+		m_bDead = true;
+		if (m_pShadow != NULL)
+		{
+			m_pShadow->Uninit();
+			m_pShadow = NULL;
+		}
+	}
 
 	//前回座標の保存
-	D3DXVECTOR3 m_oldPos = m_pos;
+	m_oldPos = m_pos;
+
+	//前回角度の保存
+	m_oldRot = m_rot;
+
+	//着地状態を取得
+	m_bRand = CGameManager::GetFan()->OnMesh(m_pos);
 
 	//存在位置の判定
 	if (m_bRand)
@@ -218,6 +241,9 @@ void CPlayer::Update(void)
 	//傾ける
 	Slop();
 
+	//モーションを更新する
+	m_pMotion->Update();
+
 	//攻撃
 	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
@@ -243,33 +269,18 @@ void CPlayer::Update(void)
 	}
 	else
 	{
-		if (m_orbit != NULL)
-		{
-			m_orbit->Uninit();
-			delete m_orbit;
-			m_orbit = NULL;
-		}
+		//if (m_orbit != NULL)
+		//{
+		//	m_orbit->Uninit();
+		//	delete m_orbit;
+		//	m_orbit = NULL;
+		//}
 	}
-
-	//モーションを更新する
-	m_pMotion->Update();
 
 	//影の情報を更新する
 	if (m_pShadow != NULL)
 	{
 		m_pShadow->SetTransform(m_pos, m_rot);
-	}
-
-	//死亡判定
-	if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
-	{
-		m_nLife--;
-		m_bDead = true;
-		if (m_pShadow != NULL)
-		{
-			m_pShadow->Uninit();
-			m_pShadow = NULL;
-		}
 	}
 
 	//デバッグ表示

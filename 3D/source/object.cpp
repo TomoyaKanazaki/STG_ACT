@@ -43,6 +43,8 @@ CObject::CObject(int nPriority)
 
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_oldPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_oldRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nPriority = nPriority;
 	m_type = TYPE_NONE;
