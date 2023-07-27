@@ -264,7 +264,7 @@ void CPlayer::Update(void)
 	{
 		if (m_orbit == NULL)
 		{
-			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 100);
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 50);
 		}
 	}
 	else

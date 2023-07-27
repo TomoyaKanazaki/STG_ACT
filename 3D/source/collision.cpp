@@ -165,15 +165,13 @@ bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, CObjec
 //==========================================
 //  矩形の内部の敵を破棄
 //==========================================
-void Collision::InSquare(D3DXVECTOR3 *pVtx)
+void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 {
 	//判定に利用する4つのベクトルを算出
-	D3DXVECTOR3 vecLine[4] = 
+	D3DXVECTOR3 vecLine[2] = 
 	{
 		pVtx[1] - pVtx[0],
-		pVtx[2] - pVtx[1],
-		pVtx[3] - pVtx[2],
-		pVtx[0] - pVtx[3]
+		pVtx[3] - pVtx[2]
 	};
 
 	//全描画優先順位を確認
@@ -198,23 +196,32 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx)
 				D3DXVECTOR3 posObj = pObj->GetPos(), vecToPos[4] =
 				{
 					posObj - pVtx[0],
-					posObj - pVtx[1],
-					posObj - pVtx[2],
-					posObj - pVtx[3]
+					posObj - pVtx[2]
 				};
 
-				//4つのベクトルで判定をする
-				for (int nCntVec = 0; nCntVec < 4; nCntVec++)
-				{
-					//外積を算出
-					float fDot = 0.0f;
-					fDot = vecLine[nCntVec].z * vecToPos[nCntVec].x - vecLine[nCntVec].x * vecToPos[nCntVec].z;
+				//距離の判定を取る
+				D3DXVECTOR3 vecLength = posObj - CGameManager::GetPlayer()->GetPos();
 
-					if (fDot <= 0.0f)
+				//判定距離内の場合
+				if (fLength >= vecLength.x * vecLength.x + vecLength.z * vecLength.z)
+				{
+					//4つのベクトルで判定をする
+					for (int nCntVec = 0; nCntVec < 2; nCntVec++)
 					{
-						bIn = false;
-						break;
+						//外積を算出
+						float fDot = 0.0f;
+						fDot = vecLine[nCntVec].z * vecToPos[nCntVec].x - vecLine[nCntVec].x * vecToPos[nCntVec].z;
+
+						if (fDot <= 0.0f)
+						{
+							bIn = false;
+							break;
+						}
 					}
+				}
+				else
+				{
+					bIn = false;
 				}
 
 				//内部に存在した場合
@@ -237,7 +244,10 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx)
 	}
 }
 
-void Collision::InSquare(D3DXVECTOR3 * pVtx, float fPressure)
+//==========================================
+//  矩形の内部の敵を吹き飛ばす
+//==========================================
+void Collision::InSquare(D3DXVECTOR3 * pVtx, float fLength, float fPressure)
 {
 	//判定に利用する4つのベクトルを算出
 	D3DXVECTOR3 vecLine[4] =

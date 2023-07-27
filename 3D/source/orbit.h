@@ -55,6 +55,7 @@ private:
 	int m_nLife; //‘¶İŠÔ
 	int m_nNumVtx; //’¸“_”
 	CObject_Mesh *m_pMesh; //ƒƒbƒVƒ…
+	float m_fLength; //”»’è‹——£
 
 };
 

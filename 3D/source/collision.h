@@ -21,8 +21,8 @@ namespace Collision
 	D3DXVECTOR3 GetRevisionVec(const D3DXVECTOR3 vecMove, const D3DXVECTOR3 vecLine, const D3DXVECTOR3 vecToPos); //“ñ’¼ü‚ÌŒğ“_‚Ìæ“¾
 	bool CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3DXVECTOR3 *pPos = NULL); //“G‚Æ‚Ì‹——£”»’è
 	bool HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, CObject **pObject); //“G‚Æ‚Ì‹——£”»’è
-	void InSquare(D3DXVECTOR3 *pVtx); //‹éŒ`‚Ì“à•”‚Ì“G‚ğ”jŠü
-	void InSquare(D3DXVECTOR3 *pVtx, float fPressure); //‹éŒ`‚Ì“à•”‚Ì“G‚ğ”jŠü
+	void InSquare(D3DXVECTOR3 *pVtx, float fLength); //‹éŒ`‚Ì“à•”‚Ì“G‚ğ”jŠü
+	void InSquare(D3DXVECTOR3 *pVtx, float fLength, float fPressure); //‹éŒ`‚Ì“à•”‚Ì“G‚ğ‚«”ò‚Î‚·
 }
 
 #endif

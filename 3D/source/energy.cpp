@@ -62,6 +62,12 @@ void CEnergy::Uninit(void)
 //==========================================
 void CEnergy::Update(void)
 {
+	//最大値の補正
+	if (m_fEnergy > m_fMax)
+	{
+		m_fEnergy = m_fMax;
+	}
+
 	//ゲージの伸縮
 	float fSizeMove = m_size.y, fSizeDest = m_fEnergy, fSizeDiff; //計算用変数
 	fSizeDiff = fSizeDest - fSizeMove; //現在の大きさと目標の大きさの差分を求める

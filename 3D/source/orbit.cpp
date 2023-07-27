@@ -11,10 +11,8 @@
 #include "debugproc.h"
 #include "object_mesh.h"
 #include "collision.h"
-#ifdef _DEBUG
 #include "gamemanager.h"
 #include "player.h"
-#endif
 
 //==========================================
 //  マクロ定義
@@ -37,6 +35,7 @@ COrbit::COrbit()
 	}
 	m_pMesh = NULL;
 	m_pVtxPos = NULL;
+	m_fLength = 0.0f;
 }
 
 //==========================================
@@ -67,6 +66,10 @@ HRESULT COrbit::Init(void)
 	//オフセット計算処理
 	CalcOffset();
 
+	//プレイヤー中心と端の距離を算出
+	D3DXVECTOR3 vecLength = CGameManager::GetPlayer()->GetPos() - m_pVtxPos[1];
+	m_fLength = vecLength.x * vecLength.x + vecLength.z * vecLength.z;
+
 	//頂点情報を初期化
 	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt += 2)
 	{
@@ -90,8 +93,6 @@ void COrbit::Uninit(void)
 	if (m_pMesh != NULL)
 	{
 		m_pMesh->Uninit();
-		delete m_pMesh;
-		m_pMesh = NULL;
 	}
 
 	//自分自身の破棄
@@ -155,6 +156,8 @@ void COrbit::Update(void)
 		aVtx[1] = m_pVtxPos[1];
 		aVtx[2] = m_pVtxPos[3];
 		aVtx[3] = m_pVtxPos[2];
+
+
 	}
 	else if (CGameManager::GetPlayer()->GetRot().y - CGameManager::GetPlayer()->GetOldRot().y > 0.0f)
 	{
@@ -166,7 +169,7 @@ void COrbit::Update(void)
 #endif
 
 	//先端ポリゴンの当たり判定
-	Collision::InSquare(&aVtx[0]);
+	Collision::InSquare(&aVtx[0], m_fLength);
 }
 
 //==========================================
@@ -223,7 +226,7 @@ void COrbit::CalcOffset(void)
 		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
 		D3DXMATRIX mtxParent; //親マトリックス
 
-							  //ワールドマトリックスの初期化
+		//ワールドマトリックスの初期化
 		D3DXMatrixIdentity(&m_offset[nCnt].mtxWorld);
 
 		//向きの反映
