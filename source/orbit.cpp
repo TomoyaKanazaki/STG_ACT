@@ -150,16 +150,14 @@ void COrbit::Update(void)
 	//}
 
 #ifdef _DEBUG
-	if (CGameManager::GetPlayer()->GetRot().y - CGameManager::GetPlayer()->GetOldRot().y < 0.0f)
+	if (CGameManager::GetPlayer()->GetDirection() < 0.0f)
 	{
 		aVtx[0] = m_pVtxPos[0];
 		aVtx[1] = m_pVtxPos[1];
 		aVtx[2] = m_pVtxPos[3];
 		aVtx[3] = m_pVtxPos[2];
-
-
 	}
-	else if (CGameManager::GetPlayer()->GetRot().y - CGameManager::GetPlayer()->GetOldRot().y > 0.0f)
+	else if (CGameManager::GetPlayer()->GetDirection() > 0.0f)
 	{
 		aVtx[0] = m_pVtxPos[2];
 		aVtx[1] = m_pVtxPos[3];

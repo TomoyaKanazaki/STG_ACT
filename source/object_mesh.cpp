@@ -319,7 +319,7 @@ void CObject_Mesh::CalcData(void)
 bool CObject_Mesh::OnMesh(const D3DXVECTOR3 pos)
 {
 	//ローカル変数宣言
-	int nCntPoint = 0;
+	//int nCntPoint = 0;
 
 	//頂点バッファの呼び出し
 	VERTEX_3D *pVtx;
@@ -407,7 +407,7 @@ bool CObject_Mesh::OnMesh(const D3DXVECTOR3 pos)
 bool CObject_Mesh::OnMesh(const D3DXVECTOR3 pos, const D3DXVECTOR3 oldpos, D3DXVECTOR3 *pVecLine, D3DXVECTOR3 *pVecToPos)
 {
 	//ローカル変数宣言
-	int nCntPoint = 0;
+	//int nCntPoint = 0;
 
 	//頂点バッファの呼び出し
 	VERTEX_3D *pVtx;

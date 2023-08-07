@@ -5,6 +5,8 @@
 //
 //==========================================
 #include "gamemanager.h"
+#include "manager.h"
+#include "sound.h"
 #include "object_fan.h"
 #include "score.h"
 #include "timer.h"
@@ -83,6 +85,9 @@ HRESULT CGameManager::Init(void)
 	//ƒGƒlƒ‹ƒM[‚Ì¶¬
 	m_pEnergy = CEnergy::Create(D3DXVECTOR3(1200.0f, SCREEN_HEIGHT * 0.5f, 0.0f), 20.0f);
 
+	//BGM‚ÌÄ¶
+	//CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
+
 	return S_OK;
 }
 
@@ -106,6 +111,9 @@ void CGameManager::Uninit(void)
 		delete m_pLight;
 		m_pLight = NULL;
 	}
+
+	//BGM‚Ì’âŽ~
+	CManager::GetSound()->Stop();
 }
 
 //==========================================
@@ -156,11 +164,11 @@ void CGameManager::Update(void)
 	}
 
 	//‰æ–Ê‘JˆÚ
-	if (m_pTimer->GetTime() <= 0)
-	{
-		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
-		return;
-	}
+	//if (m_pTimer->GetTime() <= 0)
+	//{
+	//	CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
+	//	return;
+	//}
 }
 
 //==========================================

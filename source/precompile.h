@@ -8,11 +8,14 @@
 #define _PRECOMPILE_H_
 
 #include <Windows.h>
-#include "d3dx9.h"
+
+#include <d3dx9.h>
 #define DIRECTINPUT_VERSION (0x0800) //ビルド時の警告対処用マクロ
-#include "dinput.h"
+#include <dinput.h>
+#include <xaudio2.h>
+
 #include <stdio.h>
-#include "xaudio2.h"
+#include <assert.h>
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>

@@ -193,10 +193,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	{
 		m_pSceneManager = CSceneManager::Create(CSceneManager::GAME);
 	}
-
-	//BGM‚ÌÄ¶
-	m_pSound->Play(CSound::SOUND_LABEL_BGM001);
-
 	return S_OK;
 }
 

@@ -91,7 +91,7 @@ HRESULT CTexture::Load(void)
 				strcpy(&sTexName[0], SHARE_PASS_TEX);
 
 				//ÉtÉ@ÉCÉãñºÇÃì«Ç›çûÇ›
-				for (int nCnt = 0; nCnt < 3; nCnt++)
+				for (int nCnt2 = 0; nCnt2 < 3; nCnt2++)
 				{
 					fscanf(pFile, "%s", &aStr[0]);
 				}

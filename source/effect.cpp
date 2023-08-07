@@ -140,17 +140,11 @@ void CEffect::Draw(void)
 CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLOR col, int nLife)
 {
 	//インスタンス生成
-	CEffect *pEffect = NULL;
-
-	//NULLチェック
-	if (pEffect == NULL)
-	{
-		//メモリを確保
-		pEffect = new CEffect;
-	}
+	CEffect *pEffect = new CEffect;
 
 	if (pEffect == NULL)
 	{
+		assert(false);
 		return NULL;
 	}
 

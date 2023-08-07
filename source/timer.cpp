@@ -53,7 +53,7 @@ HRESULT CTimer::Init(void)
 			//ê∂ê¨Ç∑ÇÈç¿ïWÇåvéZ
 			D3DXVECTOR3 NumPos = CalcPos(nCnt);
 
-			if (FAILED(m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(m_size.x / TIME_DIGIT, m_size.y, m_size.z), m_rot, m_aTime[nCnt])))
+			if (nullptr == (m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(m_size.x / TIME_DIGIT, m_size.y, m_size.z), m_rot, m_aTime[nCnt])))
 			{
 				return E_FAIL;
 			}

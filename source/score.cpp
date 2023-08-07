@@ -48,7 +48,7 @@ HRESULT CScore::Init(void)
 			//ê∂ê¨Ç∑ÇÈç¿ïWÇåvéZ
 			D3DXVECTOR3 NumPos = CalcPos(nCnt);
 
-			if (FAILED(m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(m_size.x / SCORE_DIGIT, m_size.y, m_size.z), m_rot, m_aScore[nCnt])))
+			if (nullptr == (m_apNumber[nCnt] = CNumber::Create(NumPos, D3DXVECTOR3(m_size.x / SCORE_DIGIT, m_size.y, m_size.z), m_rot, m_aScore[nCnt])))
 			{
 				return E_FAIL;
 			}

@@ -35,7 +35,7 @@ public:
 
 	//ƒƒ“ƒoŠÖ”
 	void Init(SCENE newsecene);
-	void Uninit(SCENE next = NONE);
+	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 	void SetNext(SCENE next);

@@ -82,7 +82,7 @@ void CSceneManager::Init(SCENE newsecene)
 //==========================================
 //  終了処理
 //==========================================
-void CSceneManager::Uninit(SCENE next)
+void CSceneManager::Uninit(void)
 {
 	//全オブジェクトを破棄
 	CObject::ReleaseAll();
@@ -93,12 +93,6 @@ void CSceneManager::Uninit(SCENE next)
 		m_pScene->Uninit();
 		delete m_pScene;
 		m_pScene = NULL;
-	}
-
-	//次のシーンが存在しない場合自身を破棄
-	if (next = NONE)
-	{
-		delete this;
 	}
 }
 
@@ -130,7 +124,7 @@ void CSceneManager::Update(void)
 			//次のシーンを生成する
 			if (mode == CFade::MODE_OUT)
 			{
-				Uninit(m_Next);
+				Uninit();
 				Init(m_Next);
 			}
 		}

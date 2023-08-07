@@ -44,7 +44,7 @@ HRESULT CParticle::Init(void)
 		m_range.y *= m_nMove;
 
 		//エフェクトを生成
-		if (FAILED(CEffect::Create(m_pos, m_size, m_col, m_nEffectLife, m_range)))
+		if (nullptr == (CEffect::Create(m_pos, m_size, m_col, m_nEffectLife, m_range)))
 		{
 			return E_FAIL;
 		}
@@ -87,7 +87,7 @@ void CParticle::Update(void)
 		m_range.y *= m_nMove;
 
 		//エフェクトを生成
-		if (FAILED(CEffect::Create(m_pos, m_size, m_col, m_nEffectLife, m_range)))
+		if (nullptr == (CEffect::Create(m_pos, m_size, m_col, m_nEffectLife, m_range)))
 		{
 			return;
 		}
@@ -108,7 +108,7 @@ void CParticle::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CParticle *CParticle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, D3DXVECTOR3 range, D3DXCOLOR col, int nEffectNum, int nEffectLife, int nMove, int nLife)
+CParticle *CParticle::Create(D3DXVECTOR3 /*pos*/, D3DXVECTOR3 /*size*/, D3DXVECTOR3 /*rot*/, D3DXVECTOR3 range, D3DXCOLOR col, int nEffectNum, int nEffectLife, int nMove, int nLife)
 {
 	//インスタンス生成
 	CParticle *pParticle = NULL;

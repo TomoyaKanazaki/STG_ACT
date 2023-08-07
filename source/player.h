@@ -25,6 +25,14 @@ class CPlayer : public CObject
 {
 public:
 
+	//回転方向判定用
+	enum Turning
+	{
+		TURN_NONE = 0, //回転していない状態
+		TURN_RIGHT, //右回転
+		TURN_LEFT //左回転
+	};
+
 	CPlayer(int nPriority = 4); //コンストラクタ
 	~CPlayer(); //デストラクタ
 
@@ -34,6 +42,8 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	D3DXVECTOR3 GetMove(void) { return m_move; }
+	float GetDirection(void) { return m_fRotDiff; }
+	Turning Turn(void);
 
 	//静的メンバ変数
 	static CPlayer *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -52,6 +62,7 @@ private:
 	int m_nDeadCounter;
 	float m_fSpeed;
 	float m_fAngle;
+	float m_fRotDiff;
 	bool m_bRand;
 	bool m_bDead;
 
