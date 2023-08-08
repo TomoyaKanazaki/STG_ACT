@@ -138,6 +138,12 @@ void CEnemy::Uninit(void)
 		m_pMotion = NULL;
 	}
 
+	//影のポインタを破棄
+	if (m_pShadow != NULL)
+	{
+		m_pShadow->Uninit();
+	}
+
 	//自分自身の破棄
 	Release();
 }

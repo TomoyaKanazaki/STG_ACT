@@ -42,8 +42,6 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	float GetDirection(void) { return m_fRotDiff; }
-	Turning Turn(void);
 
 	//Ã“Iƒƒ“ƒo•Ï”
 	static CPlayer *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -62,7 +60,6 @@ private:
 	int m_nDeadCounter;
 	float m_fSpeed;
 	float m_fAngle;
-	float m_fRotDiff;
 	bool m_bRand;
 	bool m_bDead;
 

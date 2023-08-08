@@ -85,6 +85,7 @@ void CTimer::Update(void)
 	//•\¦‰Â”\”ÍˆÍ‚ğ’´‚¦‚½ê‡
 	if (m_nTime <= 0 || 999 <= m_nTime)
 	{
+		m_nTime = 0;
 		return;
 	}
 

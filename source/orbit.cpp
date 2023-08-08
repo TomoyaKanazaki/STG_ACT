@@ -133,31 +133,23 @@ void COrbit::Update(void)
 	//先端ポリゴンを生成する頂点の情報
 	D3DXVECTOR3 aVtx[4];
 
-	//回転方向の判定
-	//if (m_parent->GetOldRot().y - m_parent->GetOldRot().y < 0.0f)
-	//{
-	//	aVtx[0] = m_pVtxPos[0];
-	//	aVtx[1] = m_pVtxPos[1];
-	//	aVtx[2] = m_pVtxPos[3];
-	//	aVtx[3] = m_pVtxPos[2];
-	//}
-	//else if(m_parent->GetOldRot().y - m_parent->GetOldRot().y > 0.0f)
-	//{
-	//	aVtx[0] = m_pVtxPos[2];
-	//	aVtx[1] = m_pVtxPos[3];
-	//	aVtx[2] = m_pVtxPos[1];
-	//	aVtx[3] = m_pVtxPos[0];
-	//}
+	//回転方向計算用変数
+	D3DXVECTOR3 Direction;
+	D3DXVECTOR3 vtxNew = m_pVtxPos[1] - m_pVtxPos[0];
+	D3DXVECTOR3 vtxOld = m_pVtxPos[3] - m_pVtxPos[2];
+
+	//計算用ベクトルの外積を求める
+	D3DXVec3Cross(&Direction, &vtxNew, &vtxOld);
 
 #ifdef _DEBUG
-	if (CGameManager::GetPlayer()->GetDirection() < 0.0f)
+	if (Direction.y > 0.0f)
 	{
 		aVtx[0] = m_pVtxPos[0];
 		aVtx[1] = m_pVtxPos[1];
 		aVtx[2] = m_pVtxPos[3];
 		aVtx[3] = m_pVtxPos[2];
 	}
-	else if (CGameManager::GetPlayer()->GetDirection() > 0.0f)
+	else if (Direction.y < 0.0f)
 	{
 		aVtx[0] = m_pVtxPos[2];
 		aVtx[1] = m_pVtxPos[3];

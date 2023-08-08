@@ -42,7 +42,6 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_nDeadCounter = 0;
 	m_fSpeed = 0.0f;
 	m_fAngle = 0.0f;
-	m_fRotDiff = 0.0f;
 	m_bRand = true;
 	m_bDead = false;
 	m_ppModel = NULL;
@@ -146,6 +145,11 @@ void CPlayer::Uninit(void)
 		m_orbit = NULL;
 	}
 
+	//影のポインタを破棄
+	if (m_pShadow != NULL)
+	{
+		m_pShadow->Uninit();
+	}
 
 	//自分自身の破棄
 	Release();
@@ -181,16 +185,16 @@ void CPlayer::Update(void)
 	}
 
 	//死亡判定
-	//if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
-	//{
-	//	m_nLife--;
-	//	m_bDead = true;
-	//	if (m_pShadow != NULL)
-	//	{
-	//		m_pShadow->Uninit();
-	//		m_pShadow = NULL;
-	//	}
-	//}
+	if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
+	{
+		m_nLife--;
+		m_bDead = true;
+		if (m_pShadow != NULL)
+		{
+			m_pShadow->Uninit();
+			m_pShadow = NULL;
+		}
+	}
 
 	//前回座標の保存
 	m_oldPos = m_pos;
@@ -434,18 +438,4 @@ void CPlayer::Shot(void)
 
 	//弾の生成
 	CBullet::Create(BulletPos, m_size * 0.5f, BulletMove);
-}
-
-//==========================================
-//  回転方向判定処理
-//==========================================
-CPlayer::Turning CPlayer::Turn(void)
-{
-	//ローカル変数宣言
-	Turning turn = TURN_NONE; //返り値
-
-	//判定
-
-	//変数を返す
-	return turn;
 }
