@@ -12,6 +12,7 @@
 #include "score.h"
 #include "gamemanager.h"
 #include "player.h"
+#include "particle.h"
 
 //==========================================
 //  二直線の交点の取得
@@ -229,6 +230,9 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 				{
 					//アイテムをドロップする
 					CItem::Create(pObj->GetPos(), CItem::SCORE);
+
+					//パーティクルを呼び出す
+					CParticle::Create(pObj->GetPos(), D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(25.0f, 25.0f, 25.0f), D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), 100, 30, 20, 1);
 
 					//スコアを加算する
 					CGameManager::GetScore()->Add(100);

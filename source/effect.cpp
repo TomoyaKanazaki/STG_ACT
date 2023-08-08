@@ -80,6 +80,7 @@ void CEffect::Update(void)
 	//ƒTƒCƒY‚ğ¬‚³‚­‚·‚é
 	m_size.x -= m_vecDeffSize.x * m_fLifeRatio;
 	m_size.y -= m_vecDeffSize.y * m_fLifeRatio;
+	m_size.z -= m_vecDeffSize.z * m_fLifeRatio;
 
 	//ˆÚ“®—Ê‚ğ‰ÁZ‚·‚é
 	m_pos += m_move;

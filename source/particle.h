@@ -25,7 +25,7 @@ public:
 	void Draw(void) override;
 
 	//ê√ìIÉÅÉìÉoä÷êî
-	static CParticle *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, D3DXVECTOR3 range, D3DXCOLOR col, int nEffectNum, int nEffectLife, int nMove, int nLife);
+	static CParticle *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 range, D3DXCOLOR col, int nEffectNum, int nEffectLife, int nMove, int nLife);
 
 private:
 
