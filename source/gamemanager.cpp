@@ -14,7 +14,6 @@
 #include "enemy_manager.h"
 #include "light.h"
 #include "camera.h"
-#include "energy.h"
 #include "debugproc.h"
 #include "manager.h"
 #include "input.h"
@@ -82,9 +81,6 @@ HRESULT CGameManager::Init(void)
 	//タイマーの生成
 	m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 120);
 
-	//エネルギーの生成
-	m_pEnergy = CEnergy::Create(D3DXVECTOR3(1200.0f, SCREEN_HEIGHT * 0.5f, 0.0f), 20.0f);
-
 	//BGMの再生
 	//CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
 
@@ -142,25 +138,19 @@ void CGameManager::Update(void)
 		m_pLight->Update();
 	}
 
-	if (m_State == SHOT)
+	if (m_State == SHOT || m_State == BLADE)
 	{
-		if (m_pEnergy->IsMax())
+		if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
 		{
-			if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
+			if (m_State == SHOT)
 			{
 				m_State = BLADE;
 			}
-			CManager::GetDebugProc()->Print("\nエネルギーMAX\n");
+			else if (m_State == BLADE)
+			{
+				m_State = SHOT;
+			}
 		}
-		//スコアの倍率を下げる処理
-	}
-	else if (m_State == BLADE)
-	{
-		if (m_pEnergy->IsMin())
-		{
-			m_State = SHOT;
-		}
-		//エネルギーを減らす処理
 	}
 
 	//画面遷移

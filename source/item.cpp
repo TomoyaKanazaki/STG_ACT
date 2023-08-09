@@ -9,7 +9,6 @@
 #include "renderer.h"
 #include "player.h"
 #include "gamemanager.h"
-#include "energy.h"
 #include "score.h"
 
 //==========================================
@@ -85,7 +84,6 @@ void CItem::Update(void)
 		switch (m_type)
 		{
 		case ENERGY:
-			CGameManager::GetEnergy()->Add();
 			break;
 		case SCORE:
 			CGameManager::GetScore()->AddScale(0.01f);

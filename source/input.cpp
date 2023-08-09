@@ -401,12 +401,12 @@ bool CMouse::GetMouseControll(void)
 //==========================================
 CJoyPad::CJoyPad()
 {
-	XINPUT_STATE m_JoyKeyState = {};
-	XINPUT_STATE m_JoyKeyTrigger = {};
-	XINPUT_VIBRATION m_Vibration = {};
-	VIBRATION m_VibrationState = VIBRATIONSTATE_NONE;
-	int m_VibrationTimer = 0;
-	int m_nIdx = m_nNum;
+	//XINPUT_STATE m_JoyKeyState = {};
+	//XINPUT_STATE m_JoyKeyTrigger = {};
+	//XINPUT_VIBRATION m_Vibration = {};
+	//VIBRATION m_VibrationState = VIBRATIONSTATE_NONE;
+	//int m_VibrationTimer = 0;
+	//int m_nIdx = m_nNum;
 
 	//égópêîÇâ¡éZÇ∑ÇÈ
 	m_nNum++;
@@ -524,7 +524,7 @@ void CJoyPad::Update(void)
 //==========================================
 bool CJoyPad::GetPress(JOYKEY Key)
 {
-	return (m_JoyKeyState.Gamepad.wButtons & (0x01 << Key)) ? true : false;
+	return (m_JoyKeyState.Gamepad.wButtons & (0x01 << Key)) != 0;
 }
 
 //==========================================
@@ -632,6 +632,7 @@ void CJoyPad::VibrationJoyPad(VIBRATION VibrationState)
 		m_VibrationTimer = 100;
 		break;
 	default:
+		assert(false);
 		break;
 	}
 

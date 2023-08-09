@@ -26,7 +26,6 @@
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
     <ClCompile Include="source\enemy_manager.cpp" />
-    <ClCompile Include="source\energy.cpp" />
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\gamemanager.cpp" />
@@ -75,7 +74,6 @@
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
     <ClInclude Include="source\enemy_manager.h" />
-    <ClInclude Include="source\energy.h" />
     <ClInclude Include="source\fade.h" />
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\gamemanager.h" />
@@ -193,6 +191,7 @@
       <AdditionalIncludeDirectories>source;imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <TreatSpecificWarningsAsErrors>4458</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -208,6 +207,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
+      <TreatSpecificWarningsAsErrors>4458</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -227,6 +227,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <TreatSpecificWarningsAsErrors>4458</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -246,6 +247,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
+      <TreatSpecificWarningsAsErrors>4458</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
