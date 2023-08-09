@@ -17,17 +17,12 @@
 #include "motion.h"
 #include "item.h"
 #include "motion.h"
+#include "enemy_approach.h"
 
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
 int CEnemy::m_nCntEnemy = 0;
-
-//==========================================
-//  マクロ定義
-//==========================================
-#define SPEED (2.0f) //移動速度
-#define DETECTION (10000.0f) //索敵範囲
 
 //==========================================
 //  コンストラクタ
@@ -153,9 +148,6 @@ void CEnemy::Uninit(void)
 //==========================================
 void CEnemy::Update(void)
 {
-	//移動の処理
-	Move();
-
 	//移動量の適用
 	m_pos += m_move;
 
@@ -212,7 +204,22 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 	if (pEnemy == NULL)
 	{
 		//メモリを確保
-		pEnemy = new CEnemy;
+		switch (type)
+		{
+		case CEnemy::TYPE_NORMAL:
+
+			pEnemy = new CEnemyApproach;
+			break;
+
+		case CEnemy::TYPE_SHOT:
+
+			//pEnemy = new CEnemyShot;
+			//break;
+
+		default:
+			return NULL;
+			break;
+		}
 	}
 
 	//各種情報の保存
@@ -228,33 +235,4 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 
 	//ポインタを返す
 	return pEnemy;
-}
-
-//==========================================
-//  移動処理
-//==========================================
-void CEnemy::Move(void)
-{
-	//慣性による移動の停止
-	m_move.x += (0.0f - m_move.x) * 0.1f;
-	m_move.z += (0.0f - m_move.z) * 0.1f;
-
-	//プレイヤーの位置を取得
-	D3DXVECTOR3 posTarget = CGameManager::GetPlayer()->GetPos();
-
-	//プレイヤーに向かうベクトルを算出
-	posTarget -= m_pos;
-
-	//プレイヤーとの距離が近い場合
-	if (posTarget.x * posTarget.x + posTarget.z * posTarget.z < DETECTION * DETECTION)
-	{
-		//Y座標への補正を削除する
-		posTarget.y = 0.0f;
-
-		//ベクトルの正規化
-		D3DXVec3Normalize(&posTarget, &posTarget);
-
-		//移動量を補正して適用
-		m_move = posTarget * SPEED;
-	}
 }

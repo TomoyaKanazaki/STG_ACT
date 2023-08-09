@@ -26,6 +26,7 @@ public:
 	typedef enum
 	{
 		TYPE_NORMAL = 0, //•’Ê‚Ì“G
+		TYPE_SHOT, //‰“‹——£UŒ‚‚Ì“G
 		TYPE_MAX
 	}TYPE;
 
@@ -47,9 +48,6 @@ public:
 	static int m_nCntEnemy;
 
 private:
-
-	//ƒƒ“ƒoŠÖ”
-	void Move(void);
 
 	//ƒƒ“ƒo•Ï”
 	D3DXVECTOR3 m_oldPos;
