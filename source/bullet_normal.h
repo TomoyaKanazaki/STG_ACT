@@ -25,7 +25,6 @@ public:
 	void Draw(void) override;
 
 private:
-	
 
 };
 

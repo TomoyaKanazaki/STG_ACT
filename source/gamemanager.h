@@ -19,6 +19,7 @@ class CPlayer;
 class CCamera;
 class CLight;
 class CEnergy;
+class CBattery;
 
 //==========================================
 //  ゲームマネージャクラス定義
@@ -52,6 +53,7 @@ public:
 	static CCamera *GetCamera(void) { return m_pCamera; }
 	static CLight *GetLight(void) { return m_pLight; }
 	static CEnergy *GetEnergy(void) { return m_pEnergy; }
+	static CBattery *GetBattery(void) { return m_pBattery; }
 
 private:
 
@@ -66,6 +68,7 @@ private:
 	static CCamera *m_pCamera;
 	static CLight *m_pLight;
 	static CEnergy *m_pEnergy;
+	static CBattery *m_pBattery;
 
 };
 

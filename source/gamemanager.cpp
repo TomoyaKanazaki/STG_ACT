@@ -18,6 +18,7 @@
 #include "manager.h"
 #include "input.h"
 #include "scenemanager.h"
+#include "battery.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -30,6 +31,7 @@ CObject_Fan *CGameManager::m_pFan = NULL;
 CCamera *CGameManager::m_pCamera = NULL;
 CLight *CGameManager::m_pLight = NULL;
 CEnergy *CGameManager::m_pEnergy = NULL;
+CBattery *CGameManager::m_pBattery = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -81,8 +83,11 @@ HRESULT CGameManager::Init(void)
 	//タイマーの生成
 	m_pTimer = CTimer::Create(D3DXVECTOR3(0.0f, 25.0f, 0.0f), D3DXVECTOR3(187.5f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 120);
 
+	//バッテリーを生成
+	m_pBattery = CBattery::Create();
+
 	//BGMの再生
-	//CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
+	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
 
 	return S_OK;
 }
@@ -153,7 +158,7 @@ void CGameManager::Update(void)
 		}
 	}
 
-	//画面遷移
+	////画面遷移
 	//if (m_pTimer->GetTime() <= 0)
 	//{
 	//	CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);

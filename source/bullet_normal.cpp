@@ -54,9 +54,5 @@ void CBulletNormal::Update(void)
 //==========================================
 void CBulletNormal::Draw(void)
 {
-	//CManager::GetRenderer()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	//CManager::GetRenderer()->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	CBullet::Draw();
-	CManager::GetRenderer()->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	CManager::GetRenderer()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 }
