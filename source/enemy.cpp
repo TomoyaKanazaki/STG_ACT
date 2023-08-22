@@ -18,6 +18,7 @@
 #include "item.h"
 #include "motion.h"
 #include "enemy_approach.h"
+#include "enemy_shot.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -213,8 +214,8 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 
 		case CEnemy::TYPE_SHOT:
 
-			//pEnemy = new CEnemyShot;
-			//break;
+			pEnemy = new CEnemyShot;
+			break;
 
 		default:
 			return NULL;

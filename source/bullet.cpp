@@ -12,15 +12,14 @@
 #include "effect.h"
 #include "collision.h"
 #include "object.h"
+#include "bullet_normal.h"
+#include "bullet_homing.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
 #define BULLET_SPEED (10.0f) //弾速
 #define BULLET_LIFE (256) //寿命
-#define HOMING_LENGTH (200.0f) //ホーミング判定距離
-#define HOMING_POWER (0.3f) //ホーミングの強さ
-#define HOMING_TIMER (30) //ホーミング時間
 #define HIT_LENGTH (20.0f) //ヒット判定距離
 
 //==========================================
@@ -30,9 +29,6 @@ CBullet::CBullet(int nPriority) : CObject3D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nLife = BULLET_LIFE;
-	m_Target.pObj = NULL;
-	m_Target.nCounter = 0;
-	m_Target.bHoming = false;
 }
 
 //==========================================
@@ -72,73 +68,21 @@ void CBullet::Uninit(void)
 //==========================================
 void CBullet::Update(void)
 {
-	//ホーミング処理
-	if (m_Target.bHoming)
-	{
-		if (m_Target.nCounter <= HOMING_TIMER)
-		{
-			if 
-				(
-					m_Target.pObj->GetPos().x > -500.0f &&
-					m_Target.pObj->GetPos().x < 500.0f &&
-					m_Target.pObj->GetPos().z > -500.0f &&
-					m_Target.pObj->GetPos().z < 500.0f
-				)
-			{
-				//ホーミングムーブ
-				D3DXVECTOR3 move = m_Target.pObj->GetPos() - m_pos;
-				move.y = 0.0f;
-
-				//移動量の正規化
-				D3DXVec3Normalize(&move, &move);
-
-				//移動量の適応
-				D3DXVECTOR3 moveDiff = m_move - move;
-
-				//一定時間経過していたら直撃する
-				if (m_Target.nCounter > 20)
-				{
-					m_move -= moveDiff;
-				}
-				else
-				{
-					m_move -= moveDiff * HOMING_POWER;
-				}
-
-				//時間を加算する
-				m_Target.nCounter++;
-			}
-			else
-			{
-				m_Target.bHoming = false;
-			}
-		}
-	}
-	else if (Collision::HomingEnemy(m_pos, HOMING_LENGTH, false, &m_Target.pObj) && m_Target.bHoming == false)
-	{
-		//ホーミングムーブ
-		D3DXVECTOR3 move = m_Target.pObj->GetPos() - m_pos;
-		move.y = 0.0f;
-
-		//移動量の正規化
-		D3DXVec3Normalize(&move, &move);
-
-		//移動量の適応
-		D3DXVECTOR3 moveDiff = m_move - move;
-		m_move -= moveDiff * HOMING_POWER;
-
-		//ホーミング時間のリセット
-		m_Target.nCounter = 0;
-
-		//ホーミング済フラグを立てる
-		m_Target.bHoming = true;
-	}
-
 	//消滅条件
-	if (m_nLife <= 0 || Collision::CollisionEnemy(m_pos, HIT_LENGTH, true))
+	if (m_nLife <= 0)
 	{
 		Uninit();
 		return;
+	}
+
+	//敵との接触
+	if (m_user == CBullet::PLAYER)
+	{
+		if (Collision::CollisionEnemy(m_pos, HIT_LENGTH, true))
+		{
+			Uninit();
+			return;
+		}
 	}
 
 	//寿命を減らす
@@ -176,7 +120,7 @@ void CBullet::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CBullet * CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move)
+CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move, USER user, TYPE type)
 {
 	//インスタンス生成
 	CBullet *pBullet = NULL;
@@ -185,7 +129,21 @@ CBullet * CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move)
 	if (pBullet == NULL)
 	{
 		//メモリを確保
-		pBullet = new CBullet;
+		switch (type)
+		{
+		case NORMAL_BULLET:
+
+			pBullet = new CBulletNormal;
+			break;
+
+		case HOMING_BULLET:
+
+			pBullet = new CBulletHoming;
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	if (pBullet == NULL)
@@ -194,6 +152,7 @@ CBullet * CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move)
 	}
 
 	//値を設定
+	pBullet->m_user = user;
 	pBullet->m_pos = pos;
 	pBullet->m_size = size;
 	pBullet->m_move = move;

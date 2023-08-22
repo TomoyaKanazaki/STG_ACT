@@ -437,5 +437,5 @@ void CPlayer::Shot(void)
 	);
 
 	//íeÇÃê∂ê¨
-	CBullet::Create(BulletPos, m_size * 0.5f, BulletMove);
+	CBullet::Create(BulletPos, m_size * 0.5f, BulletMove, CBullet::PLAYER, CBullet::HOMING_BULLET);
 }

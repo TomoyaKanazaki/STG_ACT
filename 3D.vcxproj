@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\bullet.cpp" />
+    <ClCompile Include="source\bullet_homing.cpp" />
+    <ClCompile Include="source\bullet_normal.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\collision.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
@@ -27,6 +29,7 @@
     <ClCompile Include="source\enemy.cpp" />
     <ClCompile Include="source\enemy_approach.cpp" />
     <ClCompile Include="source\enemy_manager.cpp" />
+    <ClCompile Include="source\enemy_shot.cpp" />
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\gamemanager.cpp" />
@@ -69,6 +72,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\bullet.h" />
+    <ClInclude Include="source\bullet_homing.h" />
+    <ClInclude Include="source\bullet_normal.h" />
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\collision.h" />
     <ClInclude Include="source\debugproc.h" />
@@ -76,6 +81,7 @@
     <ClInclude Include="source\enemy.h" />
     <ClInclude Include="source\enemy_approach.h" />
     <ClInclude Include="source\enemy_manager.h" />
+    <ClInclude Include="source\enemy_shot.h" />
     <ClInclude Include="source\fade.h" />
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\gamemanager.h" />
