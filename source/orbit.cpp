@@ -141,7 +141,6 @@ void COrbit::Update(void)
 	//計算用ベクトルの外積を求める
 	D3DXVec3Cross(&Direction, &vtxNew, &vtxOld);
 
-#ifdef _DEBUG
 	if (Direction.y > 0.0f)
 	{
 		aVtx[0] = m_pVtxPos[0];
@@ -156,7 +155,6 @@ void COrbit::Update(void)
 		aVtx[2] = m_pVtxPos[1];
 		aVtx[3] = m_pVtxPos[0];
 	}
-#endif
 
 	//先端ポリゴンの当たり判定
 	Collision::InSquare(&aVtx[0], m_fLength);
