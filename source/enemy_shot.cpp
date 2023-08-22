@@ -15,13 +15,14 @@
 //  ƒ}ƒNƒ’è‹`
 //==========================================
 #define SPEED (3.0f) //’e‚Ì‘¬“x
+#define INTERVAL (60) //’e‚Ì”­ŽËŠÔŠu
 
 //==========================================
 //  ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //==========================================
 CEnemyShot::CEnemyShot()
 {
-
+	m_nInterval = 0;
 }
 
 //==========================================
@@ -54,7 +55,13 @@ void CEnemyShot::Uninit(void)
 //==========================================
 void CEnemyShot::Update(void)
 {
+	//’e‚Ì”­ŽËŽžŠÔ‚ðXV
+	m_nInterval++;
+
+	//’e‚Ì”­ŽË‚ÉŠÖ‚·‚éˆ—
 	Shot();
+
+	//XV
 	CEnemy::Update();
 }
 
@@ -95,7 +102,7 @@ void CEnemyShot::Shot(void)
 	pos.y += 10.0f;
 
 	//’e‚ðŒ‚‚Â
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	if (m_nInterval % INTERVAL == 0)
 	{
 		CBullet::Create(pos, D3DXVECTOR3(25.0f, 25.0f, 0.0f), vecToPlayer, CBullet::ENEMY, CBullet::NORMAL_BULLET);
 	}

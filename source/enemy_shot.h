@@ -29,6 +29,9 @@ private:
 	//ƒƒ“ƒoŠÖ”
 	void Shot(void);
 
+	//ƒƒ“ƒo•Ï”
+	int m_nInterval; //’e‚Ì”­ËŠÔŠu
+
 };
 
 #endif
