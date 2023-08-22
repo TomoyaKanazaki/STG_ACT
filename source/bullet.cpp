@@ -19,8 +19,8 @@
 //  マクロ定義
 //==========================================
 #define BULLET_SPEED (10.0f) //弾速
-#define BULLET_LIFE (256) //寿命
-#define HIT_LENGTH (20.0f) //ヒット判定距離
+#define BULLET_LIFE (128) //寿命
+#define HIT_LENGTH (30.0f) //ヒット判定距離
 
 //==========================================
 //  コンストラクタ
@@ -79,6 +79,16 @@ void CBullet::Update(void)
 	if (m_user == CBullet::PLAYER)
 	{
 		if (Collision::CollisionEnemy(m_pos, HIT_LENGTH, true))
+		{
+			Uninit();
+			return;
+		}
+	}
+
+	//プレイヤーとの接触
+	if (m_user == CBullet::ENEMY)
+	{
+		if(Collision::CollisionPlayer(m_pos, HIT_LENGTH))
 		{
 			Uninit();
 			return;

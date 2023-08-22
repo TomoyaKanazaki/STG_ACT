@@ -115,6 +115,34 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 //==========================================
 //  敵との当たり判定
 //==========================================
+bool Collision::CollisionPlayer(D3DXVECTOR3 pos, float fLange)
+{
+	//プレイヤーの位置を取得
+	D3DXVECTOR3 posPlayer = CGameManager::GetPlayer()->GetPos();
+
+	//プレイヤーへのベクトルを算出する
+	D3DXVECTOR3 vecToPlayer = pos - posPlayer;
+
+	//プレイヤーまでのベクトルの大きさを算出
+	float fLangePlayer = (vecToPlayer.x * vecToPlayer.x) + (vecToPlayer.z * vecToPlayer.z);
+
+	//距離判定
+	if (fLange * fLange >= fLangePlayer)
+	{
+		//プレイヤーを殺す
+		CGameManager::GetPlayer()->SetDead(true);
+
+		//当たった結果を返して関数を終了
+		return true;
+	}
+
+	//当たっていない
+	return false;
+}
+
+//==========================================
+//  敵との当たり判定
+//==========================================
 bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, CObject **pObject)
 {
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
@@ -239,85 +267,6 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 
 					//対象のオブジェクトを終了
 					pObj->Uninit();
-				}
-			}
-
-			//確認するアドレスをずらす
-			pObj = pNext;
-		}
-	}
-}
-
-//==========================================
-//  矩形の内部の敵を吹き飛ばす
-//==========================================
-void Collision::InSquare(D3DXVECTOR3 * pVtx, float fLength, float fPressure)
-{
-	//判定に利用する4つのベクトルを算出
-	D3DXVECTOR3 vecLine[4] =
-	{
-		pVtx[1] - pVtx[0],
-		pVtx[2] - pVtx[1],
-		pVtx[3] - pVtx[2],
-		pVtx[0] - pVtx[3]
-	};
-
-	//全描画優先順位を確認
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject *pObj = CObject::GetTop(nCntPriority);
-
-		//全てのオブジェクトを確認
-		while (pObj != NULL)
-		{
-			//次のアドレスを保存
-			CObject *pNext = pObj->GetNext();
-
-			//対象オブジェクトが敵の場合
-			if (pObj->GetType() == CObject::TYPE_ENEMY)
-			{
-				//判定フラグ
-				bool bIn = true;
-
-				//判定に必要なベクトルを算出
-				D3DXVECTOR3 posObj = pObj->GetPos(), vecToPos[4] =
-				{
-					posObj - pVtx[0],
-					posObj - pVtx[1],
-					posObj - pVtx[2],
-					posObj - pVtx[3]
-				};
-
-				//4つのベクトルで判定をする
-				for (int nCntVec = 0; nCntVec < 4; nCntVec++)
-				{
-					//外積を算出
-					float fDot = 0.0f;
-					fDot = vecLine[nCntVec].z * vecToPos[nCntVec].x - vecLine[nCntVec].x * vecToPos[nCntVec].z;
-
-					if (fDot <= 0.0f)
-					{
-						bIn = false;
-						break;
-					}
-				}
-
-				//内部に存在した場合
-				if (bIn)
-				{
-					//プレイヤーの位置を取得
-					D3DXVECTOR3 posPlayer = CGameManager::GetPlayer()->GetPos();
-
-					//プレイヤーからオブジェクトまでのベクトルを取得
-					D3DXVECTOR3 vecPlayer = posObj - posPlayer;
-					vecPlayer.y = 0.0f;
-
-					//ベクトルを正規化
-					D3DXVec3Normalize(&vecPlayer, &vecPlayer);
-
-					//ベクトルを補正
-					vecPlayer *= fPressure;
 				}
 			}
 
