@@ -64,6 +64,7 @@ private:
 	float m_fAngle;
 	bool m_bRand;
 	bool m_bDead;
+	D3DXMATERIAL *m_pDefMat;
 
 	//Ã“Iƒƒ“ƒo•Ï”
 	const static float mc_fExplosion; //Ÿr–Å”ÍˆÍ

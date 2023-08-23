@@ -46,6 +46,7 @@ public:
 
 	//Ã“Iƒƒ“ƒoŠÖ”
 	static STATE GetState(void) { return m_State; }
+	static void SetState(STATE state) { m_State = state; }
 	static CScore *GetScore(void) { return m_pScore; }
 	static CTimer *GetTimer(void) { return m_pTimer; }
 	static CObject_Fan *GetFan(void) { return m_pFan; }

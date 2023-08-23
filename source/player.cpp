@@ -180,7 +180,6 @@ void CPlayer::Update(void)
 			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			Explosion();
-
 			if (m_pShadow == NULL)
 			{
 				m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
@@ -203,6 +202,13 @@ void CPlayer::Update(void)
 			m_pShadow->Uninit();
 			m_pShadow = NULL;
 		}
+		if (m_orbit != NULL)
+		{
+			m_orbit->Uninit();
+			delete m_orbit;
+			m_orbit = NULL;
+		}
+		CGameManager::SetState(CGameManager::SHOT);
 	}
 
 	//ëOâÒç¿ïWÇÃï€ë∂
@@ -278,7 +284,7 @@ void CPlayer::Update(void)
 	{
 		if (m_orbit == NULL)
 		{
-			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 50);
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 50);
 		}
 	}
 	else
