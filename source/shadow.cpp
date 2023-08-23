@@ -141,7 +141,7 @@ CShadow *CShadow::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3
 	pShadow->Init();
 
 	//テクスチャを割り当てる
-	pShadow->BindTexture(CManager::GetTexture()->GetAddress(1));
+	pShadow->BindTexture(CManager::GetTexture()->GetAddress(CTexture::EFFECT));
 
 	//ポインタを返す
 	return pShadow;

@@ -44,8 +44,15 @@ public:
 
 	//静的メンバ変数
 	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type);
-
 	static int m_nCntEnemy;
+
+protected:
+
+	//モデル情報
+	CModel **m_ppModel; //モデル情報
+	CLayer::LAYERDATA *m_pLayer; //階層構造情報
+	CMotion *m_pMotion;
+	CShadow *m_pShadow;
 
 private:
 
@@ -55,12 +62,6 @@ private:
 	int m_nLife;
 	float m_fSpeed;
 	bool m_bRand;
-
-	//モデル情報
-	CModel **m_ppModel; //モデル情報
-	CLayer::LAYERDATA *m_pLayer; //階層構造情報
-	CMotion *m_pMotion;
-	CShadow *m_pShadow;
 
 };
 

@@ -57,47 +57,6 @@ HRESULT CEnemy::Init(void)
 	//タイプの設定
 	SetType(CObject::TYPE_ENEMY);
 
-	//階層構造情報を生成
-	m_pLayer = CLayer::Set(CLayer::PLAYER_LAYER);
-
-	if (m_ppModel == NULL)
-	{
-		m_ppModel = new CModel*[m_pLayer->nNumModel];
-	}
-
-	//必要なモデルを生成
-	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
-	{
-		//空にする
-		m_ppModel[nCnt] = NULL;
-
-		//親が存在しない場合
-		if (m_pLayer->pParentID[nCnt] == -1)
-		{
-			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
-		}
-		else
-		{
-			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_ppModel[m_pLayer->pParentID[nCnt]]);
-		}
-	}
-
-	//モーション情報の生成
-	while (1)
-	{
-		if (m_pMotion == NULL)
-		{
-			m_pMotion = new CMotion;
-
-			//モーション情報にモデルを追加する
-			m_pMotion->SetModel(m_ppModel, m_pLayer->nNumModel, CMotion::PLAYER_SHOT);
-		}
-		else
-		{
-			break;
-		}
-	}
-
 	//影を生成
 	if (m_pShadow == NULL)
 	{
@@ -125,13 +84,6 @@ void CEnemy::Uninit(void)
 		}
 		delete[] m_ppModel;
 		m_ppModel = NULL;
-	}
-
-	//モーションのポインタを破棄
-	if (m_pMotion != NULL)
-	{
-		delete m_pMotion;
-		m_pMotion = NULL;
 	}
 
 	//影のポインタを破棄
@@ -165,12 +117,6 @@ void CEnemy::Update(void)
 				}
 			}
 		}
-	}
-
-	//モーションを更新する
-	if (m_pMotion != NULL)
-	{
-		m_pMotion->Update();
 	}
 
 	//影の情報を更新する

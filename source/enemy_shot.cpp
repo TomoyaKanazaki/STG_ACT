@@ -10,6 +10,8 @@
 #include "bullet.h"
 #include "manager.h"
 #include "input.h"
+#include "model.h"
+#include "motion.h"
 
 //==========================================
 //  マクロ定義
@@ -38,6 +40,31 @@ CEnemyShot::~CEnemyShot()
 //==========================================
 HRESULT CEnemyShot::Init(void)
 {
+	//階層構造情報を生成
+	m_pLayer = CLayer::Set(CLayer::ENEMY_SHOT_LAYER);
+
+	if (m_ppModel == NULL)
+	{
+		m_ppModel = new CModel*[m_pLayer->nNumModel];
+	}
+
+	//必要なモデルを生成
+	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+	{
+		//空にする
+		m_ppModel[nCnt] = NULL;
+
+		//親が存在しない場合
+		if (m_pLayer->pParentID[nCnt] == -1)
+		{
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
+		}
+		else
+		{
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_ppModel[m_pLayer->pParentID[nCnt]]);
+		}
+	}
+
 	CEnemy::Init();
 	return S_OK;
 }
@@ -60,6 +87,12 @@ void CEnemyShot::Update(void)
 
 	//弾の発射に関する処理
 	Shot();
+
+	//モーションを更新する
+	if (m_pMotion != NULL)
+	{
+		m_pMotion->Update();
+	}
 
 	//更新
 	CEnemy::Update();
@@ -85,7 +118,7 @@ void CEnemyShot::Shot(void)
 	D3DXVECTOR3 vecToPlayer = posPlayer - m_pos;
 
 	//算出したベクトルから角度を算出
-	float rotVector = atan2f(vecToPlayer.x, vecToPlayer.z);
+	float rotVector = atan2f(vecToPlayer.z, -vecToPlayer.x);
 
 	//算出した角度を自分の方向にする
 	m_rot.y = rotVector;

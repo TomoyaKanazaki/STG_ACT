@@ -106,7 +106,7 @@ CNumber * CNumber::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D
 	}
 
 	//テクスチャを割り当てる
-	pNumber->BindTexture(CManager::GetTexture()->GetAddress(2));
+	pNumber->BindTexture(CManager::GetTexture()->GetAddress(CTexture::NUMBER));
 
 	//ポインタを返す
 	return pNumber;

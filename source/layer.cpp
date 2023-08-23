@@ -149,17 +149,20 @@ void CLayer::UnLoad(void)
 	//ƒƒ‚ƒŠ‚ðŠJ•ú‚·‚é
 	if (m_pData != NULL)
 	{
-		delete m_pData->pModelID;
-		m_pData->pModelID = NULL;
+		for (int nCnt = 0; nCnt < m_nNumLayer; nCnt++)
+		{
+			delete m_pData[nCnt].pModelID;
+			m_pData[nCnt].pModelID = NULL;
 
-		delete m_pData->pParentID;
-		m_pData->pParentID = NULL;
+			delete m_pData[nCnt].pParentID;
+			m_pData[nCnt].pParentID = NULL;
 
-		delete m_pData->pPos;
-		m_pData->pPos = NULL;
+			delete m_pData[nCnt].pPos;
+			m_pData[nCnt].pPos = NULL;
 
-		delete m_pData->pRot;
-		m_pData->pRot = NULL;
+			delete m_pData[nCnt].pRot;
+			m_pData[nCnt].pRot = NULL;
+		}
 
 		delete m_pData;
 		m_pData = NULL;

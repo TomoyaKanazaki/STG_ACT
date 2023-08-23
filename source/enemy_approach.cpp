@@ -7,6 +7,8 @@
 #include "enemy_approach.h"
 #include "gamemanager.h"
 #include "player.h"
+#include "model.h"
+#include "motion.h"
 
 //==========================================
 //  マクロ定義
@@ -35,6 +37,31 @@ CEnemyApproach::~CEnemyApproach()
 //==========================================
 HRESULT CEnemyApproach::Init(void)
 {
+	//階層構造情報を生成
+	m_pLayer = CLayer::Set(CLayer::ENEMY_APPROACH_LAYER);
+
+	if (m_ppModel == NULL)
+	{
+		m_ppModel = new CModel*[m_pLayer->nNumModel];
+	}
+
+	//必要なモデルを生成
+	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+	{
+		//空にする
+		m_ppModel[nCnt] = NULL;
+
+		//親が存在しない場合
+		if (m_pLayer->pParentID[nCnt] == -1)
+		{
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
+		}
+		else
+		{
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_ppModel[m_pLayer->pParentID[nCnt]]);
+		}
+	}
+
 	CEnemy::Init();
 	return S_OK;
 }
@@ -92,4 +119,10 @@ void CEnemyApproach::Move(void)
 		//移動量を補正して適用
 		m_move = posTarget * SPEED;
 	}
+
+	//算出したベクトルから角度を算出
+	float rotVector = atan2f(-posTarget.x, -posTarget.z);
+
+	//算出した角度を自分の方向にする
+	m_rot.y = rotVector;
 }

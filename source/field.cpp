@@ -67,8 +67,6 @@ void CField::Draw()
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
 	CObject3D::Draw();
 
 	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
@@ -94,9 +92,6 @@ CField *CField::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 	{
 		pField->Init(pos, size, rot);
 	}
-
-	//テクスチャを割り当てる
-	//pField->BindTexture(CManager::GetTexture()->GetAddress(0));
 
 	//ポインタを返す
 	return pField;

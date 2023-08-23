@@ -158,7 +158,7 @@ CEffect *CEffect::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLO
 	pEffect->Init();
 
 	//テクスチャを割り当てる
-	pEffect->BindTexture(CManager::GetTexture()->GetAddress(1));
+	pEffect->BindTexture(CManager::GetTexture()->GetAddress(CTexture::EFFECT));
 
 	//デフォルトサイズを保存する
 	pEffect->m_vecDeffSize = size;

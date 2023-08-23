@@ -19,6 +19,16 @@
 class CTexture
 {
 public:
+	//テクスチャの種類の列挙型定義
+	enum TEXTURE
+	{
+		EFFECT = 0, //エフェクト
+		NUMBER, //数字
+		TARGET, //ターゲット
+		BULLET, //弾
+		TEXTURE_MAX
+	};
+
 	CTexture(); //コンストラクタ
 	~CTexture(); //デストラクタ
 

@@ -144,7 +144,7 @@ CTarget *CTarget::Create(const D3DXVECTOR3 size)
 	pTarget->Init();
 
 	//テクスチャを割り当てる
-	pTarget->BindTexture(CManager::GetTexture()->GetAddress(3));
+	pTarget->BindTexture(CManager::GetTexture()->GetAddress(CTexture::TARGET));
 
 	//ポインタを返す
 	return pTarget;

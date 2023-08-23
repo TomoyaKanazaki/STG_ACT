@@ -174,7 +174,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move, US
 	pBullet->Init();
 
 	//テクスチャを割り当てる
-	pBullet->BindTexture(CManager::GetTexture()->GetAddress(4));
+	pBullet->BindTexture(CManager::GetTexture()->GetAddress(CTexture::BULLET));
 
 	//ポインタを返す
 	return pBullet;
