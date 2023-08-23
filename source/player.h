@@ -44,7 +44,7 @@ public:
 	D3DXVECTOR3 GetMove(void) { return m_move; }
 	void SetDead(const bool bDead) { m_bDead = bDead; }
 
-	//静的メンバ変数
+	//静的メンバ関数
 	static CPlayer *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 private:
@@ -54,6 +54,7 @@ private:
 	void Rotate(void);
 	void Slop(void);
 	void Shot(void);
+	void Explosion(void);
 
 	//メンバ変数
 	int m_nLife;
@@ -63,6 +64,9 @@ private:
 	float m_fAngle;
 	bool m_bRand;
 	bool m_bDead;
+
+	//静的メンバ変数
+	const static float mc_fExplosion; //殲滅範囲
 
 	//モデル情報
 	CModel **m_ppModel; //モデル情報

@@ -25,11 +25,17 @@
 #include "layer.h"
 #include "gamemanager.h"
 #include "orbit.h"
+#include "particle.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
 #define PLAYER_SPEED (1.0f) //プレイヤーの移動速度(キーボード)
+
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
+const float CPlayer::mc_fExplosion = 500.0f;
 
 //==========================================
 //  コンストラクタ
@@ -173,10 +179,13 @@ void CPlayer::Update(void)
 			m_nDeadCounter = 0;
 			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			Explosion();
+
 			if (m_pShadow == NULL)
 			{
 				m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
 			}
+			return;
 		}
 		else
 		{
@@ -269,7 +278,7 @@ void CPlayer::Update(void)
 	{
 		if (m_orbit == NULL)
 		{
-			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-100.0f, 0.0f, 0.0f), 50);
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 50);
 		}
 	}
 	else
@@ -438,4 +447,40 @@ void CPlayer::Shot(void)
 
 	//弾の生成
 	CBullet::Create(BulletPos, m_size * 0.5f, BulletMove, CBullet::PLAYER, CBullet::HOMING_BULLET);
+}
+
+//==========================================
+//  復活時に爆発して敵を倒す処理
+//==========================================
+void CPlayer::Explosion(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//自分のアドレスを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
+			{
+				pObj = pNext;
+				continue;
+			}
+
+			//近くにいるかの判定
+			D3DXVECTOR3 vecToObj = m_pos - pObj->GetPos();
+			float fLengh = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
+			if (fLengh < mc_fExplosion * mc_fExplosion)
+			{
+				//殺す
+				pObj->Uninit();
+			}
+
+			//次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
 }

@@ -81,6 +81,7 @@ void CEnemyApproach::Update(void)
 {
 	//ˆÚ“®
 	Move();
+	AvertEnemy();
 	CEnemy::Update();
 }
 

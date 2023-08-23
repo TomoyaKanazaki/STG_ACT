@@ -39,7 +39,6 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	D3DXVECTOR3 GetOldPos(void) { return m_oldPos; }
 	void SetLife(const int nDamage) { if (m_nLife > 0) m_nLife -= nDamage; }
 
 	//静的メンバ変数
@@ -47,6 +46,9 @@ public:
 	static int m_nCntEnemy;
 
 protected:
+
+	//メンバ関数
+	void AvertEnemy(void);
 
 	//モデル情報
 	CModel **m_ppModel; //モデル情報
@@ -57,11 +59,13 @@ protected:
 private:
 
 	//メンバ変数
-	D3DXVECTOR3 m_oldPos;
 	int m_nNumModel;
 	int m_nLife;
 	float m_fSpeed;
 	bool m_bRand;
+
+	//静的メンバ変数
+	const static float mc_fSize; //敵同士の当たり判定の範囲
 
 };
 

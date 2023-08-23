@@ -41,7 +41,7 @@ HRESULT CParticle::Init(void)
 //==========================================
 void CParticle::Uninit(void)
 {
-
+	Release();
 }
 
 //==========================================

@@ -19,11 +19,13 @@
 #include "motion.h"
 #include "enemy_approach.h"
 #include "enemy_shot.h"
+#include "particle.h"
 
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
 int CEnemy::m_nCntEnemy = 0;
+const float CEnemy::mc_fSize = 75.0f;
 
 //==========================================
 //  コンストラクタ
@@ -92,6 +94,9 @@ void CEnemy::Uninit(void)
 		m_pShadow->Uninit();
 	}
 
+	//パーティクルを呼び出し
+	CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(0.98f, 0.87f, 0.28f, 0.5f), 10, 10, 10, 5);
+
 	//自分自身の破棄
 	Release();
 }
@@ -101,9 +106,6 @@ void CEnemy::Uninit(void)
 //==========================================
 void CEnemy::Update(void)
 {
-	//移動量の適用
-	m_pos += m_move;
-
 	//実体を移動する
 	if (m_ppModel != NULL)
 	{
@@ -129,6 +131,9 @@ void CEnemy::Update(void)
 		//再生成
 		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
 	}
+
+	//移動量の適用
+	m_pos += m_move;
 }
 
 //==========================================
@@ -182,4 +187,55 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 
 	//ポインタを返す
 	return pEnemy;
+}
+
+//==========================================
+//  敵同士がぶつかる判定
+//==========================================
+void CEnemy::AvertEnemy(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//自分のアドレスを取得
+		CObject *pObj = this->GetNext();
+
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
+			{
+				pObj = pNext;
+				continue;
+			}
+
+			//現在の敵と自分を結ぶベクトルを取得する
+			D3DXVECTOR3 posObj = pObj->GetPos();
+			D3DXVECTOR3 vecToObj = m_pos - posObj;
+
+			//ベクトルの大きさを算出
+			float fLength = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
+
+			//接触範囲内にいた場合
+			if (fLength < mc_fSize * mc_fSize)
+			{
+				//接点座標を求める
+				D3DXVECTOR3 contact = (posObj + m_pos) * 0.5f;
+
+				//ベクトルの角度を求める
+				float rotVector = atan2f(vecToObj.x, vecToObj.z);
+
+				//x,zの補正値を求める
+				D3DXVECTOR2 correction = { sinf(rotVector), cosf(rotVector) };
+
+				//座標を補正する
+				m_pos.x = correction.x * (mc_fSize * 0.5f) + contact.x;
+				m_pos.z = correction.y * (mc_fSize * 0.5f) + contact.z;
+			}
+
+			//次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
 }
