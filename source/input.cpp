@@ -321,6 +321,9 @@ void CMouse::Update(void)
 		{
 			//トリガー情報の保存
 			m_MouseStateTrigger.rgbButtons[nCnt] = (m_MouseState.rgbButtons[nCnt] ^ mouse.rgbButtons[nCnt]) & mouse.rgbButtons[nCnt];
+
+			//リリース情報の保存
+			m_MouseStateRelease.rgbButtons[nCnt] = (mouse.rgbButtons[nCnt] ^ m_MouseState.rgbButtons[nCnt]) & m_MouseState.rgbButtons[nCnt];
 		}
 
 		if (m_MouseState.lX != mouse.lX || m_MouseState.lY != mouse.lY)
@@ -376,6 +379,14 @@ bool CMouse::GetPress(int nKey)
 bool CMouse::GetTrigger(int nKey)
 {
 	return (m_MouseStateTrigger.rgbButtons[nKey] & 0x80) ? true : false;
+}
+
+//==========================================
+//  リリース情報
+//==========================================
+bool CMouse::GetRelease(int nKey)
+{
+	return (m_MouseStateRelease.rgbButtons[nKey] & 0x80) ? true : false;
 }
 
 //==========================================

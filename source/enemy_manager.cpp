@@ -9,6 +9,7 @@
 #include "manager.h"
 #include "input.h"
 #include "gamemanager.h"
+#include "player.h"
 
 //==========================================
 //  コンストラクタ
@@ -90,9 +91,12 @@ void CEnemyManager::Update(void)
 		if (m_nPopCounter[nCnt] * 60 == m_nTime && m_bPop[nCnt] == false)
 		{
 			//生成中心座標を生成
-			m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
-			D3DXVec3Normalize(&m_pos, &m_pos);
-			m_pos = D3DXVECTOR3(m_pos.x * 800.0f, 0.0f, m_pos.z * 800.0f);
+			while (CGameManager::GetPlayer()->GetPos().z > m_pos.z)
+			{
+				m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
+				D3DXVec3Normalize(&m_pos, &m_pos);
+				m_pos = D3DXVECTOR3(m_pos.x * 800.0f, 0.0f, m_pos.z * 800.0f);
+			}
 
 			for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
 			{

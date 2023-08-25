@@ -14,12 +14,6 @@
 class CCamera
 {
 public:
-	typedef enum
-	{
-		SLIP_ON = 0, //慣性あり
-		SLIP_OFF //慣性なし
-	}SLIP;
-
 	CCamera(); //コンストラクタ
 	~CCamera(); //デストラクタ
 
@@ -30,7 +24,6 @@ public:
 	void SetCamera(void);
 	void FirstPerson(void);
 	void ThirdPerson(void);
-	void Move(void);
 	D3DXVECTOR3 GetPosR(void) { return m_posR; }
 	D3DXVECTOR3 GetPosV(void) { return m_posV; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
@@ -44,11 +37,10 @@ private:
 	D3DXMATRIX m_mtxProjection; //プロジェクションマトリックス
 	D3DXMATRIX m_mtxView; //ビューマトリックス
 	D3DXVECTOR3 m_rot; //Xの計算に使用する角度
-	float m_FOV; //視野角
+	D3DXVECTOR3 m_diff; //プレイヤー座標との差分
 
 	//メンバ関数
-	void CalcPos(SLIP slipFlag = SLIP_ON);
-	void CalcFOV(void);
+	void Move(void);
 
 };
 

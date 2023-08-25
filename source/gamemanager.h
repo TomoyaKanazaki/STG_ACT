@@ -26,8 +26,8 @@ public:
 	typedef enum
 	{
 		NONE = 0, //なし
-		SHOT, //射撃モード
-		BLADE, //斬撃モード
+		MOVIE, //ムービー状態
+
 		MAX
 	}STATE;
 

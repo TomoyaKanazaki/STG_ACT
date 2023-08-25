@@ -208,7 +208,7 @@ void CPlayer::Update(void)
 			delete m_orbit;
 			m_orbit = NULL;
 		}
-		CGameManager::SetState(CGameManager::SHOT);
+		CGameManager::SetState(CGameManager::NONE);
 	}
 
 	//前回座標の保存
@@ -256,10 +256,13 @@ void CPlayer::Update(void)
 	}
 
 	//回転処理
-	Rotate();
+	//Rotate();
 
 	//傾ける
 	Slop();
+
+	//腕を回す
+	Swing();
 
 	//モーションを更新する
 	m_pMotion->Update();
@@ -267,27 +270,18 @@ void CPlayer::Update(void)
 	//攻撃
 	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
-		switch (CGameManager::GetState())
-		{
-		case CGameManager::SHOT:
-			Shot();
-			break;
-		case CGameManager::BLADE:
-			break;
-		default:
-			break;
-		}
+		Shot();
 	}
 
 	//軌跡の生成、削除
-	if (CGameManager::GetState() == CGameManager::BLADE)
+	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_RIGHT))
 	{
 		if (m_orbit == NULL)
 		{
-			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 50);
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 10);
 		}
 	}
-	else
+	else if (CManager::GetMouse()->GetRelease(CMouse::BUTTON_RIGHT))
 	{
 		if (m_orbit != NULL)
 		{
@@ -486,4 +480,49 @@ void CPlayer::Explosion(void)
 			pObj = pNext;
 		}
 	}
+}
+
+//==========================================
+//  腕を振る処理
+//==========================================
+void CPlayer::Swing(void)
+{
+	//マウスの横方向の移動量を取得する
+	float fMove = CManager::GetMouse()->GetMouseMove().x;
+
+	//角度を取得
+	D3DXVECTOR3 rot = m_ppModel[4]->GetRot();
+
+	//腕の角度を変える
+	if (fMove < 0.0f)
+	{
+		rot.y += 1.0f;
+	}
+	else if (fMove > 0.0f)
+	{
+		rot.y -= 1.0f;
+	}
+
+	//角度の補正
+	if (rot.y < -2.7f)
+	{
+		rot.y = -2.7f;
+	}
+	if (rot.y > 0.0f)
+	{
+		rot.y = 0.0f;
+	}
+	if (rot.y > D3DX_PI)
+	{
+		rot.y -= D3DX_PI * 2.0f;
+	}
+	if (rot.y <= -D3DX_PI)
+	{
+		rot.y += D3DX_PI * 2.0f;
+	}
+
+	//角度を適用
+	m_ppModel[4]->SetRot(rot);
+
+	CManager::GetDebugProc()->Print("腕の向き : %f\n", m_ppModel[4]->GetRot().y);
 }

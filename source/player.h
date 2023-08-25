@@ -24,15 +24,6 @@ class COrbit;
 class CPlayer : public CObject
 {
 public:
-
-	//回転方向判定用
-	enum Turning
-	{
-		TURN_NONE = 0, //回転していない状態
-		TURN_RIGHT, //右回転
-		TURN_LEFT //左回転
-	};
-
 	CPlayer(int nPriority = 4); //コンストラクタ
 	~CPlayer(); //デストラクタ
 
@@ -55,6 +46,7 @@ private:
 	void Slop(void);
 	void Shot(void);
 	void Explosion(void);
+	void Swing(void);
 
 	//メンバ変数
 	int m_nLife;

@@ -20,7 +20,7 @@
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
 //==========================================
-CGameManager::STATE CGameManager::m_State = SHOT;
+CGameManager::STATE CGameManager::m_State = NONE;
 CPlayer *CGameManager::m_pPlayer = NULL;
 CObject_Fan *CGameManager::m_pFan = NULL;
 CCamera *CGameManager::m_pCamera = NULL;
@@ -126,28 +126,6 @@ void CGameManager::Update(void)
 	{
 		m_pLight->Update();
 	}
-
-	if (m_State == SHOT || m_State == BLADE)
-	{
-		if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
-		{
-			if (m_State == SHOT)
-			{
-				m_State = BLADE;
-			}
-			else if (m_State == BLADE)
-			{
-				m_State = SHOT;
-			}
-		}
-	}
-
-	////‰æ–Ê‘JˆÚ
-	//if (m_pTimer->GetTime() <= 0)
-	//{
-	//	CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
-	//	return;
-	//}
 }
 
 //==========================================

@@ -156,7 +156,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hInstancePrev*/, LPSTR /*lpC
 					pManager->Draw();
 
 #if _DEBUG
-					if (pManager->GetKeyboard()->GetTrigger(DIK_R))
+					if (pManager->GetKeyboard()->GetTrigger(DIK_F2))
 					{
 						pManager->Uninit();
 						delete pManager;

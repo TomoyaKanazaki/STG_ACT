@@ -149,6 +149,12 @@ void CEnemy::Draw()
 //==========================================
 CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type)
 {
+	//プレイヤーより後方には出現できない
+	if (CGameManager::GetPlayer()->GetPos().z > pos.z)
+	{
+		return NULL;
+	}
+
 	//インスタンス生成
 	CEnemy *pEnemy = NULL;
 

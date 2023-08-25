@@ -88,6 +88,7 @@ public:
 	D3DXVECTOR2 GetCursor(void);
 	bool GetPress(int nKey); //プレス情報の取得
 	bool GetTrigger(int nKey); //トリガー情報の取得
+	bool GetRelease(int nKey); //リリース情報の取得
 	D3DXVECTOR3 GetMouseMove(void); //マウス移動量の取得
 	bool GetMouseControll(void); //マウス操作の有無を取得
 
@@ -96,6 +97,7 @@ private:
 	//メンバ変数
 	DIMOUSESTATE2 m_MouseState; //全入力情報の保管
 	DIMOUSESTATE2 m_MouseStateTrigger; //トリガー情報
+	DIMOUSESTATE2 m_MouseStateRelease; //リリース情報
 	bool m_bMouseMove; //マウス操作の有無
 	HWND m_hWnd; //カーソル位置の取得に必要
 };
