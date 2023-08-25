@@ -34,6 +34,8 @@ private:
 	int m_nPopCounter[24]; //生成タイミング
 	bool m_bPop[24]; //生成済みフラグ
 	int m_nNumEnemy; //一度に生成する敵の数
+	int m_nTime;
+
 
 };
 

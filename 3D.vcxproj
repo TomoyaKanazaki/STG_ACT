@@ -35,7 +35,6 @@
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\gamemanager.cpp" />
     <ClCompile Include="source\input.cpp" />
-    <ClCompile Include="source\item.cpp" />
     <ClCompile Include="source\layer.cpp" />
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -63,12 +62,10 @@
     <ClCompile Include="source\resultmanager.cpp" />
     <ClCompile Include="source\scene.cpp" />
     <ClCompile Include="source\scenemanager.cpp" />
-    <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\shadow.cpp" />
     <ClCompile Include="source\sound.cpp" />
     <ClCompile Include="source\target.cpp" />
     <ClCompile Include="source\texture.cpp" />
-    <ClCompile Include="source\timer.cpp" />
     <ClCompile Include="source\titlemanager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +85,6 @@
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\gamemanager.h" />
     <ClInclude Include="source\input.h" />
-    <ClInclude Include="source\item.h" />
     <ClInclude Include="source\layer.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\main.h" />
@@ -111,12 +107,10 @@
     <ClInclude Include="source\resultmanager.h" />
     <ClInclude Include="source\scene.h" />
     <ClInclude Include="source\scenemanager.h" />
-    <ClInclude Include="source\score.h" />
     <ClInclude Include="source\shadow.h" />
     <ClInclude Include="source\sound.h" />
     <ClInclude Include="source\target.h" />
     <ClInclude Include="source\texture.h" />
-    <ClInclude Include="source\timer.h" />
     <ClInclude Include="source\titlemanager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

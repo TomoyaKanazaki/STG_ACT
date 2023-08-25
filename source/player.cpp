@@ -35,7 +35,7 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-const float CPlayer::mc_fExplosion = 500.0f;
+const float CPlayer::mc_fExplosion = 5000.0f;
 
 //==========================================
 //  コンストラクタ
@@ -470,19 +470,16 @@ void CPlayer::Explosion(void)
 			//次のアドレスを保存
 			CObject *pNext = pObj->GetNext();
 
-			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
+			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET) //敵の場合
 			{
-				pObj = pNext;
-				continue;
-			}
-
-			//近くにいるかの判定
-			D3DXVECTOR3 vecToObj = m_pos - pObj->GetPos();
-			float fLengh = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
-			if (fLengh < mc_fExplosion * mc_fExplosion)
-			{
-				//殺す
-				pObj->Uninit();
+				//近くにいるかの判定
+				D3DXVECTOR3 vecToObj = m_pos - pObj->GetPos();
+				float fLengh = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
+				if (fLengh < mc_fExplosion * mc_fExplosion)
+				{
+					//殺す
+					pObj->Uninit();
+				}
 			}
 
 			//次のアドレスにずらす

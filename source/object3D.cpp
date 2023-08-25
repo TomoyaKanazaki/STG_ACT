@@ -110,13 +110,6 @@ HRESULT CObject3D::Init(void)
 //==========================================
 void CObject3D::Uninit(void)
 {
-	//頂点バッファの破棄
-	if (m_pVtxBuff != NULL)
-	{
-		m_pVtxBuff->Release();
-		m_pVtxBuff = NULL;
-	}
-
 	//自分自身の破棄
 	Release();
 }

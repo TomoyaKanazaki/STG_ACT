@@ -9,7 +9,6 @@
 #include "debugproc.h"
 #include "object.h"
 #include "item.h"
-#include "score.h"
 #include "gamemanager.h"
 #include "player.h"
 #include "particle.h"
@@ -81,22 +80,6 @@ bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3D
 				//死ぬ
 				if (bRelease)
 				{
-					//アイテムをドロップする
-					switch (CGameManager::GetState())
-					{
-					case CGameManager::SHOT:
-						CItem::Create(pObj->GetPos(), CItem::ENERGY);
-						break;
-					case CGameManager::BLADE:
-						CItem::Create(pObj->GetPos(), CItem::SCORE);
-						break;
-					default:
-						break;
-					}
-
-					//スコアを加算する
-					CGameManager::GetScore()->Add(100);
-
 					pObj->Uninit();
 				}
 
@@ -176,9 +159,6 @@ bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, CObjec
 				//死ぬ
 				if (bRelease)
 				{
-					//アイテムをドロップする
-					CItem::Create(pObj->GetPos(), CItem::ENERGY);
-
 					pObj->Uninit();
 				}
 				return true;
@@ -256,14 +236,8 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 				//内部に存在した場合
 				if (bIn)
 				{
-					//アイテムをドロップする
-					CItem::Create(pObj->GetPos(), CItem::SCORE);
-
 					//パーティクルを呼び出す
 					CParticle::Create(pObj->GetPos(), D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(25.0f, 25.0f, 25.0f), D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), 100, 30, 20, 1);
-
-					//スコアを加算する
-					CGameManager::GetScore()->Add(100);
 
 					//対象のオブジェクトを終了
 					pObj->Uninit();

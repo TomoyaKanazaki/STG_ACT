@@ -17,7 +17,7 @@
 //  マクロ定義
 //==========================================
 #define DISTANCE (1000.0f) //視点と注視点の距離
-#define DISTANCE_LEVEL (0.4f) //xzの割合
+#define DISTANCE_LEVEL (0.6f) //xzの割合
 #define SPEED (0.05f) //カメラのスピード
 #define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
 #define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
@@ -29,7 +29,7 @@
 //==========================================
 CCamera::CCamera()
 {
-	m_posV = D3DXVECTOR3(0.0f, 150.0f, -100.0f);
+	m_posV = D3DXVECTOR3(0.0f, 100.0f, -100.0f);
 	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
