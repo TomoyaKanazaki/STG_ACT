@@ -10,14 +10,13 @@
 #include "input.h"
 #include "player.h"
 #include "debugproc.h"
-#include "target.h"
 #include "gamemanager.h"
 
 //==========================================
 //  マクロ定義
 //==========================================
-#define DISTANCE (-300.0f) //視点と注視点の距離
-#define HEIGHT (300.0f) //視点と注視点の距離
+#define DISTANCE (-250.0f) //視点と注視点の距離
+#define HEIGHT (400.0f) //視点と注視点の距離
 #define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
 #define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
 
@@ -49,9 +48,6 @@ HRESULT CCamera::Init(void)
 	//上方向ベクトルを設定
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
-	//ターゲットを生成
-	CTarget::Create(D3DXVECTOR3(30.0f, 0.0f, 30.0f));
-
 	return S_OK;
 }
 
@@ -69,7 +65,6 @@ void CCamera::Uninit(void)
 void CCamera::Update(void)
 {
 	//位置の更新
-	//ThirdPerson();
 	Move();
 
 	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
@@ -95,7 +90,7 @@ void CCamera::SetCamera(void)
 		D3DXToRadian(54.0f),
 		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
 		10.0f,
-		10000.0f
+		20000.0f
 	);
 
 	//プロジェクションマトリックスの設定

@@ -18,7 +18,6 @@
 #include "field.h"
 #include "object_fan.h"
 #include "collision.h"
-#include "target.h"
 #include "bullet.h"
 #include "motion.h"
 #include "collision.h"
@@ -255,14 +254,14 @@ void CPlayer::Update(void)
 		}
 	}
 
-	//回転処理
-	//Rotate();
-
 	//傾ける
 	Slop();
 
 	//腕を回す
 	Swing();
+
+	//腕を回す
+	Aiming();
 
 	//モーションを更新する
 	m_pMotion->Update();
@@ -356,57 +355,6 @@ void CPlayer::Move(void)
 }
 
 //==========================================
-//  回転処理
-//==========================================
-void CPlayer::Rotate(void)
-{
-	//マウスカーソル位置の取得
-	D3DXVECTOR2 CursorPos = CManager::GetMouse()->GetCursor();
-
-	//プレイヤー方向の取得
-	m_fAngle = atan2f(-CursorPos.x, CursorPos.y);
-
-	//方向転換用変数
-	float fRotMove, fRotDest, fRotDiff;
-
-	//現在の角度と目的の角度の差分を計算
-	fRotMove = m_rot.y;
-	fRotDest = m_fAngle;
-	fRotDiff = fRotDest - fRotMove;
-
-	//角度の補正
-	if (fRotDiff > D3DX_PI)
-	{
-		fRotDiff -= D3DX_PI * 2.0f;
-	}
-	else if (fRotDiff <= -D3DX_PI)
-	{
-		fRotDiff += D3DX_PI * 2.0f;
-	}
-
-	CManager::GetDebugProc()->Print("プレイヤーの向き : %f\n", fRotMove);
-	CManager::GetDebugProc()->Print("目標の角度 : %f\n", fRotDest);
-	CManager::GetDebugProc()->Print("角度の差分 : %f\n", fRotDiff);
-
-
-	//方向転換の慣性
-	fRotMove += fRotDiff * 0.5f;
-
-	//角度の補正
-	if (fRotMove > D3DX_PI)
-	{
-		fRotMove -= D3DX_PI * 2.0f;
-	}
-	else if (fRotMove <= -D3DX_PI)
-	{
-		fRotMove += D3DX_PI * 2.0f;
-	}
-
-	//方向を適用する
-	m_rot.y = fRotMove;
-}
-
-//==========================================
 //  移動方向に傾ける
 //==========================================
 void CPlayer::Slop(void)
@@ -432,17 +380,17 @@ void CPlayer::Shot(void)
 	//弾の移動量を算出
 	D3DXVECTOR3 BulletMove = D3DXVECTOR3
 	(
-		-sinf(m_rot.y),
+		-cosf(m_ppModel[3]->GetRot().y),
 		0.0f,
-		-cosf(m_rot.y)
+		sinf(m_ppModel[3]->GetRot().y)
 	);
 
 	//弾の発射位置を算出
 	D3DXVECTOR3 BulletPos = D3DXVECTOR3
 	(
-		m_ppModel[4]->GetMtx()._41,
-		m_ppModel[4]->GetMtx()._42,
-		m_ppModel[4]->GetMtx()._43
+		m_ppModel[3]->GetMtx()._41,
+		m_ppModel[3]->GetMtx()._42,
+		m_ppModel[3]->GetMtx()._43
 	);
 
 	//弾の生成
@@ -494,14 +442,7 @@ void CPlayer::Swing(void)
 	D3DXVECTOR3 rot = m_ppModel[4]->GetRot();
 
 	//腕の角度を変える
-	if (fMove < 0.0f)
-	{
-		rot.y += 1.0f;
-	}
-	else if (fMove > 0.0f)
-	{
-		rot.y -= 1.0f;
-	}
+	rot.y += -fMove;
 
 	//角度の補正
 	if (rot.y < -2.7f)
@@ -512,17 +453,59 @@ void CPlayer::Swing(void)
 	{
 		rot.y = 0.0f;
 	}
-	if (rot.y > D3DX_PI)
-	{
-		rot.y -= D3DX_PI * 2.0f;
-	}
-	if (rot.y <= -D3DX_PI)
-	{
-		rot.y += D3DX_PI * 2.0f;
-	}
 
 	//角度を適用
 	m_ppModel[4]->SetRot(rot);
+}
 
-	CManager::GetDebugProc()->Print("腕の向き : %f\n", m_ppModel[4]->GetRot().y);
+//==========================================
+//  狙う処理
+//==========================================
+void CPlayer::Aiming(void)
+{
+	//ローカル変数宣言
+	D3DXMATRIX mtx = m_ppModel[3]->GetMtx();
+	D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
+	D3DXMATRIX mtxParent; //親マトリックス
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&mtx);
+
+	//向きの反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&mtx, &mtx, &mtxRot);
+
+	//位置の反映
+	D3DXMatrixTranslation(&mtxTrans, m_ppModel[3]->GetPos().x, m_ppModel[3]->GetPos().y, m_ppModel[3]->GetPos().z);
+	D3DXMatrixMultiply(&mtx, &mtx, &mtxTrans);
+
+	//親マトリックスの設定
+	mtxParent = m_ppModel[3]->GetParent()->GetMtx();
+
+	//ワールドマトリックスと親マトリックスをかけ合わせる
+	D3DXMatrixMultiply
+	(
+		&mtx,
+		&mtx,
+		&mtxParent
+	);
+
+	//座標を抽出
+	D3DXVECTOR3 pos = D3DXVECTOR3(mtx._41, mtx._42, mtx._43);
+
+	//カメラの注視点を取得
+	D3DXVECTOR3 posR = CGameManager::GetCamera()->GetPosR();
+
+	//座標から注視点のベクトルを求める
+	D3DXVECTOR3 vecToPos = posR - pos;
+
+	//ベクトルの方向を求める
+	float fRot = atan2f(vecToPos.z, -vecToPos.x);
+
+	//モデルの角度を取得
+	D3DXVECTOR3 rot = m_ppModel[3]->GetRot();
+	rot.y = fRot;
+
+	//角度を適用
+	m_ppModel[3]->SetRot(rot);
 }

@@ -16,7 +16,7 @@ CObject_Fan::CObject_Fan(int nPriority) : CObject(nPriority)
 	m_pVtxBuff = NULL;
 	m_mtxWorld = {};
 	m_pTexture = NULL;
-	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
+	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.1f);
 	m_fRadius = 0.0f;
 	m_nNumPrimitive = 0;
 }
@@ -92,6 +92,11 @@ void CObject_Fan::Draw(void)
 	//ローカル変数宣言
 	D3DXMATRIX mtxRot, mtxTrans, mtxView; //計算用マトリックス
 
+	//アルファテストの有効化
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
@@ -119,6 +124,11 @@ void CObject_Fan::Draw(void)
 
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, m_nNumPrimitive);
+
+	//アルファテストの無効化
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
 
 	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }

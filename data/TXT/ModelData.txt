@@ -5,7 +5,7 @@
 //
 //==========================================
 
-NUM_MODEL = 7
+NUM_MODEL = 8
 
 //==========================================
 //  xファイル名
@@ -17,3 +17,4 @@ MODEL_FILENAME = Player\\arm_left.x		//[3]プレイヤーの左腕
 MODEL_FILENAME = Player\\arm_right.x	//[4]プレイヤーの右腕
 MODEL_FILENAME = Enemy\\ballbot.x		//[5]丸い敵
 MODEL_FILENAME = Enemy\\cannon.x		//[6]弾を撃つ敵
+MODEL_FILENAME = sky.x					//[7]天球

@@ -27,7 +27,6 @@ public:
 	{
 		NONE = 0, //‚È‚µ
 		MOVIE, //ƒ€[ƒr[ó‘Ô
-
 		MAX
 	}STATE;
 

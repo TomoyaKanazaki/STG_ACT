@@ -16,6 +16,8 @@
 #include "manager.h"
 #include "input.h"
 #include "scenemanager.h"
+#include "model.h"
+#include "renderer.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -48,7 +50,9 @@ CGameManager::~CGameManager()
 HRESULT CGameManager::Init(void)
 {
 	//床の生成
-	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 8, 1000.0f);
+	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 12, 1000.0f);
+	CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.01f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 8, 666.0f);
+	CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.02f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 6, 333.0f);
 
 	//プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
@@ -69,6 +73,8 @@ HRESULT CGameManager::Init(void)
 		m_pCamera = new CCamera;
 		m_pCamera->Init();
 	}
+
+	CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7);
 
 	//BGMの再生
 	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);

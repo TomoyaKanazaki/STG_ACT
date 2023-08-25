@@ -68,7 +68,7 @@ HRESULT COrbit::Init(void)
 
 	//プレイヤー中心と端の距離を算出
 	D3DXVECTOR3 vecLength = CGameManager::GetPlayer()->GetPos() - m_pVtxPos[1];
-	m_fLength = vecLength.x * vecLength.x + vecLength.z * vecLength.z;
+	m_fLength = (vecLength.x * vecLength.x + vecLength.z * vecLength.z) * 2.2f;
 
 	//頂点情報を初期化
 	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt += 2)

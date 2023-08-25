@@ -64,7 +64,6 @@
     <ClCompile Include="source\scenemanager.cpp" />
     <ClCompile Include="source\shadow.cpp" />
     <ClCompile Include="source\sound.cpp" />
-    <ClCompile Include="source\target.cpp" />
     <ClCompile Include="source\texture.cpp" />
     <ClCompile Include="source\titlemanager.cpp" />
   </ItemGroup>
@@ -109,7 +108,6 @@
     <ClInclude Include="source\scenemanager.h" />
     <ClInclude Include="source\shadow.h" />
     <ClInclude Include="source\sound.h" />
-    <ClInclude Include="source\target.h" />
     <ClInclude Include="source\texture.h" />
     <ClInclude Include="source\titlemanager.h" />
   </ItemGroup>
