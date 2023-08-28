@@ -7,6 +7,7 @@
 #include "object_fan.h"
 #include "manager.h"
 #include "renderer.h"
+#include "texture.h"
 
 //==========================================
 //  コンストラクタ
@@ -16,7 +17,7 @@ CObject_Fan::CObject_Fan(int nPriority) : CObject(nPriority)
 	m_pVtxBuff = NULL;
 	m_mtxWorld = {};
 	m_pTexture = NULL;
-	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.1f);
+	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_fRadius = 0.0f;
 	m_nNumPrimitive = 0;
 }
@@ -216,6 +217,9 @@ CObject_Fan *CObject_Fan::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nNumPrimi
 	//初期化
 	pFan->Init();
 
+	//テクスチャを割り当てる
+	pFan->BindTexture(CManager::GetTexture()->GetAddress(CTexture::FIELD));
+
 	//ポインタを返す
 	return pFan;
 }
@@ -264,6 +268,14 @@ void CObject_Fan::SetVtx(void)
 
 	//最後の頂点を設定
 	pVtx[m_nNumVtx - 1] = pVtx[1];
+
+	//テクスチャ座標を設定
+	for (int nCnt = 0; nCnt < m_nNumVtx; nCnt++)
+	{
+		//座標を正規化する
+		D3DXVECTOR2 texPos = D3DXVECTOR2(pVtx[nCnt].pos.x, pVtx[nCnt].pos.z);
+		D3DXVec2Normalize(&pVtx[nCnt].tex, &texPos);
+	}
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();

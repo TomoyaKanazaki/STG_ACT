@@ -65,7 +65,7 @@ HRESULT CEnemyManager::Init(void)
 	m_nPopCounter[21] = 10;
 	m_nPopCounter[22] = 5;
 	m_nPopCounter[23] = 0;
-	m_nNumEnemy = 5;
+	m_nNumEnemy = 15;
 
 	return S_OK;
 }
@@ -90,23 +90,14 @@ void CEnemyManager::Update(void)
 	{
 		if (m_nPopCounter[nCnt] * 60 == m_nTime && m_bPop[nCnt] == false)
 		{
-			//生成中心座標を生成
-			while (CGameManager::GetPlayer()->GetPos().z > m_pos.z)
-			{
-				m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
-				D3DXVec3Normalize(&m_pos, &m_pos);
-				m_pos = D3DXVECTOR3(m_pos.x * 800.0f, 0.0f, m_pos.z * 800.0f);
-			}
-
 			for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
 			{
-				//生成座標を生成
-				D3DXVECTOR3 PopPos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
-				D3DXVec3Normalize(&PopPos, &PopPos);
-				PopPos = D3DXVECTOR3(m_pos.x + (PopPos.x * m_vecError.x), 0.0f, m_pos.z + (PopPos.z * m_vecError.z));
+				//生成中心座標を生成
+				m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
+				m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
 
 				//敵を生成
-				CEnemy::Create(PopPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
+				CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
 			}
 
 			//生成完了フラグを立てる
@@ -116,22 +107,16 @@ void CEnemyManager::Update(void)
 	}
 
 #ifdef _DEBUG
-	if (CManager::GetKeyboard()->GetPress(DIK_E))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
 	{
-		//生成中心座標を生成
-		m_pos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
-		D3DXVec3Normalize(&m_pos, &m_pos);
-		m_pos = D3DXVECTOR3(m_pos.x * 800.0f, 0.0f, m_pos.z * 800.0f);
-
-		for (int nCntEnemy = 0; nCntEnemy < 2; nCntEnemy++)
+		for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
 		{
-			//生成座標を生成
-			D3DXVECTOR3 PopPos = D3DXVECTOR3((float)(rand() * 2 - RAND_MAX), 0.0f, (float)(rand() * 2 - RAND_MAX));
-			D3DXVec3Normalize(&PopPos, &PopPos);
-			PopPos = D3DXVECTOR3(m_pos.x + (PopPos.x * m_vecError.x), 0.0f, m_pos.z + (PopPos.z * m_vecError.z));
+			//生成中心座標を生成
+			m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
+			m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
 
 			//敵を生成
-			CEnemy::Create(PopPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
+			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
 		}
 	}
 #endif

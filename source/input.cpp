@@ -180,25 +180,25 @@ D3DXVECTOR3 CKeyboard::GetWASD(void)
 	//W
 	if (GetPress(DIK_W))
 	{
-		move.z += 1.0f;
+		move.z += -1.0f;
 	}
 
 	//A
 	if (GetPress(DIK_A))
 	{
-		move.x += -1.0f;
+		move.x += 1.0f;
 	}
 
 	//S
 	if (GetPress(DIK_S))
 	{
-		move.z += -1.0f;
+		move.z += 1.0f;
 	}
 
 	//D
 	if (GetPress(DIK_D))
 	{
-		move.x += 1.0f;
+		move.x += -1.0f;
 	}
 
 	//ÉxÉNÉgÉãÇÃê≥ãKâª

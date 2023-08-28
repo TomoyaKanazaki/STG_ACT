@@ -41,6 +41,7 @@ private:
 
 	//ƒƒ“ƒoŠÖ”
 	void Move(void);
+	void Rotate(void);
 
 };
 

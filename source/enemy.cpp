@@ -95,7 +95,7 @@ void CEnemy::Uninit(void)
 	}
 
 	//パーティクルを呼び出し
-	CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(0.98f, 0.87f, 0.28f, 0.5f), 10, 10, 10, 5);
+	CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(0.98f, 0.87f, 0.28f, 0.5f), 10, 30, 10, 5);
 
 	//自分自身の破棄
 	Release();
@@ -149,12 +149,6 @@ void CEnemy::Draw()
 //==========================================
 CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type)
 {
-	//プレイヤーより後方には出現できない
-	if (CGameManager::GetPlayer()->GetPos().z > pos.z)
-	{
-		return NULL;
-	}
-
 	//インスタンス生成
 	CEnemy *pEnemy = NULL;
 

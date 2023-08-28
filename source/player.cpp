@@ -25,6 +25,7 @@
 #include "gamemanager.h"
 #include "orbit.h"
 #include "particle.h"
+#include "camera.h"
 
 //==========================================
 //  マクロ定義
@@ -267,7 +268,7 @@ void CPlayer::Update(void)
 	m_pMotion->Update();
 
 	//攻撃
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
 	{
 		Shot();
 	}
@@ -294,6 +295,12 @@ void CPlayer::Update(void)
 	if (m_pShadow != NULL)
 	{
 		m_pShadow->SetTransform(m_pos, m_rot);
+	}
+
+	//大人の壁
+	if (m_pos.z > 130.0f)
+	{
+		m_pos.z = 130.0f;
 	}
 
 	//デバッグ表示
@@ -351,7 +358,10 @@ void CPlayer::Move(void)
 	m_move.z += (0.0f - m_move.z) * 0.1f;
 
 	//移動量の取得
-	m_move += CManager::GetKeyboard()->GetWASD();
+	D3DXVECTOR3 move = CManager::GetKeyboard()->GetWASD();
+
+	//移動量を適用
+	m_move += move;
 }
 
 //==========================================
@@ -377,14 +387,6 @@ void CPlayer::Slop(void)
 //==========================================
 void CPlayer::Shot(void)
 {
-	//弾の移動量を算出
-	D3DXVECTOR3 BulletMove = D3DXVECTOR3
-	(
-		-cosf(m_ppModel[3]->GetRot().y),
-		0.0f,
-		sinf(m_ppModel[3]->GetRot().y)
-	);
-
 	//弾の発射位置を算出
 	D3DXVECTOR3 BulletPos = D3DXVECTOR3
 	(
@@ -392,6 +394,15 @@ void CPlayer::Shot(void)
 		m_ppModel[3]->GetMtx()._42,
 		m_ppModel[3]->GetMtx()._43
 	);
+
+	//カメラの注視点を取得
+	D3DXVECTOR3 vecPosR = CGameManager::GetCamera()->GetPosR();
+
+	//移動量を算出
+	D3DXVECTOR3 BulletMove = vecPosR - BulletPos;
+	BulletMove.y = 0.0f;
+	D3DXVec3Normalize(&BulletMove, &BulletMove);
+	BulletMove *= 5.0f;
 
 	//弾の生成
 	CBullet::Create(BulletPos, m_size * 0.5f, BulletMove, CBullet::PLAYER, CBullet::HOMING_BULLET);
@@ -494,17 +505,11 @@ void CPlayer::Aiming(void)
 	D3DXVECTOR3 pos = D3DXVECTOR3(mtx._41, mtx._42, mtx._43);
 
 	//カメラの注視点を取得
-	D3DXVECTOR3 posR = CGameManager::GetCamera()->GetPosR();
-
-	//座標から注視点のベクトルを求める
-	D3DXVECTOR3 vecToPos = posR - pos;
-
-	//ベクトルの方向を求める
-	float fRot = atan2f(vecToPos.z, -vecToPos.x);
+	D3DXVECTOR3 rotCamera = CGameManager::GetCamera()->GetRot();
 
 	//モデルの角度を取得
 	D3DXVECTOR3 rot = m_ppModel[3]->GetRot();
-	rot.y = fRot;
+	rot.y = rotCamera.y;
 
 	//角度を適用
 	m_ppModel[3]->SetRot(rot);

@@ -15,8 +15,9 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define DISTANCE (-250.0f) //視点と注視点の距離
-#define HEIGHT (400.0f) //視点と注視点の距離
+#define DISTANCE_V (500.0f) //視点からプレイヤーの距離
+#define DISTANCE_R (5.0f) //プレイヤーから注視点の倍率
+#define HEIGHT (500.0f) //視点の高さ
 #define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
 #define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
 
@@ -25,11 +26,11 @@
 //==========================================
 CCamera::CCamera()
 {
-	m_posV = D3DXVECTOR3(0.0f, 100.0f, -100.0f);
-	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_posV = D3DXVECTOR3(0.0f, HEIGHT, DISTANCE_V);
+	m_posR = D3DXVECTOR3(0.0f, 0.0f, -DISTANCE_V);
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_diff = D3DXVECTOR3(0.0f, HEIGHT, DISTANCE);
+	m_diff = D3DXVECTOR3(0.0f, HEIGHT, DISTANCE_V);
 }
 
 //==========================================
@@ -65,7 +66,8 @@ void CCamera::Uninit(void)
 void CCamera::Update(void)
 {
 	//位置の更新
-	Move();
+	//ThirdPerson();
+	//Move();
 
 	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
 	CManager::GetDebugProc()->Print("視点 : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
@@ -139,9 +141,9 @@ void CCamera::FirstPerson(void)
 	}
 
 	//角度を更新
-	m_posR.x = m_posV.x - (sinf(m_rot.z) * cosf(m_rot.x)) * DISTANCE;
-	m_posR.y = m_posV.y - cosf(m_rot.z) * DISTANCE;
-	m_posR.z = m_posV.z - (sinf(m_rot.z) * sinf(m_rot.x)) * DISTANCE;
+	m_posR.x = m_posV.x - (sinf(m_rot.z) * cosf(m_rot.x)) * DISTANCE_V;
+	m_posR.y = m_posV.y - cosf(m_rot.z) * DISTANCE_V;
+	m_posR.z = m_posV.z - (sinf(m_rot.z) * sinf(m_rot.x)) * DISTANCE_V;
 }
 
 //==========================================
@@ -149,8 +151,15 @@ void CCamera::FirstPerson(void)
 //==========================================
 void CCamera::ThirdPerson(void)
 {
+	//プレイヤーの位置を取得
+	D3DXVECTOR3 PlayerPos = CGameManager::GetPlayer()->GetPos();
+	PlayerPos.y += HEIGHT;
+
 	//視点の値を更新
-	m_rot += CManager::GetMouse()->GetMouseMove();
+	if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+	{
+		m_rot += CManager::GetMouse()->GetMouseMove();
+	}
 
 	//角度の補正
 	if (m_rot.z > MAX_ROT)
@@ -170,10 +179,16 @@ void CCamera::ThirdPerson(void)
 		m_rot.x = D3DX_PI;
 	}
 
+	//視点を更新
+	m_posV.x = PlayerPos.x + (sinf(m_rot.z) * cosf(m_rot.x)) * DISTANCE_V;
+	m_posV.y = PlayerPos.y + cosf(m_rot.z) * DISTANCE_V;
+	m_posV.z = PlayerPos.z + (sinf(m_rot.z) * sinf(m_rot.x)) * -DISTANCE_V;
+
+	////注視点を更新
+	m_posR = PlayerPos - (m_posV * DISTANCE_R);
+
 	//角度を更新
-	m_posV.x = m_posR.x + (sinf(m_rot.z) * cosf(m_rot.x)) * DISTANCE;
-	m_posV.y = m_posR.y + cosf(m_rot.z) * DISTANCE;
-	m_posV.z = m_posR.z + (sinf(m_rot.z) * sinf(m_rot.x)) * DISTANCE;
+	m_rot.y = atan2f(m_posR.x, m_posR.z);
 }
 
 //==========================================
@@ -202,4 +217,18 @@ void CCamera::Move(void)
 	m_posV += m_diff;
 	m_posR -= m_diff;
 	m_posR.y = pos.y;
+}
+
+//==========================================
+//  回転処理
+//==========================================
+void CCamera::Rotate(void)
+{
+	//視点から注視点へのベクトルを求める
+	D3DXVECTOR3 vecCamera = m_posR - m_posV;
+
+	//求めたベクトルから角度を求める
+	m_rot.x = atan2f(vecCamera.y, vecCamera.z);
+	m_rot.y = atan2f(vecCamera.z, vecCamera.x);
+	m_rot.z = atan2f(vecCamera.x, vecCamera.y);
 }

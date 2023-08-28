@@ -26,6 +26,7 @@ public:
 		NUMBER, //数字
 		TARGET, //ターゲット
 		BULLET, //弾
+		FIELD, //床
 		TEXTURE_MAX
 	};
 
