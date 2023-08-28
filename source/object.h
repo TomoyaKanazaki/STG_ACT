@@ -34,8 +34,6 @@ public:
 		TYPE_FIELD, //床
 		TYPE_SHADOW, //影
 		TYPE_TARGET, //目標
-		TYPE_ITEM, //アイテム
-		TYPE_ENERGY, //エネルギー
 		TYPE_FADE, //フェード
 		METHOD_MAX
 	}TYPE;

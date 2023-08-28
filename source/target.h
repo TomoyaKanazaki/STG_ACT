@@ -15,7 +15,7 @@
 class CTarget : public CObject3D
 {
 public:
-	CTarget(int nPriority = 1); //コンストラクタ
+	CTarget(int nPriority = 6); //コンストラクタ
 	~CTarget(); //デストラクタ
 
 	//メンバ関数
@@ -25,7 +25,7 @@ public:
 	void Draw(void);
 
 	//静的メンバ関数
-	static CTarget *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, D3DXCOLOR col, int nLife);
+	static CTarget *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size);
 
 private:
 

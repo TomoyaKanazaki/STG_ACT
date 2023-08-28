@@ -16,6 +16,7 @@ class CObject_Fan;
 class CPlayer;
 class CCamera;
 class CLight;
+class CTarget;
 
 //==========================================
 //  ゲームマネージャクラス定義
@@ -46,6 +47,7 @@ public:
 	static CPlayer *GetPlayer(void) { return m_pPlayer; }
 	static CCamera *GetCamera(void) { return m_pCamera; }
 	static CLight *GetLight(void) { return m_pLight; }
+	static CTarget *GetTarget(void) { return m_pTarget; }
 
 private:
 
@@ -57,6 +59,7 @@ private:
 	static CPlayer *m_pPlayer;
 	static CCamera *m_pCamera;
 	static CLight *m_pLight;
+	static CTarget *m_pTarget;
 
 };
 

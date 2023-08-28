@@ -18,6 +18,7 @@
 #include "scenemanager.h"
 #include "model.h"
 #include "renderer.h"
+#include "target.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -27,6 +28,7 @@ CPlayer *CGameManager::m_pPlayer = NULL;
 CObject_Fan *CGameManager::m_pFan = NULL;
 CCamera *CGameManager::m_pCamera = NULL;
 CLight *CGameManager::m_pLight = NULL;
+CTarget *CGameManager::m_pTarget = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -71,6 +73,9 @@ HRESULT CGameManager::Init(void)
 		m_pCamera = new CCamera;
 		m_pCamera->Init();
 	}
+
+	//ターゲットを生成
+	m_pTarget = CTarget::Create(m_pCamera->GetPosR(), D3DXVECTOR3(50.0f, 0.0f, 50.0f));
 
 	//BGMの再生
 	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);

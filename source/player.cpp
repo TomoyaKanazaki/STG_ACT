@@ -46,8 +46,10 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_nNumModel = 0;
 	m_nLife = 0;
 	m_nDeadCounter = 0;
+	m_nBladeLife = 10;
 	m_fSpeed = 0.0f;
 	m_fAngle = 0.0f;
+	m_fSwing = 0.3f;
 	m_bRand = true;
 	m_bDead = false;
 	m_ppModel = NULL;
@@ -273,24 +275,6 @@ void CPlayer::Update(void)
 		Shot();
 	}
 
-	//軌跡の生成、削除
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_RIGHT))
-	{
-		if (m_orbit == NULL)
-		{
-			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 10);
-		}
-	}
-	else if (CManager::GetMouse()->GetRelease(CMouse::BUTTON_RIGHT))
-	{
-		if (m_orbit != NULL)
-		{
-			m_orbit->Uninit();
-			delete m_orbit;
-			m_orbit = NULL;
-		}
-	}
-
 	//影の情報を更新する
 	if (m_pShadow != NULL)
 	{
@@ -446,14 +430,38 @@ void CPlayer::Explosion(void)
 //==========================================
 void CPlayer::Swing(void)
 {
-	//マウスの横方向の移動量を取得する
-	float fMove = CManager::GetMouse()->GetMouseMove().x;
-
 	//角度を取得
 	D3DXVECTOR3 rot = m_ppModel[4]->GetRot();
 
+	//振る方向を設定
+	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
+	{
+		m_fSwing *= -1.0f;
+		m_nBladeLife = 10;
+		if (m_orbit == NULL)
+		{
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 10);
+		}
+	}
+	else
+	{
+		if (m_nBladeLife == 0)
+		{
+			if (m_orbit != NULL)
+			{
+				m_orbit->Uninit();
+				delete m_orbit;
+				m_orbit = NULL;
+			}
+		}
+		else
+		{
+			m_nBladeLife--;
+		}
+	}
+
 	//腕の角度を変える
-	rot.y += -fMove;
+	rot.y += m_fSwing;
 
 	//角度の補正
 	if (rot.y < -2.7f)

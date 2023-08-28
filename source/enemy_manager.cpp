@@ -107,7 +107,7 @@ void CEnemyManager::Update(void)
 	}
 
 #ifdef _DEBUG
-	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
+	if (CManager::GetKeyboard()->GetPress(DIK_E))
 	{
 		for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
 		{

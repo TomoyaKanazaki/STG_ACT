@@ -52,8 +52,10 @@ private:
 	int m_nLife;
 	int m_nNumModel;
 	int m_nDeadCounter;
+	int m_nBladeLife;
 	float m_fSpeed;
 	float m_fAngle;
+	float m_fSwing;
 	bool m_bRand;
 	bool m_bDead;
 	D3DXMATERIAL *m_pDefMat;

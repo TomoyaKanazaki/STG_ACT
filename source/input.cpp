@@ -394,7 +394,7 @@ bool CMouse::GetRelease(int nKey)
 //==========================================
 D3DXVECTOR3 CMouse::GetMouseMove(void)
 {
-	return D3DXVECTOR3(((float)m_MouseState.lX) * -MOUSE_MOVE, 0.0f, ((float)m_MouseState.lY) * -MOUSE_MOVE);
+	return D3DXVECTOR3(((float)m_MouseState.lX) * -MOUSE_MOVE, 0.0f, ((float)m_MouseState.lY) * MOUSE_MOVE);
 }
 
 //==========================================
