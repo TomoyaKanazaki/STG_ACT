@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\battery.cpp" />
+    <ClCompile Include="source\boss.cpp" />
     <ClCompile Include="source\bullet.cpp" />
     <ClCompile Include="source\bullet_homing.cpp" />
     <ClCompile Include="source\bullet_normal.cpp" />
@@ -70,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\battery.h" />
+    <ClInclude Include="source\boss.h" />
     <ClInclude Include="source\bullet.h" />
     <ClInclude Include="source\bullet_homing.h" />
     <ClInclude Include="source\bullet_normal.h" />

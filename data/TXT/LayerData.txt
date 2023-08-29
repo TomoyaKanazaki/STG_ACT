@@ -5,7 +5,7 @@
 //
 //==========================================
 
-NUM_LAYER = 3
+NUM_LAYER = 4
 
 //==========================================
 //  階層構造の種類
@@ -54,6 +54,15 @@ LAYER_DATA //弾を撃つ敵の構造
 	NUM_MODEL 1
 	
 	MODELID		6
+	ParentID	-1
+	POS			0.0 0.0 0.0
+	ROT			0.0 0.0 0.0
+	
+LAYER_DATA //ボス敵の構造
+	
+	NUM_MODEL 1
+	
+	MODELID		7
 	ParentID	-1
 	POS			0.0 0.0 0.0
 	ROT			0.0 0.0 0.0

@@ -60,19 +60,7 @@ void CTarget::Update(void)
 {
 	//移動
 	m_pos += CManager::GetMouse()->GetMouseMove() * 500.0f;
-
-	//大人の壁
-	if (m_pos.x > 755.0f)
-	{
-		m_pos.x = 755.0f;
-	}
-	if (m_pos.x < -755.0f)
-	{
-		m_pos.x = -755.0f;
-	}
-
 	CManager::GetDebugProc()->Print("ターゲット座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
-
 }
 
 //==========================================

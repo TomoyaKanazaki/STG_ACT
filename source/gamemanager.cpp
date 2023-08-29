@@ -60,18 +60,18 @@ HRESULT CGameManager::Init(void)
 	//エネミーマネージャの生成
 	CEnemyManager::Create();
 
-	//ライトの生成
-	if (m_pLight == NULL)
-	{
-		m_pLight = new CLight;
-		m_pLight->Init();
-	}
-
 	//カメラの生成
 	if (m_pCamera == NULL)
 	{
 		m_pCamera = new CCamera;
 		m_pCamera->Init();
+	}
+
+	//ライトの生成
+	if (m_pLight == NULL)
+	{
+		m_pLight = new CLight;
+		m_pLight->Init();
 	}
 
 	//ターゲットを生成

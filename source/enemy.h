@@ -27,6 +27,7 @@ public:
 	{
 		TYPE_NORMAL = 0, //•’Ê‚Ì“G
 		TYPE_SHOT, //‰“‹——£UŒ‚‚Ì“G
+		TYPE_BOSS, //ƒ{ƒX“G
 		TYPE_MAX
 	}TYPE;
 

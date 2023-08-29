@@ -7,6 +7,8 @@
 #include "light.h"
 #include "manager.h"
 #include "renderer.h"
+#include "gamemanager.h"
+#include "camera.h"
 
 //==========================================
 //  コンストラクタ
@@ -57,13 +59,9 @@ HRESULT CLight::Init(void)
 			break;
 		case 1:
 			vecDir = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
-
-			//vecDir = D3DXVECTOR3(-0.18f, 0.88f, -0.44f);
 			break;
 		case 2:
-			vecDir = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
-
-			//vecDir = D3DXVECTOR3(0.89f, -0.11f, 0.44f);
+			vecDir = CGameManager::GetCamera()->GetPosR() - CGameManager::GetCamera()->GetPosV();
 		}
 
 		D3DXVec3Normalize(&vecDir, &vecDir); //ベクトルの正規化

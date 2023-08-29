@@ -199,7 +199,7 @@ HRESULT CModel::Load(void)
 			fscanf(pFile, "%s", &aStr[0]);
 		}
 
-		//テクスチャ数の読み込み
+		//モデル数の読み込み
 		fscanf(pFile, "%d", &nNumModel);
 
 		//情報を格納する

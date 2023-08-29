@@ -20,6 +20,7 @@
 #include "enemy_approach.h"
 #include "enemy_shot.h"
 #include "particle.h"
+#include "boss.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -166,6 +167,11 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 		case CEnemy::TYPE_SHOT:
 
 			pEnemy = new CEnemyShot;
+			break;
+
+		case CEnemy::TYPE_BOSS:
+
+			pEnemy = new CBoss;
 			break;
 
 		default:
