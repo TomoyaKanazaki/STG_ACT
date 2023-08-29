@@ -46,14 +46,12 @@ void CResultManager::Uninit(void)
 //==========================================
 void CResultManager::Update(void)
 {
-#if _DEBUG
 	//‰æ–Ê‘JˆÚƒeƒXƒg
-	if (CManager::GetKeyboard()->GetTrigger(DIK_0))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::TITLE);
 		return;
 	}
-#endif
 }
 
 //==========================================

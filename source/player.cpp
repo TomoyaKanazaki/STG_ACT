@@ -214,7 +214,6 @@ void CPlayer::Update(void)
 			delete m_orbit;
 			m_orbit = NULL;
 		}
-		CGameManager::SetState(CGameManager::NONE);
 	}
 
 	//‘O‰ñÀ•W‚Ì•Û‘¶

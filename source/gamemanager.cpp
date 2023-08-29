@@ -19,6 +19,8 @@
 #include "model.h"
 #include "renderer.h"
 #include "target.h"
+#include "enemy.h"
+#include "debugproc.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -116,7 +118,7 @@ void CGameManager::Update(void)
 {
 #if _DEBUG
 	//画面遷移テスト
-	if (CManager::GetKeyboard()->GetTrigger(DIK_0))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
 		return;
@@ -133,6 +135,87 @@ void CGameManager::Update(void)
 	if (m_pLight != NULL)
 	{
 		m_pLight->Update();
+	}
+
+	//フェーズ移行
+	CManager::GetDebugProc()->Print("撃破数 : %d\n", CEnemy::GetDead());
+	CManager::GetDebugProc()->Print("フェーズ : %d\n", m_State);
+
+	if (CEnemy::GetDead() >= m_State * 10 && m_State != BOSS_CREAR)
+	{
+		//フェーズを進める
+		m_State = (CGameManager::STATE)((int)m_State + 1);
+
+		//敵をリセット
+		for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+		{
+			//オブジェクトを取得
+			CObject *pObj = CObject::GetTop(nCntPriority);
+
+			//NULLチェック
+			while (pObj != NULL)
+			{
+				//次のアドレスを保存
+				CObject *pNext = pObj->GetNext();
+
+				//ボスの場合
+				if (pObj->GetType() != CObject::TYPE_ENEMY)
+				{
+					//次のアドレスにずらす
+					pObj = pNext;
+					continue;
+				}
+
+				//敵を消す
+				pObj->Uninit();
+
+				//次のアドレスにずらす
+				pObj = pNext;
+			}
+		}
+
+		//撃破数をリセット
+		CEnemy::ResetDead();
+	}
+
+	//遷移
+	if (m_State == BOSS_CREAR)
+	{
+		for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+		{
+			//オブジェクトを取得
+			CObject *pObj = CObject::GetTop(nCntPriority);
+
+			//NULLチェック
+			while (pObj != NULL)
+			{
+				//次のアドレスを保存
+				CObject *pNext = pObj->GetNext();
+
+				//ボスの場合
+				if (pObj->GetType() != CObject::TYPE_BOSS)
+				{
+					//次のアドレスにずらす
+					pObj = pNext;
+					continue;
+				}
+
+				//ボスを撃破し画面遷移する
+				pObj->Uninit();
+				CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
+				return;
+			}
+		}
+	}
+
+	//ボス戦になったらエネミーマネージャーを削除する
+	if (m_State == BOSS_CREAR)
+	{
+		if (m_pEnemy != NULL)
+		{
+			m_pEnemy->Uninit();
+			m_pEnemy = NULL;
+		}
 	}
 }
 

@@ -13,7 +13,7 @@
 #include "collision.h"
 #include "gamemanager.h"
 #include "player.h"
-#include "particle.h"
+#include "effect.h"
 
 //==========================================
 //  マクロ定義
@@ -140,9 +140,13 @@ void COrbit::Update(void)
 	D3DXVECTOR3 vtxOld = m_pVtxPos[3] - m_pVtxPos[2];
 
 	//パーティクルを呼び出し
-	CParticle::Create(m_pVtxPos[1], D3DXVECTOR3(5.0f, 5.0f, 5.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f), m_colDef, 5, 30, 3, 3);
-	CParticle::Create(m_pVtxPos[3], D3DXVECTOR3(5.0f, 5.0f, 5.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f), m_colDef, 5, 30, 3, 3);
-	CParticle::Create((m_pVtxPos[3] + m_pVtxPos[1]) * 0.5f, D3DXVECTOR3(5.0f, 5.0f, 5.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f), m_colDef, 5, 20, 3, 2);
+	for (int nCnt = 0; nCnt < 50; nCnt++)
+	{
+		//発生するポイント
+		D3DXVECTOR3 pos;
+		D3DXVec3Lerp(&pos, &m_pVtxPos[1], &m_pVtxPos[3], 0.02f * nCnt);
+		CEffect::Create(pos, D3DXVECTOR3(5.0f, 5.0f, 5.0f), m_colDef, 30);
+	}
 
 	//計算用ベクトルの外積を求める
 	D3DXVec3Cross(&Direction, &vtxNew, &vtxOld);

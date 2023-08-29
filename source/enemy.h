@@ -44,7 +44,8 @@ public:
 
 	//Ã“Iƒƒ“ƒo•Ï”
 	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type);
-	static int m_nCntEnemy;
+	static int GetDead(void) { return m_nDead; }
+	static void ResetDead(void) { m_nDead = 0; }
 
 protected:
 
@@ -67,6 +68,7 @@ private:
 
 	//Ã“Iƒƒ“ƒo•Ï”
 	const static float mc_fSize; //“G“¯m‚Ì“–‚½‚è”»’è‚Ì”ÍˆÍ
+	static int m_nDead; //“|‚µ‚½“G‚Ì”
 
 };
 

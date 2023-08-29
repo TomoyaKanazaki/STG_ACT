@@ -25,7 +25,7 @@
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
 //==========================================
-int CEnemy::m_nCntEnemy = 0;
+int CEnemy::m_nDead = 0;
 const float CEnemy::mc_fSize = 75.0f;
 
 //==========================================
@@ -41,7 +41,6 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 	m_pShadow = NULL;
 	m_pMotion = NULL;
 	m_bRand = true;
-	m_nCntEnemy++;
 }
 
 //==========================================
@@ -49,7 +48,7 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 //==========================================
 CEnemy::~CEnemy()
 {
-	m_nCntEnemy--;
+
 }
 
 //==========================================
@@ -100,6 +99,9 @@ void CEnemy::Uninit(void)
 
 	//©•ª©g‚Ì”jŠü
 	Release();
+
+	//Œ‚”j”‚ğ‰ÁZ
+	m_nDead++;
 }
 
 //==========================================
