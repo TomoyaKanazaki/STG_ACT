@@ -26,6 +26,7 @@
 #include "orbit.h"
 #include "particle.h"
 #include "camera.h"
+#include "target.h"
 
 //==========================================
 //  マクロ定義
@@ -114,6 +115,9 @@ HRESULT CPlayer::Init(void)
 	{
 		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
 	}
+
+	//腕を前方に向ける
+	m_ppModel[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 
 	return S_OK;
 }
@@ -379,11 +383,11 @@ void CPlayer::Shot(void)
 		m_ppModel[3]->GetMtx()._43
 	);
 
-	//カメラの注視点を取得
-	D3DXVECTOR3 vecPosR = CGameManager::GetCamera()->GetPosR();
+	//ターゲットの位置を取得
+	D3DXVECTOR3 posTarget = CGameManager::GetTarget()->GetPos();
 
 	//移動量を算出
-	D3DXVECTOR3 BulletMove = vecPosR - BulletPos;
+	D3DXVECTOR3 BulletMove = posTarget - BulletPos;
 	BulletMove.y = 0.0f;
 	D3DXVec3Normalize(&BulletMove, &BulletMove);
 	BulletMove *= 5.0f;
@@ -482,43 +486,15 @@ void CPlayer::Swing(void)
 //==========================================
 void CPlayer::Aiming(void)
 {
-	//ローカル変数宣言
-	D3DXMATRIX mtx = m_ppModel[3]->GetMtx();
-	D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
-	D3DXMATRIX mtxParent; //親マトリックス
+	//ターゲットの位置を取得
+	D3DXVECTOR3 posTarget = CGameManager::GetTarget()->GetPos();
 
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&mtx);
+	//ターゲットへのベクトルを算出
+	D3DXVECTOR3 vecToTarget = m_pos - posTarget;
 
-	//向きの反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-	D3DXMatrixMultiply(&mtx, &mtx, &mtxRot);
-
-	//位置の反映
-	D3DXMatrixTranslation(&mtxTrans, m_ppModel[3]->GetPos().x, m_ppModel[3]->GetPos().y, m_ppModel[3]->GetPos().z);
-	D3DXMatrixMultiply(&mtx, &mtx, &mtxTrans);
-
-	//親マトリックスの設定
-	mtxParent = m_ppModel[3]->GetParent()->GetMtx();
-
-	//ワールドマトリックスと親マトリックスをかけ合わせる
-	D3DXMatrixMultiply
-	(
-		&mtx,
-		&mtx,
-		&mtxParent
-	);
-
-	//座標を抽出
-	D3DXVECTOR3 pos = D3DXVECTOR3(mtx._41, mtx._42, mtx._43);
-
-	//カメラの注視点を取得
-	D3DXVECTOR3 rotCamera = CGameManager::GetCamera()->GetRot();
-
-	//モデルの角度を取得
-	D3DXVECTOR3 rot = m_ppModel[3]->GetRot();
-	rot.y = rotCamera.y;
+	//ターゲットへの角度を算出
+	float fAngle = atan2f(vecToTarget.x, vecToTarget.z);
 
 	//角度を適用
-	m_ppModel[3]->SetRot(rot);
+	m_rot.y = fAngle;
 }

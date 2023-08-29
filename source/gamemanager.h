@@ -17,6 +17,7 @@ class CPlayer;
 class CCamera;
 class CLight;
 class CTarget;
+class CEnemyManager;
 
 //==========================================
 //  ゲームマネージャクラス定義
@@ -48,6 +49,7 @@ public:
 	static CCamera *GetCamera(void) { return m_pCamera; }
 	static CLight *GetLight(void) { return m_pLight; }
 	static CTarget *GetTarget(void) { return m_pTarget; }
+	static CEnemyManager *GetEnemyManager(void) { return m_pEnemy; }
 
 private:
 
@@ -60,6 +62,7 @@ private:
 	static CCamera *m_pCamera;
 	static CLight *m_pLight;
 	static CTarget *m_pTarget;
+	static CEnemyManager *m_pEnemy;
 
 };
 

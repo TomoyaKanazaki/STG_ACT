@@ -68,7 +68,7 @@ HRESULT CEnemyManager::Init(void)
 	m_nNumEnemy = 15;
 
 	//ボスを配置
-	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, -800.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_BOSS);
+	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_BOSS);
 
 	return S_OK;
 }

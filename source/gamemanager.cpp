@@ -29,6 +29,7 @@ CObject_Fan *CGameManager::m_pFan = NULL;
 CCamera *CGameManager::m_pCamera = NULL;
 CLight *CGameManager::m_pLight = NULL;
 CTarget *CGameManager::m_pTarget = NULL;
+CEnemyManager *CGameManager::m_pEnemy = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -58,7 +59,7 @@ HRESULT CGameManager::Init(void)
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//エネミーマネージャの生成
-	CEnemyManager::Create();
+	m_pEnemy = CEnemyManager::Create();
 
 	//カメラの生成
 	if (m_pCamera == NULL)

@@ -59,8 +59,11 @@ HRESULT CBoss::Init(void)
 	}
 
 	CEnemy::Init();
-	return S_OK;
 
+	//エネミータグを上書き
+	SetType(CObject::TYPE_BOSS);
+
+	return S_OK;
 }
 
 //==========================================

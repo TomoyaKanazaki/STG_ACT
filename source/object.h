@@ -24,6 +24,7 @@ public:
 		TYPE_NONE = 0, //不使用
 		TYPE_PLAYER, //プレイヤー
 		TYPE_ENEMY, //敵
+		TYPE_BOSS, //ボス
 		TYPE_BULLET, //弾
 		TYPE_EXPLOSION, //爆発
 		TYPE_BG, //背景
