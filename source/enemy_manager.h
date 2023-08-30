@@ -26,6 +26,9 @@ public:
 
 	//静的メンバ関数
 	static CEnemyManager *Create(void);
+	static int GetDeth(void) { return m_nDead; }
+	static void AddDeth(void) { m_nDead++; }
+	static void ResetDeth(void) { m_nDead = 0; }
 
 private:
 	
@@ -36,7 +39,8 @@ private:
 	int m_nNumEnemy; //一度に生成する敵の数
 	int m_nTime;
 
-
+	//静的メンバ変数
+	static int m_nDead;
 };
 
 #endif

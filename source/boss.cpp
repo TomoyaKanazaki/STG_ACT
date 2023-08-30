@@ -11,6 +11,7 @@
 #include "debugproc.h"
 #include "model.h"
 #include "renderer.h"
+#include "particle.h"
 
 //==========================================
 //  コンストラクタ
@@ -71,6 +72,12 @@ HRESULT CBoss::Init(void)
 //==========================================
 void CBoss::Uninit(void)
 {
+	//パーティクルを発生
+	D3DXVECTOR3 color = D3DXVECTOR3((float)rand() / (float)RAND_MAX, (float)rand() / (float)RAND_MAX, (float)rand() / (float)RAND_MAX);
+	CParticle::Create(m_pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(color.x, color.y, color.z, 1.0f), 50, 50, 50, 50);
+	CParticle::Create(m_pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(color.z, color.x, color.y, 1.0f), 50, 50, 50, 50);
+	CParticle::Create(m_pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(color.y, color.z, color.x, 1.0f), 50, 50, 50, 50);
+
 	CEnemy::Uninit();
 }
 

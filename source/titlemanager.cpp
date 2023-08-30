@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "scenemanager.h"
 #include "input.h"
+#include "logo.h"
 
 //==========================================
 //  コンストラクタ
@@ -30,6 +31,8 @@ CTitleManager::~CTitleManager()
 //==========================================
 HRESULT CTitleManager::Init(void)
 {
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), CLogo::TITLE);
+
 	return S_OK;
 }
 

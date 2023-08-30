@@ -21,11 +21,11 @@
 #include "enemy_shot.h"
 #include "particle.h"
 #include "boss.h"
+#include "enemy_manager.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
 //==========================================
-int CEnemy::m_nDead = 0;
 const float CEnemy::mc_fSize = 75.0f;
 
 //==========================================
@@ -101,7 +101,7 @@ void CEnemy::Uninit(void)
 	Release();
 
 	//Œ‚”j”‚ğ‰ÁZ
-	m_nDead++;
+	CEnemyManager::AddDeth();
 }
 
 //==========================================

@@ -27,6 +27,8 @@ public:
 		TARGET, //ターゲット
 		BULLET, //弾
 		FIELD, //床
+		TITLE, //タイトル
+		RESULT, //リザルト
 		TEXTURE_MAX
 	};
 

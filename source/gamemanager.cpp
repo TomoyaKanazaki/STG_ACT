@@ -38,7 +38,7 @@ CEnemyManager *CGameManager::m_pEnemy = NULL;
 //==========================================
 CGameManager::CGameManager()
 {
-
+	m_State = NONE;
 }
 
 //==========================================
@@ -138,10 +138,10 @@ void CGameManager::Update(void)
 	}
 
 	//フェーズ移行
-	CManager::GetDebugProc()->Print("撃破数 : %d\n", CEnemy::GetDead());
+	CManager::GetDebugProc()->Print("撃破数 : %d\n", CEnemyManager::GetDeth());
 	CManager::GetDebugProc()->Print("フェーズ : %d\n", m_State);
 
-	if (CEnemy::GetDead() >= m_State * 10 && m_State != BOSS_CREAR)
+	if (CEnemyManager::GetDeth() >= m_State * 10 && m_State != BOSS_CREAR)
 	{
 		//フェーズを進める
 		m_State = (CGameManager::STATE)((int)m_State + 1);
@@ -175,37 +175,41 @@ void CGameManager::Update(void)
 		}
 
 		//撃破数をリセット
-		CEnemy::ResetDead();
+		CEnemyManager::ResetDeth();
+
+		if (m_State == BOSS_ATTACK)
+		{
+			for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+			{
+				//オブジェクトを取得
+				CObject *pObj = CObject::GetTop(nCntPriority);
+
+				//NULLチェック
+				while (pObj != NULL)
+				{
+					//次のアドレスを保存
+					CObject *pNext = pObj->GetNext();
+
+					//ボスの場合
+					if (pObj->GetType() != CObject::TYPE_BOSS)
+					{
+						//次のアドレスにずらす
+						pObj = pNext;
+						continue;
+					}
+
+					//ボスを撃破し画面遷移する
+					pObj->Uninit();
+					break;
+				}
+			}
+		}
 	}
 
 	//遷移
 	if (m_State == BOSS_CREAR)
 	{
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
-		{
-			//オブジェクトを取得
-			CObject *pObj = CObject::GetTop(nCntPriority);
-
-			//NULLチェック
-			while (pObj != NULL)
-			{
-				//次のアドレスを保存
-				CObject *pNext = pObj->GetNext();
-
-				//ボスの場合
-				if (pObj->GetType() != CObject::TYPE_BOSS)
-				{
-					//次のアドレスにずらす
-					pObj = pNext;
-					continue;
-				}
-
-				//ボスを撃破し画面遷移する
-				pObj->Uninit();
-				CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
-				return;
-			}
-		}
+		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
 	}
 
 	//ボス戦になったらエネミーマネージャーを削除する

@@ -50,10 +50,10 @@ HRESULT CFade::Init(void)
 	switch (m_Mode)
 	{
 	case MODE_IN:
-		SetCol(D3DXCOLOR(0.0f, 0.5f, 0.5f, 1.0f));
+		SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 		break;
 	case MODE_OUT:
-		SetCol(D3DXCOLOR(0.0f, 0.5f, 0.5f, 0.0f));
+		SetCol(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 		break;
 	default:
 		break;
