@@ -7,15 +7,15 @@
 #ifndef _TARGET_H_
 #define _TARGET_H_
 #include "main.h"
-#include "object3D.h"
+#include "object2D.h"
 
 //==========================================
 //  クラス定義
 //==========================================
-class CTarget : public CObject3D
+class CTarget : public CObject2D
 {
 public:
-	CTarget(int nPriority = 6); //コンストラクタ
+	CTarget(int nPriority = 7); //コンストラクタ
 	~CTarget(); //デストラクタ
 
 	//メンバ関数
@@ -25,10 +25,12 @@ public:
 	void Draw(void);
 
 	//静的メンバ関数
-	static CTarget *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size);
+	static CTarget *Create(void);
 
 private:
 
+	//静的メンバ変数
+	static const float mc_fRate;
 };
 
 #endif

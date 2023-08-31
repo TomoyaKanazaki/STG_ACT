@@ -12,9 +12,14 @@
 #include "renderer.h"
 
 //==========================================
+//  静的メンバ変数宣言
+//==========================================
+const float CTarget::mc_fRate = 80.0f;
+
+//==========================================
 //  コンストラクタ
 //==========================================
-CTarget::CTarget(int nPriority) : CObject3D(nPriority)
+CTarget::CTarget(int nPriority) : CObject2D(nPriority)
 {
 
 }
@@ -32,12 +37,14 @@ CTarget::~CTarget()
 //==========================================
 HRESULT CTarget::Init(void)
 {
-	if (FAILED(CObject3D::Init()))
+	//値を設定する
+	m_pos = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f);
+	m_size = D3DXVECTOR3(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.2f, 0.0f);
+
+	if (FAILED(CObject2D::Init()))
 	{
 		return E_FAIL;
 	}
-
-	SwitchBillboard();
 
 	//タイプの設定
 	SetType(TYPE_TARGET);
@@ -50,7 +57,7 @@ HRESULT CTarget::Init(void)
 //==========================================
 void CTarget::Uninit(void)
 {
-	CObject3D::Uninit();
+	CObject2D::Uninit();
 }
 
 //==========================================
@@ -59,8 +66,11 @@ void CTarget::Uninit(void)
 void CTarget::Update(void)
 {
 	//移動
-	m_pos += CManager::GetMouse()->GetMouseMove() * 500.0f;
-	CManager::GetDebugProc()->Print("ターゲット座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
+	D3DXVECTOR3 move = CManager::GetMouse()->GetMouseMove();
+	m_pos += move * mc_fRate;
+
+	//更新
+	CObject2D::Update();
 }
 
 //==========================================
@@ -84,7 +94,7 @@ void CTarget::Draw(void)
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
 
 	//描画
-	CObject3D::Draw();
+	CObject2D::Draw();
 
 	//アルファテストの無効化
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -102,7 +112,7 @@ void CTarget::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CTarget *CTarget::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size)
+CTarget *CTarget::Create(void)
 {
 	//インスタンス生成
 	CTarget *pTarget = new CTarget;
@@ -112,11 +122,6 @@ CTarget *CTarget::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size)
 		assert(false);
 		return NULL;
 	}
-
-	//各種情報を設定する
-	pTarget->m_pos = pos;
-	pTarget->m_pos.y = 30.0f;
-	pTarget->m_size = size;
 
 	//初期化
 	pTarget->Init();

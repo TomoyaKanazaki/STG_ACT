@@ -177,7 +177,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\DATA\\00_ì‹Æ\\01_ƒQ[ƒ€§ì\\00_Git\\STG_ACT\\data\\TEXTURE\\boss.png";
+    "data\\TEXTURE\\boss.png";
    }
   }
   Material {

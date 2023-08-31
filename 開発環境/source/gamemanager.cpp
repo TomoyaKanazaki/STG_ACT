@@ -78,7 +78,7 @@ HRESULT CGameManager::Init(void)
 	}
 
 	//ターゲットを生成
-	m_pTarget = CTarget::Create(m_pCamera->GetPosR(), D3DXVECTOR3(50.0f, 0.0f, 50.0f));
+	m_pTarget = CTarget::Create();
 
 	//BGMの再生
 	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);

@@ -272,12 +272,6 @@ void CPlayer::Update(void)
 	//モーションを更新する
 	m_pMotion->Update();
 
-	//攻撃
-	if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE))
-	{
-		Shot();
-	}
-
 	//影の情報を更新する
 	if (m_pShadow != NULL)
 	{
@@ -370,32 +364,6 @@ void CPlayer::Slop(void)
 }
 
 //==========================================
-//  射撃
-//==========================================
-void CPlayer::Shot(void)
-{
-	//弾の発射位置を算出
-	D3DXVECTOR3 BulletPos = D3DXVECTOR3
-	(
-		m_ppModel[3]->GetMtx()._41,
-		m_ppModel[3]->GetMtx()._42,
-		m_ppModel[3]->GetMtx()._43
-	);
-
-	//ターゲットの位置を取得
-	D3DXVECTOR3 posTarget = CGameManager::GetTarget()->GetPos();
-
-	//移動量を算出
-	D3DXVECTOR3 BulletMove = posTarget - BulletPos;
-	BulletMove.y = 0.0f;
-	D3DXVec3Normalize(&BulletMove, &BulletMove);
-	BulletMove *= 5.0f;
-
-	//弾の生成
-	CBullet::Create(BulletPos, m_size * 0.5f, BulletMove, CBullet::PLAYER, CBullet::HOMING_BULLET);
-}
-
-//==========================================
 //  復活時に爆発して敵を倒す処理
 //==========================================
 void CPlayer::Explosion(void)
@@ -485,15 +453,54 @@ void CPlayer::Swing(void)
 //==========================================
 void CPlayer::Aiming(void)
 {
-	//ターゲットの位置を取得
-	D3DXVECTOR3 posTarget = CGameManager::GetTarget()->GetPos();
+	//最も距離の近い敵の位置を取得
+	D3DXVECTOR3 vecMin = D3DXVECTOR3(9999.9f, 9999.9f, 9999.9f); //最も近い敵の座標
+	float fLength = 9999.9f * 9999.9f; //敵との距離 ^ 2
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
 
-	//ターゲットへのベクトルを算出
-	D3DXVECTOR3 vecToTarget = m_pos - posTarget;
+		//NULLチェック
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
 
-	//ターゲットへの角度を算出
-	float fAngle = atan2f(vecToTarget.x, vecToTarget.z);
+			//敵の場合
+			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BOSS)
+			{
+				//ターゲットへのベクトルを算出
+				D3DXVECTOR3 vecToTarget = m_pos - pObj->GetPos();
+
+				//現在保存されている距離より近い場合
+				if (fLength >= vecToTarget.x * vecToTarget.x + vecToTarget.z * vecToTarget.z)
+				{
+					//最も近い敵の座標を更新
+					vecMin = vecToTarget;
+				}
+			}
+
+			//次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
+
+	//角度の変数
+	float fRotMove = m_rot.y; //現在の角度
+	float fRotDest = atan2f(vecMin.x, vecMin.z); //目標の角度
+	float fRotDiff = fRotDest - fRotMove; //角度の差分
+
+	//角度を補正
+	if (fRotDiff > 3.14f)
+	{
+		fRotDiff -= 6.28f;
+	}
+	else if (fRotDiff <= -3.14f)
+	{
+		fRotDiff += 6.28f;
+	}
 
 	//角度を適用
-	m_rot.y = fAngle;
+	m_rot.y += fRotDiff * 0.1f;
 }
