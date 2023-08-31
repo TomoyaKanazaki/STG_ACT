@@ -18,6 +18,7 @@
 #include "layer.h"
 #include "motion.h"
 #include "scenemanager.h"
+#include "enemy_manager.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -118,6 +119,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//モーション情報を読み込む
 	CMotion::Load();
+
+	//敵の生成情報を読み込む
+	CEnemyManager::Load();
 
 	//デバッグ表示の生成
 	if (m_pDebugProc == NULL)
@@ -289,6 +293,9 @@ void CManager::Uninit(void)
 
 	//モーション情報の破棄
 	CMotion::UnLoad();
+
+	//生成情報を破棄
+	CEnemyManager::Unload();
 }
 
 //==========================================

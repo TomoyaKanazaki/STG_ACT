@@ -21,7 +21,7 @@
 #include <crtdbg.h>
 
 #ifdef _DEBUG
-#define CHECK_MEM_LEAK
+//#define CHECK_MEM_LEAK
 #endif // _DEBUG
 
 //ïÅíiégópã÷é~

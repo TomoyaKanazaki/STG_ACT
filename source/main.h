@@ -6,12 +6,13 @@
 //==========================================
 #ifndef _MAIN_H_
 #define _MAIN_H_
-#include <Windows.h>
-#include "d3dx9.h"
-#define DIRECTINPUT_VERSION (0x0800) //ビルド時の警告対処用マクロ
-#include "dinput.h"
-#include <stdio.h>
-#include "xaudio2.h"
+
+//ImGui Template
+#include "imgui.h"
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.h"
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include <imgui_internal.h>
 
 //==========================================
 //  ライブラリのリンク

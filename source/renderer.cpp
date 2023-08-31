@@ -11,6 +11,12 @@
 #include "scenemanager.h"
 #include "debugproc.h"
 #include "model.h"
+#include "ui.h"
+
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
+CUi *CRenderer::m_pUi = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -121,6 +127,11 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	//乱数シードの設定
 	srand((unsigned int)time(0));
 
+	//UIを生成
+#ifdef _DEBUG
+	m_pUi = CUi::Create(hWnd);
+#endif
+
 	return S_OK;
 
 }
@@ -143,6 +154,14 @@ void CRenderer::Uninit(void)
 		m_pD3D->Release();
 		m_pD3D = NULL;
 	}
+
+	//UIを破棄
+	if (m_pUi != NULL)
+	{
+		m_pUi->Uninit();
+		delete m_pUi;
+		m_pUi = NULL;
+	}
 }
 
 //==========================================
@@ -150,6 +169,12 @@ void CRenderer::Uninit(void)
 //==========================================
 void CRenderer::Update(void)
 {
+	//UIを更新
+	if (m_pUi != NULL)
+	{
+		m_pUi->Update();
+	}
+
 	CObject::UpdateAll();
 }
 
@@ -172,6 +197,12 @@ void CRenderer::Draw(void)
 	//描画開始
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
+		//UIを描画
+		if (m_pUi != NULL)
+		{
+			m_pUi->Draw();
+		}
+
 		//オブジェクト群の描画
 		CObject::DrawAll();
 

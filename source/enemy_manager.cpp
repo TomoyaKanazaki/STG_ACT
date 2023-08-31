@@ -12,9 +12,16 @@
 #include "player.h"
 
 //==========================================
+//  マクロ定義
+//==========================================
+#define ENEMY_FILEPASS "data\\BIN\\EnemyData.bin"
+
+//==========================================
 //  静的メンバ変数宣言
 //==========================================
 int CEnemyManager::m_nDead = 0;
+int CEnemyManager::m_nNumData = 0;
+CEnemyManager::CreateData *CEnemyManager::m_pCreateData = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -128,4 +135,43 @@ CEnemyManager *CEnemyManager::Create(void)
 
 	//ポインタを返す
 	return pEnemyManager;
+}
+
+//==========================================
+//  読み込み処理
+//==========================================
+void CEnemyManager::Load(void)
+{
+	//ローカル変数宣言
+	FILE *pFile; //ファイル名
+
+	//ファイルを読み取り専用で開く
+	pFile = fopen(ENEMY_FILEPASS, "rb");
+
+	if (pFile != NULL)
+	{
+		//保存されているデータ数を取得する
+		fread(&m_nNumData, sizeof(int), 1, pFile);
+
+		//必要数のメモリを確保する
+		m_pCreateData = new CreateData[m_nNumData];
+
+		//保存されているデータを全て読み込む
+		fread(m_pCreateData, sizeof(CreateData), m_nNumData, pFile);
+
+		//ファイルを閉じる
+		fclose(pFile);
+	}
+}
+
+//==========================================
+//  データの破棄
+//==========================================
+void CEnemyManager::Unload(void)
+{
+	if (m_pCreateData != NULL)
+	{
+		delete[] m_pCreateData;
+		m_pCreateData = NULL;
+	}
 }

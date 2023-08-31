@@ -15,6 +15,17 @@
 class CEnemyManager : public CObject
 {
 public:
+
+	//生成アルゴリズムに使用するデータ群
+	struct CreateData
+	{
+		D3DXVECTOR3 pos; //初期位置
+		int type; //敵の種類
+		int fase; //出現するフェーズ
+		int nCount; //生成される回数
+		int nInterval; //生成間隔
+	};
+
 	CEnemyManager(); //コンストラクタ
 	~CEnemyManager(); //デストラクタ
 
@@ -29,6 +40,8 @@ public:
 	static int GetDeth(void) { return m_nDead; }
 	static void AddDeth(void) { m_nDead++; }
 	static void ResetDeth(void) { m_nDead = 0; }
+	static void Load(void);
+	static void Unload(void);
 
 private:
 	
@@ -41,6 +54,8 @@ private:
 
 	//静的メンバ変数
 	static int m_nDead;
+	static int m_nNumData;
+	static CreateData *m_pCreateData;
 };
 
 #endif
