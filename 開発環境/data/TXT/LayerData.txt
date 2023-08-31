@@ -1,0 +1,68 @@
+//==========================================
+//
+//  階層構造の設定[LayerData.txt]
+//  Author : Tomoya Kanazaki
+//
+//==========================================
+
+NUM_LAYER = 4
+
+//==========================================
+//  階層構造の種類
+//==========================================
+
+LAYER_DATA //プレイヤーの構造
+	
+	NUM_MODEL 5
+	
+	MODELID		0
+	ParentID	-1
+	POS			0.0 50.0 0.0
+	ROT			0.0 0.0 0.0
+	
+	MODELID		1
+	ParentID	0
+	POS			0.0 0.0 0.0
+	ROT			0.0 0.0 0.0
+
+	MODELID		2
+	ParentID	0
+	POS			0.0 0.0 0.0
+	ROT			0.0 0.0 0.0
+
+	MODELID		3
+	ParentID	0
+	POS			30.0 0.0 0.0
+	ROT			0.0 0.0 0.0
+
+	MODELID		4
+	ParentID	0
+	POS			-30.0 0.0 0.0
+	ROT			0.0 0.0 0.0
+
+LAYER_DATA //丸い敵の構造
+	
+	NUM_MODEL 1
+	
+	MODELID		5
+	ParentID	-1
+	POS			0.0 50.0 0.0
+	ROT			0.0 0.0 0.0
+	
+LAYER_DATA //弾を撃つ敵の構造
+	
+	NUM_MODEL 1
+	
+	MODELID		6
+	ParentID	-1
+	POS			0.0 0.0 0.0
+	ROT			0.0 0.0 0.0
+	
+LAYER_DATA //ボス敵の構造
+	
+	NUM_MODEL 1
+	
+	MODELID		7
+	ParentID	-1
+	POS			0.0 0.0 0.0
+	ROT			0.0 0.0 0.0
