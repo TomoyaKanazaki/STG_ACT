@@ -65,13 +65,7 @@ void CCamera::Uninit(void)
 //==========================================
 void CCamera::Update(void)
 {
-	//位置の更新
-	//ThirdPerson();
-	//Move();
 
-	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
-	CManager::GetDebugProc()->Print("視点 : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
-	CManager::GetDebugProc()->Print("角度 : ( %f, %f, %f )\n", m_rot.x, m_rot.y, m_rot.z);
 }
 
 //==========================================
@@ -98,17 +92,8 @@ void CCamera::SetCamera(void)
 	//プロジェクションマトリックスの設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);
 
-	//ビューマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxView);
-
-	//ビューマトリックスを作成
-	D3DXMatrixLookAtLH
-	(
-		&m_mtxView,
-		&m_posV,
-		&m_posR,
-		&m_vecU
-	);
+	//ビューマトリックスを計算
+	CreateViewMatrix();
 
 	//ビューマトリックスの設定
 	pDevice->SetTransform(D3DTS_VIEW, &m_mtxView);
@@ -231,4 +216,24 @@ void CCamera::Rotate(void)
 	m_rot.x = atan2f(vecCamera.y, vecCamera.z);
 	m_rot.y = atan2f(vecCamera.z, vecCamera.x);
 	m_rot.z = atan2f(vecCamera.x, vecCamera.y);
+}
+
+//==========================================
+//  ビューマトリックスの生成
+//==========================================
+D3DXMATRIX CCamera::CreateViewMatrix(void)
+{
+	//ビューマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxView);
+
+	//ビューマトリックスを作成
+	D3DXMatrixLookAtLH
+	(
+		&m_mtxView,
+		&m_posV,
+		&m_posR,
+		&m_vecU
+	);
+
+	return m_mtxView;
 }

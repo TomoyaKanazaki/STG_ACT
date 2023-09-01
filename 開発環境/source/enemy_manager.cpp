@@ -86,19 +86,20 @@ void CEnemyManager::Update(void)
 			//“G‚ð¶¬
 			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
 		}
+		CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_SHOT);
 	}
 
 #ifdef _DEBUG
-	if (CManager::GetKeyboard()->GetPress(DIK_E))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
 	{
-		for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
+		for (int nCntEnemy = 0; nCntEnemy < 1; nCntEnemy++)
 		{
 			//¶¬’†SÀ•W‚ð¶¬
 			m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
 			m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
 
 			//“G‚ð¶¬
-			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
+			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_SHOT);
 		}
 	}
 #endif

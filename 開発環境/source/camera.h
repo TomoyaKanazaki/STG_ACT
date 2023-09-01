@@ -27,6 +27,8 @@ public:
 	D3DXVECTOR3 GetPosR(void) { return m_posR; }
 	D3DXVECTOR3 GetPosV(void) { return m_posV; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXMATRIX GetMtxPro(void) { return m_mtxProjection; }
+	D3DXMATRIX CreateViewMatrix(void);
 
 private:
 

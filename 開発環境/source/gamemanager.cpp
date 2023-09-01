@@ -211,16 +211,6 @@ void CGameManager::Update(void)
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
 	}
-
-	//ボス戦になったらエネミーマネージャーを削除する
-	if (m_State == BOSS_CREAR)
-	{
-		if (m_pEnemy != NULL)
-		{
-			m_pEnemy->Uninit();
-			m_pEnemy = NULL;
-		}
-	}
 }
 
 //==========================================

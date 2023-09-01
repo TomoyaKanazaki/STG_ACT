@@ -12,6 +12,10 @@
 #include "input.h"
 #include "model.h"
 #include "motion.h"
+#include "manager.h"
+#include "camera.h"
+#include "target.h"
+#include "rockon.h"
 
 //==========================================
 //  マクロ定義
@@ -25,6 +29,7 @@
 CEnemyShot::CEnemyShot()
 {
 	m_nInterval = 0;
+	m_pRockon = NULL;
 }
 
 //==========================================
@@ -74,6 +79,10 @@ HRESULT CEnemyShot::Init(void)
 //==========================================
 void CEnemyShot::Uninit(void)
 {
+	if (m_pRockon != NULL)
+	{
+		m_pRockon->Uninit();
+	}
 	CEnemy::Uninit();
 }
 
@@ -87,6 +96,9 @@ void CEnemyShot::Update(void)
 
 	//弾の発射に関する処理
 	Shot();
+
+	//狙われろ
+	Targeted();
 
 	//モーションを更新する
 	if (m_pMotion != NULL)
@@ -138,5 +150,65 @@ void CEnemyShot::Shot(void)
 	if (m_nInterval % INTERVAL == 0)
 	{
 		CBullet::Create(pos, D3DXVECTOR3(25.0f, 25.0f, 0.0f), vecToPlayer, CBullet::ENEMY, CBullet::NORMAL_BULLET);
+	}
+}
+
+//==========================================
+//  狙われる処理
+//==========================================
+void CEnemyShot::Targeted(void)
+{
+	//内部判定フラグ
+	bool bIn = false;
+
+	//ビューポートの設定
+	D3DVIEWPORT9 vp = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 1.0f };
+
+	//計算用変数宣言
+	D3DXMATRIX mtxView = CGameManager::GetCamera()->CreateViewMatrix(); //ビューマトリックス
+	D3DXMATRIX mtxWorld; //ワールドマトリックス
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&mtxWorld);
+
+	//敵のスクリーン座標を算出
+	D3DXVECTOR3 screenPos;
+	D3DXMATRIX mtxProjection = CGameManager::GetCamera()->GetMtxPro();
+	D3DXVec3Project
+	(
+		&screenPos,
+		&m_pos,
+		&vp,
+		&mtxProjection,
+		&mtxView,
+		&mtxWorld
+	);
+
+	//範囲内の判定
+	if (screenPos.x < CGameManager::GetTarget()->GetPos().x + CGameManager::GetTarget()->GetSize().x * 0.5f && !bIn)
+	{
+		if (screenPos.x > CGameManager::GetTarget()->GetPos().x - CGameManager::GetTarget()->GetSize().x * 0.5f && !bIn)
+		{
+			if (screenPos.y < CGameManager::GetTarget()->GetPos().y + CGameManager::GetTarget()->GetSize().y * 0.5f && !bIn)
+			{
+				if (screenPos.y > CGameManager::GetTarget()->GetPos().y - CGameManager::GetTarget()->GetSize().y * 0.5f && !bIn)
+				{
+					if (m_pRockon == NULL)
+					{
+						m_pRockon = CRockon::Create(m_pos);
+					}
+					bIn = true;
+				}
+			}
+		}
+	}
+
+	if(!bIn)
+	{
+		if (m_pRockon != NULL)
+		{
+			m_pRockon->Uninit();
+			m_pRockon = NULL;
+		}
 	}
 }

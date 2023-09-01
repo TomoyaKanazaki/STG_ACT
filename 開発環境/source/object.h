@@ -36,6 +36,7 @@ public:
 		TYPE_SHADOW, //影
 		TYPE_TARGET, //目標
 		TYPE_FADE, //フェード
+		TYPE_ROCKON, //ロックオン
 		METHOD_MAX
 	}TYPE;
 

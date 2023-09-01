@@ -72,6 +72,7 @@
     </ClCompile>
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\resultmanager.cpp" />
+    <ClCompile Include="source\rockon.cpp" />
     <ClCompile Include="source\scene.cpp" />
     <ClCompile Include="source\scenemanager.cpp" />
     <ClCompile Include="source\shadow.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="source\precompile.h" />
     <ClInclude Include="source\renderer.h" />
     <ClInclude Include="source\resultmanager.h" />
+    <ClInclude Include="source\rockon.h" />
     <ClInclude Include="source\scene.h" />
     <ClInclude Include="source\scenemanager.h" />
     <ClInclude Include="source\shadow.h" />
@@ -197,22 +199,26 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\X86;$(LibraryPath)</LibraryPath>
+    <TargetName>kanazakiGame</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
+    <TargetName>kanazakiGame</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\X86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)</OutDir>
+    <TargetName>kanazakiGame</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
+    <TargetName>kanazakiGame</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

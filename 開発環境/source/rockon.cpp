@@ -1,27 +1,18 @@
 //==========================================
 //
-//  ロックオンクラス(target.cpp)
-//  Author : Tomoya Kanazaki
+//  ロックオンクラス(rockon.cpp)
+//  Author : Tomoya Kanzaki
 //
 //==========================================
-#include "target.h"
+#include "rockon.h"
 #include "manager.h"
-#include "gamemanager.h"
-#include "input.h"
-#include "texture.h"
-#include "debugproc.h"
 #include "renderer.h"
-#include "camera.h"
-
-//==========================================
-//  静的メンバ変数宣言
-//==========================================
-const float CTarget::mc_fRate = 200.0f;
+#include "texture.h"
 
 //==========================================
 //  コンストラクタ
 //==========================================
-CTarget::CTarget(int nPriority) : CObject2D(nPriority)
+CRockon::CRockon(int nPriority) : CObject3D(nPriority)
 {
 
 }
@@ -29,7 +20,7 @@ CTarget::CTarget(int nPriority) : CObject2D(nPriority)
 //==========================================
 //  デストラクタ
 //==========================================
-CTarget::~CTarget()
+CRockon::~CRockon()
 {
 
 }
@@ -37,19 +28,22 @@ CTarget::~CTarget()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CTarget::Init(void)
+HRESULT CRockon::Init(void)
 {
-	//値を設定する
-	m_pos = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f);
-	m_size = D3DXVECTOR3(SCREEN_HEIGHT * 0.3f, SCREEN_HEIGHT * 0.3f, 0.0f);
+	//大きさを設定する
+	m_size = D3DXVECTOR3(50.0f, 0.0f, 50.0f);
 
-	if (FAILED(CObject2D::Init()))
+	//初期化
+	if (FAILED(CObject3D::Init()))
 	{
 		return E_FAIL;
 	}
 
+	//ビルボードに設定する
+	SwitchBillboard();
+
 	//タイプの設定
-	SetType(TYPE_TARGET);
+	SetType(TYPE_ROCKON);
 
 	return S_OK;
 }
@@ -57,52 +51,28 @@ HRESULT CTarget::Init(void)
 //==========================================
 //  終了処理
 //==========================================
-void CTarget::Uninit(void)
+void CRockon::Uninit(void)
 {
-	CObject2D::Uninit();
+	//終了
+	CObject3D::Uninit();
 }
 
 //==========================================
 //  更新処理
 //==========================================
-void CTarget::Update(void)
+void CRockon::Update(void)
 {
-	//移動
-	D3DXVECTOR3 move = CManager::GetMouse()->GetMouseMove();
-	m_pos += move * mc_fRate;
-
-	//移動制限
-	if (m_pos.x > SCREEN_WIDTH - m_size.x * 0.5f)
-	{
-		m_pos.x = SCREEN_WIDTH - m_size.x * 0.5f;
-	}
-	if (m_pos.x < 0.0f + m_size.x * 0.5f)
-	{
-		m_pos.x = 0.0f + m_size.x * 0.5f;
-	}
-	if (m_pos.y > SCREEN_HEIGHT - m_size.y * 0.5f)
-	{
-		m_pos.y = SCREEN_HEIGHT - m_size.y * 0.5f;
-	}
-	if (m_pos.y < 0.0f + m_size.y * 0.5f)
-	{
-		m_pos.y = 0.0f + m_size.y * 0.5f;
-	}
-
 	//更新
-	CObject2D::Update();
+	CObject3D::Update();
 }
 
 //==========================================
 //  描画処理
 //==========================================
-void CTarget::Draw(void)
+void CRockon::Draw(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	//ライティングを無効化
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	//Zテストの無効化
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
@@ -113,9 +83,18 @@ void CTarget::Draw(void)
 	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
 
-	//描画
-	CObject2D::Draw();
+	//アルファブレンディングを加算合成に設定
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
+	//描画
+	CObject3D::Draw();
+
+	//アルファブレンディングの設定を元に戻す
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	//アルファテストの無効化
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
@@ -124,31 +103,31 @@ void CTarget::Draw(void)
 	//Zテストの有効化
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
-	//ライティングを有効化
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //==========================================
 //  生成処理
 //==========================================
-CTarget *CTarget::Create(void)
+CRockon *CRockon::Create(D3DXVECTOR3 pos)
 {
 	//インスタンス生成
-	CTarget *pTarget = new CTarget;
+	CRockon *pRockon = new CRockon;
 
-	if (pTarget == NULL)
+	if (pRockon == NULL)
 	{
 		assert(false);
 		return NULL;
 	}
 
+	//各種情報を設定する
+	pRockon->m_pos = pos;
+
 	//初期化
-	pTarget->Init();
+	pRockon->Init();
 
 	//テクスチャを割り当てる
-	pTarget->BindTexture(CManager::GetTexture()->GetAddress(CTexture::TARGET));
+	pRockon->BindTexture(CManager::GetTexture()->GetAddress(CTexture::ROCKON));
 
 	//ポインタを返す
-	return pTarget;
+	return pRockon;
 }

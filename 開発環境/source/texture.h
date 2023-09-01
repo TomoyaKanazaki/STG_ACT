@@ -29,6 +29,7 @@ public:
 		FIELD, //床
 		TITLE, //タイトル
 		RESULT, //リザルト
+		ROCKON, //ロックオン
 		TEXTURE_MAX
 	};
 
