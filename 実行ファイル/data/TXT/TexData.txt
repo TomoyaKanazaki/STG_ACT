@@ -5,7 +5,7 @@
 //
 //==========================================
 
-NUM_TEXTURE = 7
+NUM_TEXTURE = 8
 
 //==========================================
 //  テクスチャファイル名
@@ -17,3 +17,4 @@ TEXTURE_FILENAME = Bullet.png			//[3]弾
 TEXTURE_FILENAME = field.png			//[4]床
 TEXTURE_FILENAME = title.png			//[5]タイトル
 TEXTURE_FILENAME = result.png			//[6]リザルト
+TEXTURE_FILENAME = Rockon.png			//[7]ロックオン
