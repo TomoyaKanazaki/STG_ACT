@@ -28,6 +28,7 @@ CUi::CUi()
 		m_EnemyData[nCnt].CreateData.nInterval = 0;
 		m_EnemyData[nCnt].bUse = false;
 	}
+	m_nID = 0;
 }
 
 //==========================================
@@ -94,6 +95,23 @@ void CUi::Update(void)
 
 	//ウィンドウの生成
 	ImGui::Begin(u8"EnemyManager");
+
+	//表示する敵の番号を決める
+	if (ImGui::ArrowButton("##0", 0))
+	{
+		if (m_nID > 0)
+		{
+			m_nID--;
+		}
+	} ImGui::SameLine();
+	ImGui::Text(u8"敵情報番号 : %d", m_nID); ImGui::SameLine();
+	if (ImGui::ArrowButton("##1", 1))
+	{
+		if (m_nID < 255)
+		{
+			m_nID++;
+		}
+	}
 
 	// 書き出し
 	Save();

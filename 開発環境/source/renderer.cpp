@@ -215,9 +215,6 @@ void CRenderer::Draw(void)
 		//デバッグ表示
 		if (CManager::GetDebugProc() != NULL)
 		{
-			CManager::GetDebugProc()->Print("オブジェクト数 : %d\n", CObject::GetNum());
-			CManager::GetDebugProc()->Print("モデル数 : %d\n", CModel::GetNum());
-			CManager::GetDebugProc()->Print("FPS : %d\n", CManager::GetFPS());
 			CManager::GetDebugProc()->Draw();
 		}
 

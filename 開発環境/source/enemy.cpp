@@ -13,7 +13,6 @@
 #include "sound.h"
 #include "debugproc.h"
 #include "model.h"
-#include "shadow.h"
 #include "motion.h"
 #include "item.h"
 #include "motion.h"
@@ -38,7 +37,6 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 	m_fSpeed = 0.0f;
 	m_ppModel = NULL;
 	m_pLayer = NULL;
-	m_pShadow = NULL;
 	m_pMotion = NULL;
 	m_bRand = true;
 }
@@ -58,12 +56,6 @@ HRESULT CEnemy::Init(void)
 {
 	//タイプの設定
 	SetType(CObject::TYPE_ENEMY);
-
-	//影を生成
-	if (m_pShadow == NULL)
-	{
-		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
-	}
 
 	return S_OK;
 }
@@ -86,12 +78,6 @@ void CEnemy::Uninit(void)
 		}
 		delete[] m_ppModel;
 		m_ppModel = NULL;
-	}
-
-	//影のポインタを破棄
-	if (m_pShadow != NULL)
-	{
-		m_pShadow->Uninit();
 	}
 
 	//パーティクルを呼び出し
@@ -122,17 +108,6 @@ void CEnemy::Update(void)
 				}
 			}
 		}
-	}
-
-	//影の情報を更新する
-	if (m_pShadow != NULL)
-	{
-		m_pShadow->SetTransform(m_pos, m_rot);
-	}
-	else
-	{
-		//再生成
-		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
 	}
 
 	//移動量の適用

@@ -149,7 +149,7 @@ void CEnemyShot::Shot(void)
 	//’e‚ðŒ‚‚Â
 	if (m_nInterval % INTERVAL == 0)
 	{
-		CBullet::Create(pos, D3DXVECTOR3(25.0f, 25.0f, 0.0f), vecToPlayer, CBullet::ENEMY, CBullet::NORMAL_BULLET);
+		//CBullet::Create(pos, D3DXVECTOR3(25.0f, 25.0f, 0.0f), vecToPlayer, CBullet::ENEMY, CBullet::NORMAL_BULLET);
 	}
 }
 

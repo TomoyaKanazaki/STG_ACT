@@ -14,7 +14,6 @@
 #include "debugproc.h"
 #include "camera.h"
 #include "model.h"
-#include "shadow.h"
 #include "field.h"
 #include "object_fan.h"
 #include "collision.h"
@@ -55,7 +54,6 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_bDead = false;
 	m_ppModel = NULL;
 	m_pLayer = NULL;
-	m_pShadow = NULL;
 	m_pMotion = NULL;
 	m_orbit = NULL;
 }
@@ -110,12 +108,6 @@ HRESULT CPlayer::Init(void)
 	//モーション情報にモデルを追加する
 	m_pMotion->SetModel(m_ppModel, m_pLayer->nNumModel, CMotion::PLAYER_SHOT);
 
-	//影を生成
-	if (m_pShadow == NULL)
-	{
-		m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
-	}
-
 	//腕を前方に向ける
 	m_ppModel[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 
@@ -157,12 +149,6 @@ void CPlayer::Uninit(void)
 		m_orbit = NULL;
 	}
 
-	//影のポインタを破棄
-	if (m_pShadow != NULL)
-	{
-		m_pShadow->Uninit();
-	}
-
 	//自分自身の破棄
 	Release();
 }
@@ -186,10 +172,6 @@ void CPlayer::Update(void)
 			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			Explosion();
-			if (m_pShadow == NULL)
-			{
-				m_pShadow = CShadow::Create(m_pos, m_size, m_rot);
-			}
 			return;
 		}
 		else
@@ -203,11 +185,6 @@ void CPlayer::Update(void)
 	{
 		m_nLife--;
 		m_bDead = true;
-		if (m_pShadow != NULL)
-		{
-			m_pShadow->Uninit();
-			m_pShadow = NULL;
-		}
 		if (m_orbit != NULL)
 		{
 			m_orbit->Uninit();
@@ -235,11 +212,6 @@ void CPlayer::Update(void)
 	{
 		//落下
 		m_move.y += -0.5f;
-		if (m_pShadow != NULL)
-		{
-			m_pShadow->Uninit();
-			m_pShadow = NULL;
-		}
 	}
 
 	//移動量の適用
@@ -271,12 +243,6 @@ void CPlayer::Update(void)
 
 	//モーションを更新する
 	m_pMotion->Update();
-
-	//影の情報を更新する
-	if (m_pShadow != NULL)
-	{
-		m_pShadow->SetTransform(m_pos, m_rot);
-	}
 
 	//大人の壁
 	if (m_pos.z > 130.0f)

@@ -42,6 +42,7 @@ private:
 	//ƒƒ“ƒo•Ï”
 	HWND m_hWnd;
 	EnemyData m_EnemyData[256];
+	int m_nID;
 
 	//Ã“Iƒƒ“ƒo•Ï”
 	static char m_sPass[256];

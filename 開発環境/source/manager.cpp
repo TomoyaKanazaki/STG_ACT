@@ -195,7 +195,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//シーンマネージャの生成
 	if (m_pSceneManager == NULL)
 	{
-		m_pSceneManager = CSceneManager::Create(CSceneManager::GAME);
+		m_pSceneManager = CSceneManager::Create(CSceneManager::TITLE);
 	}
 	return S_OK;
 }

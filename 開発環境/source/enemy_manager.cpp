@@ -75,9 +75,25 @@ void CEnemyManager::Uninit(void)
 void CEnemyManager::Update(void)
 {
 	m_nTime++;
-	if (m_nTime % 60 == 0)
+
+	//if (m_nTime % 60 == 0)
+	//{
+	//	for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
+	//	{
+	//		//生成中心座標を生成
+	//		m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
+	//		m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
+
+	//		//敵を生成
+	//		CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
+	//	}
+	//	CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_SHOT);
+	//}
+
+#ifdef _DEBUG
+	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
 	{
-		for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
+		for (int nCntEnemy = 0; nCntEnemy < 3; nCntEnemy++)
 		{
 			//生成中心座標を生成
 			m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
@@ -86,13 +102,10 @@ void CEnemyManager::Update(void)
 			//敵を生成
 			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
 		}
-		CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_SHOT);
 	}
-
-#ifdef _DEBUG
-	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_Q))
 	{
-		for (int nCntEnemy = 0; nCntEnemy < 1; nCntEnemy++)
+		for (int nCntEnemy = 0; nCntEnemy < 3; nCntEnemy++)
 		{
 			//生成中心座標を生成
 			m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);

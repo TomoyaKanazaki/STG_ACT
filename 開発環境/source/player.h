@@ -14,7 +14,6 @@
 //  前方宣言
 //==========================================
 class CModel;
-class CShadow;
 class CMotion;
 class COrbit;
 
@@ -66,7 +65,6 @@ private:
 	//モデル情報
 	CModel **m_ppModel; //モデル情報
 	CLayer::LAYERDATA *m_pLayer; //階層構造情報
-	CShadow *m_pShadow; //影の情報
 	CMotion *m_pMotion;
 	COrbit *m_orbit;
 
