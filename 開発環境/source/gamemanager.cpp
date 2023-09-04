@@ -118,7 +118,7 @@ void CGameManager::Update(void)
 {
 #if _DEBUG
 	//‰æ–Ê‘JˆÚƒeƒXƒg
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) && CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
 		return;

@@ -51,13 +51,6 @@ CEnemyManager::~CEnemyManager()
 //==========================================
 HRESULT CEnemyManager::Init(void)
 {
-	//外部ファイルから読み込み
-	m_vecError = D3DXVECTOR3(100.0f, 0.0f, 100.0f);
-	m_nNumEnemy = 15;
-
-	//ボスを配置
-	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_BOSS);
-
 	return S_OK;
 }
 
@@ -74,23 +67,39 @@ void CEnemyManager::Uninit(void)
 //==========================================
 void CEnemyManager::Update(void)
 {
+	//経過フレームを加算
 	m_nTime++;
 
-	//if (m_nTime % 60 == 0)
-	//{
-	//	for (int nCntEnemy = 0; nCntEnemy < m_nNumEnemy; nCntEnemy++)
-	//	{
-	//		//生成中心座標を生成
-	//		m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
-	//		m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
+	//現在のフェーズを取得
+	int nFaze = (int)CGameManager::GetState();
 
-	//		//敵を生成
-	//		CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
-	//	}
-	//	CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_SHOT);
-	//}
+	//エネミーデータを参照
+	for (int nCnt = 0; nCnt < m_nNumData; nCnt++)
+	{
+		//生成されるフェーズを参照する
+		if (nFaze == m_pCreateData[nCnt].fase)
+		{
+			//生成回数を参照する
+			if (m_pCreateData[nCnt].nCount > 0 || m_pCreateData[nCnt].nCount == -1)
+			{
+				//生成フレームを参照する
+				if (m_nTime % m_pCreateData[nCnt].nInterval == 0)
+				{
+					//敵を生成
+					CEnemy::Create(m_pCreateData[nCnt].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), (CEnemy::TYPE)m_pCreateData[nCnt].type);
+
+					//生成回数を減らす
+					if (m_pCreateData[nCnt].nCount != -1)
+					{
+						m_pCreateData[nCnt].nCount--;
+					}
+				}
+			}
+		}
+	}
 
 #ifdef _DEBUG
+	//接近する敵
 	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
 	{
 		for (int nCntEnemy = 0; nCntEnemy < 3; nCntEnemy++)
@@ -103,6 +112,8 @@ void CEnemyManager::Update(void)
 			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
 		}
 	}
+	
+	//射撃する敵
 	if (CManager::GetKeyboard()->GetTrigger(DIK_Q))
 	{
 		for (int nCntEnemy = 0; nCntEnemy < 3; nCntEnemy++)
@@ -171,7 +182,10 @@ void CEnemyManager::Load(void)
 		m_pCreateData = new CreateData[m_nNumData];
 
 		//保存されているデータを全て読み込む
-		fread(m_pCreateData, sizeof(CreateData), m_nNumData, pFile);
+		for (int nCnt = 0; nCnt < m_nNumData; nCnt++)
+		{
+			fread(&m_pCreateData[nCnt], sizeof(CreateData), 1, pFile);
+		}
 
 		//ファイルを閉じる
 		fclose(pFile);

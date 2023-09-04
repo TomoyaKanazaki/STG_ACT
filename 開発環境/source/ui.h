@@ -8,6 +8,7 @@
 #define _UI_H_
 #include "main.h"
 #include "enemy_manager.h"
+#include "gamemanager.h"
 
 //==========================================
 //  クラス定義
@@ -38,10 +39,12 @@ private:
 
 	//メンバ関数
 	void Save(void);
+	void Load(void);
 
 	//メンバ変数
 	HWND m_hWnd;
 	EnemyData m_EnemyData[256];
+	CGameManager::STATE m_state;
 	int m_nID;
 
 	//静的メンバ変数

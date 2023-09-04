@@ -197,12 +197,6 @@ void CRenderer::Draw(void)
 	//描画開始
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
-		//UIを描画
-		if (m_pUi != NULL)
-		{
-			m_pUi->Draw();
-		}
-
 		//オブジェクト群の描画
 		CObject::DrawAll();
 
@@ -216,6 +210,12 @@ void CRenderer::Draw(void)
 		if (CManager::GetDebugProc() != NULL)
 		{
 			CManager::GetDebugProc()->Draw();
+		}
+
+		//UIを描画
+		if (m_pUi != NULL)
+		{
+			m_pUi->Draw();
 		}
 
 		//描画終了
