@@ -164,6 +164,7 @@ void CUi::Update(void)
 	} ImGui::SameLine();
 	if (ImGui::Button(u8"再設定"))
 	{
+		ReLoad();
 		CGameManager::SetState(m_state);
 		CEnemyManager::ResetDeth();
 	}
@@ -348,14 +349,48 @@ void CUi::Load(void)
 
 				//ファイルを閉じる
 				fclose(pFile);
-			}
 
-			//エネミーマネージャに保存されたデータを更新
-			CEnemyManager::Load();
+				//エネミーマネージャに保存されたデータを更新
+				CEnemyManager::Unload();
+				CEnemyManager::Load(&m_sPass[0]);
+			}
 		}
 		else
 		{
 			MessageBox(m_hWnd, "Failed to load", "Failed to load", MB_OK);
 		}
+	}
+}
+
+//==========================================
+//  再読み込み
+//==========================================
+void CUi::ReLoad(void)
+{
+	//ローカル変数宣言
+	FILE *pFile; //ファイル名
+
+	//ファイルを書き込み専用で開く
+	pFile = fopen(m_sPass, "rb");
+
+	if (pFile != NULL)
+	{
+		//保存されているデータ数を取得する
+		int nNumData = 0;
+		fread(&nNumData, sizeof(int), 1, pFile);
+
+		//保存されているデータを全て読み込む
+		for (int nCnt = 0; nCnt < nNumData; nCnt++)
+		{
+			fread(&m_EnemyData[nCnt].CreateData, sizeof(CEnemyManager::CreateData), 1, pFile);
+			m_EnemyData[nCnt].bUse = true;
+		}
+
+		//エネミーマネージャの更新
+		CEnemyManager::Unload();
+		CEnemyManager::Load(&m_sPass[0]);
+
+		//ファイルを閉じる
+		fclose(pFile);
 	}
 }

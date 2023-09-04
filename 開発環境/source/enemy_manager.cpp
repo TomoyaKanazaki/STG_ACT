@@ -68,7 +68,7 @@ void CEnemyManager::Uninit(void)
 void CEnemyManager::Update(void)
 {
 	//経過フレームを加算
-	m_nTime++;
+	//m_nTime++;
 
 	//現在のフェーズを取得
 	int nFaze = (int)CGameManager::GetState();
@@ -172,6 +172,33 @@ void CEnemyManager::Load(void)
 
 	//ファイルを読み取り専用で開く
 	pFile = fopen(ENEMY_FILEPASS, "rb");
+
+	if (pFile != NULL)
+	{
+		//保存されているデータ数を取得する
+		fread(&m_nNumData, sizeof(int), 1, pFile);
+
+		//必要数のメモリを確保する
+		m_pCreateData = new CreateData[m_nNumData];
+
+		//保存されているデータを全て読み込む
+		for (int nCnt = 0; nCnt < m_nNumData; nCnt++)
+		{
+			fread(&m_pCreateData[nCnt], sizeof(CreateData), 1, pFile);
+		}
+
+		//ファイルを閉じる
+		fclose(pFile);
+	}
+}
+
+//==========================================
+//  読み込み処理
+//==========================================
+void CEnemyManager::Load(char *aPass)
+{
+	//ファイルを書き込み専用で開く
+	FILE *pFile = fopen(aPass, "rb");
 
 	if (pFile != NULL)
 	{

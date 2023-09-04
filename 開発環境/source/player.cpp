@@ -30,7 +30,8 @@
 //==========================================
 //  マクロ定義
 //==========================================
-#define PLAYER_SPEED (1.0f) //プレイヤーの移動速度(キーボード)
+#define PLAYER_SPEED (2.0f) //プレイヤーの移動速度(キーボード)
+#define PLAYER_HEIGHT (40.0f) //プレイヤーの高さ
 
 //==========================================
 //  静的メンバ変数宣言
@@ -235,20 +236,14 @@ void CPlayer::Update(void)
 	//傾ける
 	Slop();
 
+	//回す
+	Rotate();
+
 	//腕を回す
 	Swing();
 
-	//腕を回す
-	Aiming();
-
 	//モーションを更新する
 	m_pMotion->Update();
-
-	//大人の壁
-	if (m_pos.z > 130.0f)
-	{
-		m_pos.z = 130.0f;
-	}
 
 	//デバッグ表示
 	CManager::GetDebugProc()->Print("プレイヤー座標 : ( %f, %f, %f )\n", m_pos.x, m_pos.y, m_pos.z);
@@ -307,8 +302,32 @@ void CPlayer::Move(void)
 	//移動量の取得
 	D3DXVECTOR3 move = CManager::GetKeyboard()->GetWASD();
 
+	//進行方向を算出
+	float fangle = atan2f(move.x, move.z);
+
+	//移動量を補正
+	move.x = sinf(m_rot.y + fangle) * fabsf(move.x) + sinf(m_rot.y + fangle) * fabsf(move.z);
+	move.z = cosf(m_rot.y + fangle) * fabsf(move.z) + cosf(m_rot.y + fangle) * fabsf(move.x);
+
+	//移動量の正規化
+	D3DXVec3Normalize(&move, &move);
+
+	//攻撃中に減速
+	if (m_orbit != NULL)
+	{
+		move *= 0.3f;
+	}
+
 	//移動量を適用
-	m_move += move;
+	m_move += move * PLAYER_SPEED;
+}
+
+//==========================================
+//  回転
+//==========================================
+void CPlayer::Rotate(void)
+{
+	m_rot.y = CGameManager::GetCamera()->GetRot().y;
 }
 
 //==========================================
@@ -325,8 +344,8 @@ void CPlayer::Slop(void)
 	move.z = m_move.z * sinf(rot) + -m_move.x * cosf(rot);
 
 	//角度を算出
-	m_rot.x = atan2f(-move.x, 30.0f);
-	m_rot.z = atan2f(-move.z, 30.0f);
+	m_rot.x = atan2f(-move.x, PLAYER_HEIGHT);
+	m_rot.z = atan2f(-move.z, PLAYER_HEIGHT);
 }
 
 //==========================================
@@ -377,7 +396,7 @@ void CPlayer::Swing(void)
 		m_nBladeLife = 10;
 		if (m_orbit == NULL)
 		{
-			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-200.0f, 0.0f, 0.0f), 10);
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 10);
 		}
 	}
 	else
@@ -414,59 +433,3 @@ void CPlayer::Swing(void)
 	m_ppModel[4]->SetRot(rot);
 }
 
-//==========================================
-//  狙う処理
-//==========================================
-void CPlayer::Aiming(void)
-{
-	//最も距離の近い敵の位置を取得
-	D3DXVECTOR3 vecMin = D3DXVECTOR3(9999.9f, 9999.9f, 9999.9f); //最も近い敵の座標
-	float fLength = 9999.9f * 9999.9f; //敵との距離 ^ 2
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject *pObj = CObject::GetTop(nCntPriority);
-
-		//NULLチェック
-		while (pObj != NULL)
-		{
-			//次のアドレスを保存
-			CObject *pNext = pObj->GetNext();
-
-			//敵の場合
-			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BOSS)
-			{
-				//ターゲットへのベクトルを算出
-				D3DXVECTOR3 vecToTarget = m_pos - pObj->GetPos();
-
-				//現在保存されている距離より近い場合
-				if (fLength >= vecToTarget.x * vecToTarget.x + vecToTarget.z * vecToTarget.z)
-				{
-					//最も近い敵の座標を更新
-					vecMin = vecToTarget;
-				}
-			}
-
-			//次のアドレスにずらす
-			pObj = pNext;
-		}
-	}
-
-	//角度の変数
-	float fRotMove = m_rot.y; //現在の角度
-	float fRotDest = atan2f(vecMin.x, vecMin.z); //目標の角度
-	float fRotDiff = fRotDest - fRotMove; //角度の差分
-
-	//角度を補正
-	if (fRotDiff > 3.14f)
-	{
-		fRotDiff -= 6.28f;
-	}
-	else if (fRotDiff <= -3.14f)
-	{
-		fRotDiff += 6.28f;
-	}
-
-	//角度を適用
-	m_rot.y += fRotDiff * 0.1f;
-}

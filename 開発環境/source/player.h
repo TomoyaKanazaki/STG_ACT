@@ -41,11 +41,11 @@ private:
 
 	//ƒƒ“ƒoŠÖ”
 	void Move(void);
+	void Rotate(void);
 	void Slop(void);
 	void Shot(void);
 	void Explosion(void);
 	void Swing(void);
-	void Aiming(void);
 
 	//ƒƒ“ƒo•Ï”
 	int m_nLife;

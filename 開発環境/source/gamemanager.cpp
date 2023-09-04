@@ -55,7 +55,7 @@ CGameManager::~CGameManager()
 HRESULT CGameManager::Init(void)
 {
 	//°‚Ì¶¬
-	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.01f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 8, 550.0f);
+	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.01f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 8, 2000.0f);
 
 	//ƒvƒŒƒCƒ„[‚Ì¶¬
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -81,7 +81,7 @@ HRESULT CGameManager::Init(void)
 	m_pTarget = CTarget::Create();
 
 	//BGM‚ÌÄ¶
-	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
+	//CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
 
 	return S_OK;
 }

@@ -41,6 +41,7 @@ public:
 	static void AddDeth(void) { m_nDead++; }
 	static void ResetDeth(void) { m_nDead = 0; }
 	static void Load(void);
+	static void Load(char *aPass);
 	static void Unload(void);
 
 private:
