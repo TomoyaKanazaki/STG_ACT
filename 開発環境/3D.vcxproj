@@ -32,8 +32,6 @@
     <ClCompile Include="source\battery.cpp" />
     <ClCompile Include="source\boss.cpp" />
     <ClCompile Include="source\bullet.cpp" />
-    <ClCompile Include="source\bullet_homing.cpp" />
-    <ClCompile Include="source\bullet_normal.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\collision.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
@@ -197,7 +195,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\X86;$(LibraryPath)</LibraryPath>
-    <TargetName>3D.exe</TargetName>
+    <TargetName>3D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -210,7 +208,7 @@
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\X86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)</OutDir>
-    <TargetName>kanazakiGame</TargetName>
+    <TargetName>3D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

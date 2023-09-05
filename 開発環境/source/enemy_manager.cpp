@@ -36,6 +36,7 @@ CEnemyManager::CEnemyManager()
 	}
 	m_nNumEnemy = 0;
 	m_nTime = 0;
+	m_pCreater = NULL;
 }
 
 //==========================================
@@ -51,6 +52,13 @@ CEnemyManager::~CEnemyManager()
 //==========================================
 HRESULT CEnemyManager::Init(void)
 {
+	//生成データを記録する
+	m_pCreater = new CreateData[m_nNumData];
+	for (int nCnt = 0; nCnt < m_nNumData; nCnt++)
+	{
+		m_pCreater[nCnt] = m_pCreateData[nCnt];
+	}
+
 	return S_OK;
 }
 
@@ -59,6 +67,9 @@ HRESULT CEnemyManager::Init(void)
 //==========================================
 void CEnemyManager::Uninit(void)
 {
+	//削除
+	delete[] m_pCreater;
+	m_pCreater = NULL;
 	Release();
 }
 
@@ -68,7 +79,7 @@ void CEnemyManager::Uninit(void)
 void CEnemyManager::Update(void)
 {
 	//経過フレームを加算
-	//m_nTime++;
+	m_nTime++;
 
 	//現在のフェーズを取得
 	int nFaze = (int)CGameManager::GetState();
@@ -77,21 +88,21 @@ void CEnemyManager::Update(void)
 	for (int nCnt = 0; nCnt < m_nNumData; nCnt++)
 	{
 		//生成されるフェーズを参照する
-		if (nFaze == m_pCreateData[nCnt].fase)
+		if (nFaze == m_pCreater[nCnt].fase)
 		{
 			//生成回数を参照する
-			if (m_pCreateData[nCnt].nCount > 0 || m_pCreateData[nCnt].nCount == -1)
+			if (m_pCreater[nCnt].nCount > 0 || m_pCreater[nCnt].nCount == -1)
 			{
 				//生成フレームを参照する
-				if (m_nTime % m_pCreateData[nCnt].nInterval == 0)
+				if (m_nTime % m_pCreater[nCnt].nInterval == 0)
 				{
 					//敵を生成
-					CEnemy::Create(m_pCreateData[nCnt].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), (CEnemy::TYPE)m_pCreateData[nCnt].type);
+					CEnemy::Create(m_pCreater[nCnt].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), (CEnemy::TYPE)m_pCreater[nCnt].type);
 
 					//生成回数を減らす
-					if (m_pCreateData[nCnt].nCount != -1)
+					if (m_pCreater[nCnt].nCount != -1)
 					{
-						m_pCreateData[nCnt].nCount--;
+						m_pCreater[nCnt].nCount--;
 					}
 				}
 			}
@@ -114,7 +125,7 @@ void CEnemyManager::Update(void)
 	}
 	
 	//射撃する敵
-	if (CManager::GetKeyboard()->GetTrigger(DIK_Q))
+	if (CManager::GetKeyboard()->GetPress(DIK_Q))
 	{
 		for (int nCntEnemy = 0; nCntEnemy < 3; nCntEnemy++)
 		{

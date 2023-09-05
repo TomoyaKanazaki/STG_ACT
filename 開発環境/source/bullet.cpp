@@ -6,6 +6,8 @@
 //==========================================
 #include "bullet.h"
 #include "manager.h"
+#include "gamemanager.h"
+#include "target.h"
 #include "renderer.h"
 #include "debugproc.h"
 #include "texture.h"
@@ -16,11 +18,9 @@
 #include "bullet_homing.h"
 
 //==========================================
-//  マクロ定義
+//  静的メンバ変数宣言
 //==========================================
-#define BULLET_SPEED (10.0f) //弾速
-#define BULLET_LIFE (128) //寿命
-#define HIT_LENGTH (30.0f) //ヒット判定距離
+const float CBullet::mc_fExplosion = 300.0f;
 
 //==========================================
 //  コンストラクタ
@@ -28,7 +28,9 @@
 CBullet::CBullet(int nPriority) : CObject3D(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_nLife = BULLET_LIFE;
+	m_DefaultPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_fSpeed = 0.0f;
 }
 
 //==========================================
@@ -44,10 +46,14 @@ CBullet::~CBullet()
 //==========================================
 HRESULT CBullet::Init(void)
 {
+	m_size = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
+
 	if (FAILED(CObject3D::Init()))
 	{
 		return E_FAIL;
 	}
+
+	SwitchBillboard();
 
 	//タイプの設定
 	SetType(TYPE_BULLET);
@@ -68,45 +74,66 @@ void CBullet::Uninit(void)
 //==========================================
 void CBullet::Update(void)
 {
-	//消滅条件
-	if (m_nLife <= 0)
+	//移動量を算出
+	D3DXVECTOR3 move = m_TargetPos - m_DefaultPos;
+	D3DXVECTOR3 ratio = m_pos - m_DefaultPos;
+	float fRatio = (ratio.x * ratio.x + ratio.z * ratio.z) / (move.x * move.x + move.z * move.z);
+	move.y = 0.0f;
+	D3DXVec3Normalize(&move, &move);
+	move *= m_fSpeed;
+	m_move = move;
+
+	//移動量を適用
+	m_pos += m_move;
+	m_pos.y = sinf(fRatio * D3DX_PI) * 300.0f + m_DefaultPos.y;
+
+	//エフェクトを呼ぶ
+	for (int nCnt = 0; nCnt < 5; nCnt++)
 	{
+		//発生するポイント
+		D3DXVECTOR3 pos;
+		D3DXVec3Lerp(&pos, &m_pos, &m_oldPos, 0.2f * nCnt);
+		CEffect::Create(pos, m_size, D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 10);
+	}
+
+	//消滅条件
+	if (m_pos.y < 0.0f)
+	{
+		for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+		{
+			//自分のアドレスを取得
+			CObject *pObj = CObject::GetTop(nCntPriority);
+
+			while (pObj != NULL)
+			{
+				//次のアドレスを保存
+				CObject *pNext = pObj->GetNext();
+
+				if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET) //敵の場合
+				{
+					//近くにいるかの判定
+					D3DXVECTOR3 vecToObj = m_pos - pObj->GetPos();
+					float fLengh = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
+					if (fLengh < mc_fExplosion * mc_fExplosion)
+					{
+						//殺す
+						pObj->Uninit();
+					}
+				}
+
+				//次のアドレスにずらす
+				pObj = pNext;
+			}
+		}
 		Uninit();
 		return;
 	}
 
-	//敵との接触
-	if (m_user == CBullet::PLAYER)
-	{
-		if (Collision::CollisionEnemy(m_pos, HIT_LENGTH, true))
-		{
-			Uninit();
-			return;
-		}
-	}
-
-	//プレイヤーとの接触
-	if (m_user == CBullet::ENEMY)
-	{
-		if(Collision::CollisionPlayer(m_pos, HIT_LENGTH))
-		{
-			Uninit();
-			return;
-		}
-	}
-
-	//寿命を減らす
-	m_nLife--;
-
-	//移動量を加算する
-	D3DXVec3Normalize(&m_move, &m_move);
-	m_pos += m_move * BULLET_SPEED;
-
-	//エフェクトを呼ぶ
-	CEffect::Create(m_pos, m_size, D3DXCOLOR(0.2f, 0.5f, 1.0f, 1.0f), 10);
-
 	//更新
 	CObject3D::Update();
+
+	CManager::GetDebugProc()->Print("弾の座標 : %f, %f, %f\n", m_pos.x, m_pos.y, m_pos.z);
+	CManager::GetDebugProc()->Print("目標までの割合 : %f\n", fRatio);
 }
 
 //==========================================
@@ -130,45 +157,19 @@ void CBullet::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 move, USER user, TYPE type)
+CBullet *CBullet::Create(D3DXVECTOR3 pos, float fSpeed)
 {
 	//インスタンス生成
 	CBullet *pBullet = NULL;
 
-	//NULLチェック
-	if (pBullet == NULL)
-	{
-		//メモリを確保
-		switch (type)
-		{
-		case NORMAL_BULLET:
-
-			pBullet = new CBulletNormal;
-			break;
-
-		case HOMING_BULLET:
-
-			pBullet = new CBulletHoming;
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	if (pBullet == NULL)
-	{
-		return NULL;
-	}
+	//メモリを確保
+	pBullet = new CBullet;
 
 	//値を設定
-	pBullet->m_user = user;
 	pBullet->m_pos = pos;
-	pBullet->m_size = size;
-	pBullet->m_move = move;
-	pBullet->m_move.x = move.x * BULLET_SPEED;
-	pBullet->m_move.z = move.z * BULLET_SPEED;
-	pBullet->m_rot.x = D3DX_PI * 0.5f;
+	pBullet->m_DefaultPos = pos;
+	pBullet->m_TargetPos = CGameManager::GetTarget()->GetPos();
+	pBullet->m_fSpeed = fSpeed;
 
 	//初期化
 	pBullet->Init();

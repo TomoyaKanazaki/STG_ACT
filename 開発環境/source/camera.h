@@ -40,6 +40,7 @@ private:
 	D3DXMATRIX m_mtxView; //ビューマトリックス
 	D3DXVECTOR3 m_rot; //Xの計算に使用する角度
 	D3DXVECTOR3 m_diff; //プレイヤー座標との差分
+	float m_fFov; //視野角
 
 	//メンバ関数
 	void Move(void);

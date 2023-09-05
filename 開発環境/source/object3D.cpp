@@ -102,6 +102,8 @@ HRESULT CObject3D::Init(void)
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
 
+	m_oldPos = m_pos;
+
 	return S_OK;
 }
 
@@ -171,6 +173,8 @@ void CObject3D::Update(void)
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
+
+	m_oldPos = m_pos;
 }
 
 //==========================================

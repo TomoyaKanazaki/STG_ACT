@@ -120,12 +120,6 @@
     <ClCompile Include="source\enemy_approach.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\bullet_normal.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\bullet_homing.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\battery.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>

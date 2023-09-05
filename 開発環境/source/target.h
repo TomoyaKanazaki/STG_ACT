@@ -7,12 +7,12 @@
 #ifndef _TARGET_H_
 #define _TARGET_H_
 #include "main.h"
-#include "object2D.h"
+#include "object3D.h"
 
 //==========================================
 //  クラス定義
 //==========================================
-class CTarget : public CObject2D
+class CTarget : public CObject3D
 {
 public:
 	CTarget(int nPriority = 7); //コンストラクタ
@@ -31,6 +31,8 @@ private:
 
 	//静的メンバ変数
 	static const float mc_fRate;
+	static const float mc_fDistance;
+
 };
 
 #endif

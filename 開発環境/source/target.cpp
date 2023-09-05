@@ -12,16 +12,18 @@
 #include "debugproc.h"
 #include "renderer.h"
 #include "camera.h"
+#include "player.h"
 
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-const float CTarget::mc_fRate = 200.0f;
+const float CTarget::mc_fRate = 300.0f;
+const float CTarget::mc_fDistance = 1000.0f;
 
 //==========================================
 //  コンストラクタ
 //==========================================
-CTarget::CTarget(int nPriority) : CObject2D(nPriority)
+CTarget::CTarget(int nPriority) : CObject3D(nPriority)
 {
 
 }
@@ -40,10 +42,14 @@ CTarget::~CTarget()
 HRESULT CTarget::Init(void)
 {
 	//値を設定する
-	m_pos = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f);
-	m_size = D3DXVECTOR3(SCREEN_HEIGHT * 0.3f, SCREEN_HEIGHT * 0.3f, 0.0f);
+	D3DXVECTOR3 posPlayer = CGameManager::GetPlayer()->GetPos();
+	D3DXVECTOR3 rotPlayer = CGameManager::GetPlayer()->GetRot();
+	m_pos = D3DXVECTOR3(posPlayer.x - (sinf(rotPlayer.y) * mc_fDistance), 0.0f, posPlayer.z - (cosf(rotPlayer.y) * mc_fDistance));
+	m_size = D3DXVECTOR3(mc_fRate, 0.0f, mc_fRate);
+	m_rot.y = rotPlayer.y;
+	m_rot.x = D3DX_PI * 0.5f;
 
-	if (FAILED(CObject2D::Init()))
+	if (FAILED(CObject3D::Init()))
 	{
 		return E_FAIL;
 	}
@@ -59,7 +65,7 @@ HRESULT CTarget::Init(void)
 //==========================================
 void CTarget::Uninit(void)
 {
-	CObject2D::Uninit();
+	CObject3D::Uninit();
 }
 
 //==========================================
@@ -68,29 +74,16 @@ void CTarget::Uninit(void)
 void CTarget::Update(void)
 {
 	//移動
-	D3DXVECTOR3 move = CManager::GetMouse()->GetMouseMove();
-	m_pos += move * mc_fRate;
-
-	//移動制限
-	if (m_pos.x > SCREEN_WIDTH - m_size.x * 0.5f)
-	{
-		m_pos.x = SCREEN_WIDTH - m_size.x * 0.5f;
-	}
-	if (m_pos.x < 0.0f + m_size.x * 0.5f)
-	{
-		m_pos.x = 0.0f + m_size.x * 0.5f;
-	}
-	if (m_pos.y > SCREEN_HEIGHT - m_size.y * 0.5f)
-	{
-		m_pos.y = SCREEN_HEIGHT - m_size.y * 0.5f;
-	}
-	if (m_pos.y < 0.0f + m_size.y * 0.5f)
-	{
-		m_pos.y = 0.0f + m_size.y * 0.5f;
-	}
+	D3DXVECTOR3 posPlayer = CGameManager::GetPlayer()->GetPos();
+	D3DXVECTOR3 rotPlayer = CGameManager::GetPlayer()->GetRot();
+	m_pos = D3DXVECTOR3(posPlayer.x - (sinf(rotPlayer.y) * mc_fDistance), 0.0f, posPlayer.z - (cosf(rotPlayer.y) * mc_fDistance));
+	m_rot.y = rotPlayer.y;
 
 	//更新
-	CObject2D::Update();
+	CObject3D::Update();
+
+	CManager::GetDebugProc()->Print("ターゲットの座標 : %f, %f, %f\n", m_pos.x, m_pos.y, m_pos.z);
+
 }
 
 //==========================================
@@ -114,7 +107,7 @@ void CTarget::Draw(void)
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
 
 	//描画
-	CObject2D::Draw();
+	CObject3D::Draw();
 
 	//アルファテストの無効化
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

@@ -12,6 +12,7 @@
 #include "gamemanager.h"
 #include "player.h"
 #include "particle.h"
+#include "enemy_manager.h"
 
 //==========================================
 //  二直線の交点の取得
@@ -25,8 +26,6 @@ D3DXVECTOR3 Collision::GetRevisionVec(const D3DXVECTOR3 vecMove, const D3DXVECTO
 	//補正値を算出する
 	fRate = (vecToPos.z * vecLine.x) - (vecToPos.x * vecLine.z);
 	fRate /= (vecMove.z * vecLine.x) - (vecMove.x * vecLine.z);
-
-	CManager::GetDebugProc()->Print("fRate : %f\n", fRate);
 
 	//ベクトルを補正する
 	if (fRate >= 0.0f && fRate <= 1.0f)
@@ -241,6 +240,9 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 
 					//対象のオブジェクトを終了
 					pObj->Uninit();
+
+					//撃破数を加算
+					CEnemyManager::AddDeth();
 				}
 			}
 

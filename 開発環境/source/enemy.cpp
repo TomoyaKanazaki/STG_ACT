@@ -85,9 +85,6 @@ void CEnemy::Uninit(void)
 
 	//©•ª©g‚Ì”jŠü
 	Release();
-
-	//Œ‚”j”‚ğ‰ÁZ
-	CEnemyManager::AddDeth();
 }
 
 //==========================================

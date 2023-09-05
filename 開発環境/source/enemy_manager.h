@@ -52,11 +52,13 @@ private:
 	bool m_bPop[24]; //生成済みフラグ
 	int m_nNumEnemy; //一度に生成する敵の数
 	int m_nTime;
+	CreateData *m_pCreater;
 
 	//静的メンバ変数
 	static int m_nDead;
 	static int m_nNumData;
 	static CreateData *m_pCreateData;
+
 };
 
 #endif

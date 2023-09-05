@@ -209,6 +209,7 @@ void CRenderer::Draw(void)
 		//デバッグ表示
 		if (CManager::GetDebugProc() != NULL)
 		{
+			CManager::GetDebugProc()->Print("FPS : %d\n", CManager::GetFPS());
 			CManager::GetDebugProc()->Draw();
 		}
 

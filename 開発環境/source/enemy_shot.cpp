@@ -94,9 +94,6 @@ void CEnemyShot::Update(void)
 	//弾の発射時間を更新
 	m_nInterval++;
 
-	//弾の発射に関する処理
-	Shot();
-
 	//狙われろ
 	Targeted();
 
@@ -119,41 +116,6 @@ void CEnemyShot::Draw(void)
 }
 
 //==========================================
-//  弾を撃つ処理
-//==========================================
-void CEnemyShot::Shot(void)
-{
-	//プレイヤーの位置を取得
-	D3DXVECTOR3 posPlayer = CGameManager::GetPlayer()->GetPos();
-
-	//自分からプレイヤーに向けたベクトルを算出
-	D3DXVECTOR3 vecToPlayer = posPlayer - m_pos;
-
-	//算出したベクトルから角度を算出
-	float rotVector = atan2f(vecToPlayer.z, -vecToPlayer.x);
-
-	//算出した角度を自分の方向にする
-	m_rot.y = rotVector;
-
-	//算出したベクトルを正規化する
-	vecToPlayer.y = 0.0f;
-	D3DXVec3Normalize(&vecToPlayer, &vecToPlayer);
-
-	//プレイヤーへのベクトルに倍率与える
-	vecToPlayer *= SPEED;
-
-	//高さを与える
-	D3DXVECTOR3 pos = m_pos;
-	pos.y += 10.0f;
-
-	//弾を撃つ
-	if (m_nInterval % INTERVAL == 0)
-	{
-		//CBullet::Create(pos, D3DXVECTOR3(25.0f, 25.0f, 0.0f), vecToPlayer, CBullet::ENEMY, CBullet::NORMAL_BULLET);
-	}
-}
-
-//==========================================
 //  狙われる処理
 //==========================================
 void CEnemyShot::Targeted(void)
@@ -161,46 +123,21 @@ void CEnemyShot::Targeted(void)
 	//内部判定フラグ
 	bool bIn = false;
 
-	//ビューポートの設定
-	D3DVIEWPORT9 vp = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 1.0f };
+	//カーソル位置を取得する
+	D3DXVECTOR3 posTarget = CGameManager::GetTarget()->GetPos();
 
-	//計算用変数宣言
-	D3DXMATRIX mtxView = CGameManager::GetCamera()->CreateViewMatrix(); //ビューマトリックス
-	D3DXMATRIX mtxWorld; //ワールドマトリックス
-
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&mtxWorld);
-
-	//敵のスクリーン座標を算出
-	D3DXVECTOR3 screenPos;
-	D3DXMATRIX mtxProjection = CGameManager::GetCamera()->GetMtxPro();
-	D3DXVec3Project
-	(
-		&screenPos,
-		&m_pos,
-		&vp,
-		&mtxProjection,
-		&mtxView,
-		&mtxWorld
-	);
+	//カーソルまでの距離を判定
+	float fLength =
+		(posTarget.x - m_pos.x) * (posTarget.x - m_pos.x) + (posTarget.z - m_pos.z) * (posTarget.z - m_pos.z);
 
 	//範囲内の判定
-	if (screenPos.x < CGameManager::GetTarget()->GetPos().x + CGameManager::GetTarget()->GetSize().x * 0.5f && !bIn)
+	if (CGameManager::GetTarget()->GetSize().x * CGameManager::GetTarget()->GetSize().x * 0.64f > fLength)
 	{
-		if (screenPos.x > CGameManager::GetTarget()->GetPos().x - CGameManager::GetTarget()->GetSize().x * 0.5f && !bIn)
+		if (m_pRockon == NULL)
 		{
-			if (screenPos.y < CGameManager::GetTarget()->GetPos().y + CGameManager::GetTarget()->GetSize().y * 0.5f && !bIn)
-			{
-				if (screenPos.y > CGameManager::GetTarget()->GetPos().y - CGameManager::GetTarget()->GetSize().y * 0.5f && !bIn)
-				{
-					if (m_pRockon == NULL)
-					{
-						m_pRockon = CRockon::Create(m_pos);
-					}
-					bIn = true;
-				}
-			}
+			m_pRockon = CRockon::Create(m_pos);
 		}
+		bIn = true;
 	}
 
 	if(!bIn)

@@ -242,6 +242,42 @@ void CPlayer::Update(void)
 	//腕を回す
 	Swing();
 
+	//弾を撃つ
+	if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE) || CManager::GetMouse()->GetTrigger(CMouse::BUTTON_RIGHT))
+	{
+		//ローカル変数宣言
+		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
+		D3DXMATRIX mtxSelf = m_ppModel[3]->GetMtx(); //自分のマトリックス
+		D3DXMATRIX mtxParent; //親マトリックス
+
+		//ワールドマトリックスの初期化
+		D3DXMatrixIdentity(&mtxSelf);
+
+		//向きの反映
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+		D3DXMatrixMultiply(&mtxSelf, &mtxSelf, &mtxRot);
+
+		//位置の反映
+		D3DXMatrixTranslation(&mtxTrans, m_ppModel[3]->GetPos().x, m_ppModel[3]->GetPos().y, m_ppModel[3]->GetPos().z);
+		D3DXMatrixMultiply(&mtxSelf, &mtxSelf, &mtxTrans);
+
+		//親マトリックスの設定
+		mtxParent = m_ppModel[3]->GetParent()->GetMtx();
+
+		//ワールドマトリックスと親マトリックスをかけ合わせる
+		D3DXMatrixMultiply
+		(
+			&mtxSelf,
+			&mtxSelf,
+			&mtxParent
+		);
+
+		//頂点座標を抽出
+		D3DXVECTOR3 pos = D3DXVECTOR3(mtxSelf._41, mtxSelf._42, mtxSelf._43);
+
+		CBullet::Create(pos, 20.0f);
+	}
+
 	//モーションを更新する
 	m_pMotion->Update();
 
@@ -341,7 +377,7 @@ void CPlayer::Slop(void)
 
 	//Y軸の補正
 	move.x = m_move.z * cosf(rot) + m_move.x * sinf(rot);
-	move.z = m_move.z * sinf(rot) + -m_move.x * cosf(rot);
+	move.z = m_move.z * sinf(rot) - m_move.x * cosf(rot);
 
 	//角度を算出
 	m_rot.x = atan2f(-move.x, PLAYER_HEIGHT);
