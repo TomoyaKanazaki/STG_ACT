@@ -24,6 +24,7 @@ public:
 		TYPE_NONE = 0, //不使用
 		TYPE_PLAYER, //プレイヤー
 		TYPE_ENEMY, //敵
+		TYPE_BULLET_ENEMY, //弾の敵
 		TYPE_BOSS, //ボス
 		TYPE_BULLET, //弾
 		TYPE_EXPLOSION, //爆発
@@ -52,6 +53,7 @@ public:
 	CObject *GetNext(void) { return m_pNext; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXVECTOR3 GetMove(void) { return m_move; }
 	D3DXVECTOR3 GetOldPos(void) { return m_oldPos; }
 	D3DXVECTOR3 GetOldRot(void) { return m_oldRot; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }

@@ -25,18 +25,6 @@ class CEnemyManager;
 class CGameManager : public CScene
 {
 public:
-	typedef enum
-	{
-		NONE = 0,
-		TUTORIAL_CLOSE, //近接攻撃のチュートリアル
-		TUTORIAL_FAR, //遠距離攻撃のチュートリアル
-		BATTLE_CLOSE, //近距離メインの戦闘
-		BATTLE_FAR, //遠距離メインの戦闘
-		BATTLE_LAST, //遠近両方の戦闘
-		BOSS_ATTACK, //ボスの直接攻撃
-		BOSS_CREAR, //ボスの撃破
-		FAZE_MAX, //ゲームフェーズの最大数
-	}STATE;
 
 	CGameManager(); //コンストラクタ
 	~CGameManager(); //デストラクタ
@@ -48,8 +36,6 @@ public:
 	void Draw(void) override;
 
 	//静的メンバ関数
-	static STATE GetState(void) { return m_State; }
-	static void SetState(STATE state) { m_State = state; }
 	static CObject_Fan *GetFan(void) { return m_pFan; }
 	static CPlayer *GetPlayer(void) { return m_pPlayer; }
 	static CCamera *GetCamera(void) { return m_pCamera; }
@@ -62,7 +48,6 @@ private:
 	//メンバ変数
 
 	//静的メンバ変数
-	static STATE m_State; //ゲームの状態
 	static CObject_Fan *m_pFan;
 	static CPlayer *m_pPlayer;
 	static CCamera *m_pCamera;

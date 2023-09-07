@@ -8,7 +8,6 @@
 #include "manager.h"
 #include "debugproc.h"
 #include "object.h"
-#include "item.h"
 #include "gamemanager.h"
 #include "player.h"
 #include "particle.h"
@@ -40,63 +39,6 @@ D3DXVECTOR3 Collision::GetRevisionVec(const D3DXVECTOR3 vecMove, const D3DXVECTO
 //==========================================
 //  敵との当たり判定
 //==========================================
-bool Collision::CollisionEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, D3DXVECTOR3 *pPos)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject *pObj = CObject::GetTop(nCntPriority);
-
-		//NULLチェック
-		while (pObj != NULL)
-		{
-			//次のアドレスを保存
-			CObject *pNext = pObj->GetNext();
-
-			//敵の場合
-			if (pObj->GetType() != CObject::TYPE_ENEMY)
-			{
-				//次のアドレスにずらす
-				pObj = pNext;
-				continue;
-			}
-
-			//敵の各情報を取得する
-			D3DXVECTOR3 enemyPos = pObj->GetPos();
-			D3DXVECTOR3 size = pObj->GetSize();
-
-			//敵と弾の距離を取得
-			float fLength = (enemyPos.x - pos.x) * (enemyPos.x - pos.x) + (enemyPos.z - pos.z) * (enemyPos.z - pos.z);
-
-			if (fLength < fLange * fLange)
-			{
-				//位置を保存
-				if (pPos != NULL)
-				{
-					*pPos = pObj->GetPos();
-				}
-
-				//死ぬ
-				if (bRelease)
-				{
-					pObj->Uninit();
-				}
-
-				return true;
-			}
-
-			//次のアドレスにずらす
-			pObj = pNext;
-		}
-	}
-
-	//当たっていない
-	return false;
-}
-
-//==========================================
-//  敵との当たり判定
-//==========================================
 bool Collision::CollisionPlayer(D3DXVECTOR3 pos, float fLange)
 {
 	//プレイヤーの位置を取得
@@ -116,54 +58,6 @@ bool Collision::CollisionPlayer(D3DXVECTOR3 pos, float fLange)
 
 		//当たった結果を返して関数を終了
 		return true;
-	}
-
-	//当たっていない
-	return false;
-}
-
-//==========================================
-//  敵との当たり判定
-//==========================================
-bool Collision::HomingEnemy(D3DXVECTOR3 pos, float fLange, bool bRelease, CObject **pObject)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject *pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			//次のアドレスを保存
-			CObject *pNext = pObj->GetNext();
-
-			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
-			{
-				pObj = pNext;
-				continue;
-			}
-
-			//敵の各情報を取得する
-			D3DXVECTOR3 enemyPos = pObj->GetPos();
-			D3DXVECTOR3 size = pObj->GetSize();
-
-			//敵と弾の距離を取得
-			float fLength = (enemyPos.x - pos.x) * (enemyPos.x - pos.x) + (enemyPos.z - pos.z) * (enemyPos.z - pos.z);
-
-			if (fLength < fLange * fLange)
-			{
-				//情報を保存
-				*pObject = pObj;
-
-				//死ぬ
-				if (bRelease)
-				{
-					pObj->Uninit();
-				}
-				return true;
-			}
-			pObj = pNext;
-		}
 	}
 
 	//当たっていない
@@ -195,7 +89,7 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 			CObject *pNext = pObj->GetNext();
 
 			//対象オブジェクトが敵の場合
-			if (pObj->GetType() == CObject::TYPE_ENEMY)
+			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET)
 			{
 				//判定フラグ
 				bool bIn = true;
@@ -213,7 +107,7 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 				//判定距離内の場合
 				if (fLength >= vecLength.x * vecLength.x + vecLength.z * vecLength.z)
 				{
-					//4つのベクトルで判定をする
+					//2つのベクトルで判定をする
 					for (int nCntVec = 0; nCntVec < 2; nCntVec++)
 					{
 						//外積を算出
@@ -238,11 +132,18 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 					//パーティクルを呼び出す
 					CParticle::Create(pObj->GetPos(), D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(25.0f, 25.0f, 25.0f), D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), 100, 30, 20, 1);
 
-					//対象のオブジェクトを終了
-					pObj->Uninit();
+					//対象の敵を弾に変更
+					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
 
-					//撃破数を加算
-					CEnemyManager::AddDeth();
+					//プレイヤーから弾へのベクトルを算出
+					D3DXVECTOR3 p = pObj->GetPos();
+					D3DXVECTOR3 q = CGameManager::GetPlayer()->GetPos();
+					D3DXVECTOR3 vecToBullet = pObj->GetPos() - CGameManager::GetPlayer()->GetPos();
+					vecToBullet.y = 0.0f;
+					D3DXVec3Normalize(&vecToBullet, &vecToBullet);
+
+					//弾の移動量にする
+					pObj->SetMove(vecToBullet * 100.0f);
 				}
 			}
 

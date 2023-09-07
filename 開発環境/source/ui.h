@@ -45,7 +45,6 @@ private:
 	//メンバ変数
 	HWND m_hWnd; //ウィンドウハンドル
 	EnemyData m_EnemyData[256]; //生成情報
-	CGameManager::STATE m_state; //設定するフェーズ
 	int m_nID; //生成情報のインデックス
 	char m_aPass[256]; //直前に読み込まれたパス
 

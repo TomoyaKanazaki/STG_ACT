@@ -22,13 +22,6 @@ class CMotion;
 class CEnemy : public CObject
 {
 public:
-	typedef enum
-	{
-		TYPE_NORMAL = 0, //普通の敵
-		TYPE_SHOT, //遠距離攻撃の敵
-		TYPE_BOSS, //ボス敵
-		TYPE_MAX
-	}TYPE;
 
 	CEnemy(int nPriority = 4); //コンストラクタ
 	~CEnemy(); //デストラクタ
@@ -42,23 +35,24 @@ public:
 	void SetLife(const int nDamage) { if (m_nLife > 0) m_nLife -= nDamage; }
 
 	//静的メンバ変数
-	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type);
+	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
 
-protected:
+private:
 
 	//メンバ関数
 	void AvertEnemy(void);
+	void Chain(void);
+	void Move(void);
 
 	//モデル情報
 	CModel **m_ppModel; //モデル情報
 	CLayer::LAYERDATA *m_pLayer; //階層構造情報
 	CMotion *m_pMotion;
 
-private:
-
 	//メンバ変数
 	int m_nNumModel;
 	int m_nLife;
+	int m_nCntBullet;
 	float m_fSpeed;
 	bool m_bRand;
 

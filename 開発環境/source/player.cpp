@@ -17,7 +17,6 @@
 #include "field.h"
 #include "object_fan.h"
 #include "collision.h"
-#include "bullet.h"
 #include "motion.h"
 #include "collision.h"
 #include "layer.h"
@@ -25,7 +24,6 @@
 #include "orbit.h"
 #include "particle.h"
 #include "camera.h"
-#include "target.h"
 
 //==========================================
 //  マクロ定義
@@ -78,6 +76,7 @@ HRESULT CPlayer::Init(void)
 	//階層構造情報を生成
 	m_pLayer = CLayer::Set(CLayer::PLAYER_LAYER);
 
+	//モデル用のメモリの確保
 	if (m_ppModel == NULL)
 	{
 		m_ppModel = new CModel*[m_pLayer->nNumModel];
@@ -182,7 +181,7 @@ void CPlayer::Update(void)
 	}
 
 	//死亡判定
-	if (m_pos.y < -1000.0f || Collision::CollisionEnemy(m_pos, 30.0f, false))
+	if (m_pos.y < -1000.0f)
 	{
 		m_nLife--;
 		m_bDead = true;
@@ -241,42 +240,6 @@ void CPlayer::Update(void)
 
 	//腕を回す
 	Swing();
-
-	//弾を撃つ
-	if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE) || CManager::GetMouse()->GetTrigger(CMouse::BUTTON_RIGHT))
-	{
-		//ローカル変数宣言
-		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
-		D3DXMATRIX mtxSelf = m_ppModel[3]->GetMtx(); //自分のマトリックス
-		D3DXMATRIX mtxParent; //親マトリックス
-
-		//ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&mtxSelf);
-
-		//向きの反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-		D3DXMatrixMultiply(&mtxSelf, &mtxSelf, &mtxRot);
-
-		//位置の反映
-		D3DXMatrixTranslation(&mtxTrans, m_ppModel[3]->GetPos().x, m_ppModel[3]->GetPos().y, m_ppModel[3]->GetPos().z);
-		D3DXMatrixMultiply(&mtxSelf, &mtxSelf, &mtxTrans);
-
-		//親マトリックスの設定
-		mtxParent = m_ppModel[3]->GetParent()->GetMtx();
-
-		//ワールドマトリックスと親マトリックスをかけ合わせる
-		D3DXMatrixMultiply
-		(
-			&mtxSelf,
-			&mtxSelf,
-			&mtxParent
-		);
-
-		//頂点座標を抽出
-		D3DXVECTOR3 pos = D3DXVECTOR3(mtxSelf._41, mtxSelf._42, mtxSelf._43);
-
-		CBullet::Create(pos, 20.0f);
-	}
 
 	//モーションを更新する
 	m_pMotion->Update();
@@ -426,7 +389,7 @@ void CPlayer::Swing(void)
 	D3DXVECTOR3 rot = m_ppModel[4]->GetRot();
 
 	//振る方向を設定
-	if (CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_SPACE) || CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
 		m_fSwing *= -1.0f;
 		m_nBladeLife = 10;

@@ -14,13 +14,11 @@
 #include "debugproc.h"
 #include "model.h"
 #include "motion.h"
-#include "item.h"
 #include "motion.h"
-#include "enemy_approach.h"
-#include "enemy_shot.h"
 #include "particle.h"
-#include "boss.h"
 #include "enemy_manager.h"
+#include "object_fan.h"
+#include "collision.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -34,6 +32,7 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 {
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nNumModel = 0;
+	m_nCntBullet = 0;
 	m_fSpeed = 0.0f;
 	m_ppModel = NULL;
 	m_pLayer = NULL;
@@ -57,6 +56,38 @@ HRESULT CEnemy::Init(void)
 	//タイプの設定
 	SetType(CObject::TYPE_ENEMY);
 
+	//階層構造情報を生成
+	m_pLayer = CLayer::Set(CLayer::ENEMY_LAYER);
+
+	//モデル用のメモリの確保
+	if (m_ppModel == NULL)
+	{
+		m_ppModel = new CModel*[m_pLayer->nNumModel];
+	}
+
+	//必要なモデルを生成
+	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
+	{
+		//空にする
+		m_ppModel[nCnt] = NULL;
+
+		//親が存在しない場合
+		if (m_pLayer->pParentID[nCnt] == -1)
+		{
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
+		}
+		else
+		{
+			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_ppModel[m_pLayer->pParentID[nCnt]]);
+		}
+	}
+
+	//モーション情報の生成
+	if (m_pMotion == NULL)
+	{
+		m_pMotion = new CMotion;
+	}
+
 	return S_OK;
 }
 
@@ -78,6 +109,13 @@ void CEnemy::Uninit(void)
 		}
 		delete[] m_ppModel;
 		m_ppModel = NULL;
+	}
+
+	//モーション情報の破棄
+	if (m_pMotion != NULL)
+	{
+		delete m_pMotion;
+		m_pMotion = NULL;
 	}
 
 	//パーティクルを呼び出し
@@ -106,9 +144,54 @@ void CEnemy::Update(void)
 			}
 		}
 	}
-
+	
 	//移動量の適用
 	m_pos += m_move;
+
+	//落ちたら死ぬ
+	if (m_pos.y < -5000.0f)
+	{
+		Uninit();
+	}
+
+	//床から落ちる
+	if (!CGameManager::GetFan()->OnMesh(m_pos))
+	{
+		m_move.y -= 1.0f;
+		return;
+	}
+
+	//移動の処理
+	if (this->GetType() == CObject::TYPE_ENEMY) //プレイヤー追いかけ
+	{
+		//移動
+		Move();
+
+		//敵同士の判定
+		AvertEnemy();
+
+		//プレイヤーを殺す
+		Collision::CollisionPlayer(m_pos, 30.0f);
+	}
+	else
+	{
+		//慣性による移動の停止
+		m_move.x += (0.0f - m_move.x) * 0.1f;
+		m_move.z += (0.0f - m_move.z) * 0.1f;
+
+		//連鎖の判定
+		Chain();
+
+		//時間のカウント
+		m_nCntBullet++;
+
+		//一定時間経過で敵に戻る
+		if (m_nCntBullet >= 60 || (fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f))
+		{
+			m_nCntBullet = 0;
+			this->SetType(CObject::TYPE_ENEMY);
+		}
+	}
 }
 
 //==========================================
@@ -122,7 +205,7 @@ void CEnemy::Draw()
 //==========================================
 //  オブジェクト生成処理
 //==========================================
-CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, CEnemy::TYPE type)
+CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
 {
 	//インスタンス生成
 	CEnemy *pEnemy = NULL;
@@ -130,28 +213,7 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 	//NULLチェック
 	if (pEnemy == NULL)
 	{
-		//メモリを確保
-		switch (type)
-		{
-		case CEnemy::TYPE_NORMAL:
-
-			pEnemy = new CEnemyApproach;
-			break;
-
-		case CEnemy::TYPE_SHOT:
-
-			pEnemy = new CEnemyShot;
-			break;
-
-		case CEnemy::TYPE_BOSS:
-
-			pEnemy = new CBoss;
-			break;
-
-		default:
-			return NULL;
-			break;
-		}
+		pEnemy = new CEnemy;
 	}
 
 	//各種情報の保存
@@ -218,4 +280,87 @@ void CEnemy::AvertEnemy(void)
 			pObj = pNext;
 		}
 	}
+}
+
+//==========================================
+//  連鎖の判定
+//==========================================
+void CEnemy::Chain(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//自分のアドレスを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_ENEMY) && pObj != this)
+			{
+				//現在の敵と自分を結ぶベクトルを取得する
+				D3DXVECTOR3 posObj = pObj->GetPos();
+				D3DXVECTOR3 vecToObj = m_pos - posObj;
+
+				//ベクトルの大きさを算出
+				float fLength = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
+
+				//接触範囲内にいた場合
+				if (fLength < mc_fSize * mc_fSize)
+				{
+					//衝突対象は連鎖しない弾になる
+					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
+
+					//衝突対象の速度を取得
+					D3DXVECTOR3 moveObj = pObj->GetMove();
+
+					//衝突対象の移動量と自身の移動量の差分を求める
+					D3DXVECTOR3 vecSab = m_move - moveObj;
+
+					//前回座標
+					D3DXVECTOR3 vecToOld = m_oldPos - posObj;
+
+					//ベクトルを正規化
+					D3DXVec3Normalize(&vecToOld, &vecToOld);
+
+					//ベクトルの内積
+					float fDot = D3DXVec3Dot(&vecSab, &vecToOld);
+
+					//反発定数
+					D3DXVECTOR3 vecConst = (fDot * 0.5f) * vecToOld;
+
+					//衝突後速度ベクトルの算出
+					m_move = (vecConst + m_move) * 0.5f;
+					pObj->SetMove((vecConst + moveObj) * 0.5f);
+
+					//衝突後位置の算出
+					m_pos = m_pos + (m_move * 3.0f);
+					pObj->SetPos(posObj + (pObj->GetMove() * 3.0f));
+				}
+			}
+			
+			//次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
+}
+
+//==========================================
+//  プレイヤーに向かう処理
+//==========================================
+void CEnemy::Move(void)
+{
+	//プレイヤーの座用を取得
+	D3DXVECTOR3 posPlayer = CGameManager::GetPlayer()->GetPos();
+
+	//プレイヤーに向かうベクトルを算出
+	D3DXVECTOR3 vecToPlayer = posPlayer - m_pos;
+
+	//ベクトルを正規化
+	vecToPlayer.y = 0.0f;
+	D3DXVec3Normalize(&vecToPlayer, &vecToPlayer);
+
+	//移動量を適用
+	m_move = vecToPlayer * 5.0f;
 }

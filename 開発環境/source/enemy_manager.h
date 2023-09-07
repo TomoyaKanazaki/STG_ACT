@@ -20,8 +20,6 @@ public:
 	struct CreateData
 	{
 		D3DXVECTOR3 pos; //初期位置
-		int type; //敵の種類
-		int fase; //出現するフェーズ
 		int nCount; //生成される回数
 		int nInterval; //生成間隔
 	};

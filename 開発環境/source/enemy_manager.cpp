@@ -81,29 +81,22 @@ void CEnemyManager::Update(void)
 	//経過フレームを加算
 	m_nTime++;
 
-	//現在のフェーズを取得
-	int nFaze = (int)CGameManager::GetState();
-
 	//エネミーデータを参照
 	for (int nCnt = 0; nCnt < m_nNumData; nCnt++)
 	{
-		//生成されるフェーズを参照する
-		if (nFaze == m_pCreater[nCnt].fase)
+		//生成回数を参照する
+		if (m_pCreater[nCnt].nCount > 0 || m_pCreater[nCnt].nCount == -1)
 		{
-			//生成回数を参照する
-			if (m_pCreater[nCnt].nCount > 0 || m_pCreater[nCnt].nCount == -1)
+			//生成フレームを参照する
+			if (m_nTime % m_pCreater[nCnt].nInterval == 0)
 			{
-				//生成フレームを参照する
-				if (m_nTime % m_pCreater[nCnt].nInterval == 0)
-				{
-					//敵を生成
-					CEnemy::Create(m_pCreater[nCnt].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), (CEnemy::TYPE)m_pCreater[nCnt].type);
+				//敵を生成
+				CEnemy::Create(m_pCreater[nCnt].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-					//生成回数を減らす
-					if (m_pCreater[nCnt].nCount != -1)
-					{
-						m_pCreater[nCnt].nCount--;
-					}
+				//生成回数を減らす
+				if (m_pCreater[nCnt].nCount != -1)
+				{
+					m_pCreater[nCnt].nCount--;
 				}
 			}
 		}
@@ -113,14 +106,14 @@ void CEnemyManager::Update(void)
 	//接近する敵
 	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
 	{
-		for (int nCntEnemy = 0; nCntEnemy < 3; nCntEnemy++)
+		for (int nCntEnemy = 0; nCntEnemy < 1; nCntEnemy++)
 		{
 			//生成中心座標を生成
 			m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
 			m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
 
 			//敵を生成
-			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_NORMAL);
+			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		}
 	}
 	
@@ -134,7 +127,7 @@ void CEnemyManager::Update(void)
 			m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
 
 			//敵を生成
-			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::TYPE_SHOT);
+			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		}
 	}
 #endif

@@ -24,14 +24,11 @@ CUi::CUi()
 	for (int nCnt = 0; nCnt < 256; nCnt++)
 	{
 		m_EnemyData[nCnt].CreateData.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		m_EnemyData[nCnt].CreateData.fase = 0;
-		m_EnemyData[nCnt].CreateData.type = 0;
 		m_EnemyData[nCnt].CreateData.nCount = 0;
 		m_EnemyData[nCnt].CreateData.nInterval = 0;
 		m_EnemyData[nCnt].bUse = false;
 	}
 	m_nID = 0;
-	m_state = CGameManager::NONE;
 }
 
 //==========================================
@@ -125,14 +122,8 @@ void CUi::Update(void)
 	//敵情報のパラメータ設定
 	if (m_EnemyData[m_nID].bUse)
 	{
-		//敵タイプの設定
-		ImGui::SliderInt (u8"敵タイプ", &m_EnemyData[m_nID].CreateData.type, 0, CEnemy::TYPE_MAX - 1);
-
 		//初期位置の設定
 		ImGui::DragFloat3(u8"初期位置", m_EnemyData[m_nID].CreateData.pos);
-
-		//生成されるフェーズの設定
-		ImGui::SliderInt(u8"生成フェーズ", &m_EnemyData[m_nID].CreateData.fase, 0, CGameManager::FAZE_MAX - 1);
 
 		//生成回数の設定
 		ImGui::Text(u8"[ -1 ]で無限生成");
@@ -144,30 +135,6 @@ void CUi::Update(void)
 
 	//ライン
 	ImGui::NewLine();
-
-	//フェーズ設定
-	ImGui::Text(u8"現在のフェーズ : %d", CGameManager::GetState());
-	if (ImGui::ArrowButton("##2", 0))
-	{
-		if (m_state > 0)
-		{
-			m_state = (CGameManager::STATE)((int)m_state - 1);
-		}
-	} ImGui::SameLine();
-	ImGui::Text(u8"フェーズ : %d", m_state); ImGui::SameLine();
-	if (ImGui::ArrowButton("##3", 1))
-	{
-		if (m_state < CGameManager::FAZE_MAX - 1)
-		{
-			m_state = (CGameManager::STATE)((int)m_state + 1);
-		}
-	} ImGui::SameLine();
-	if (ImGui::Button(u8"再設定"))
-	{
-		ReLoad();
-		CGameManager::SetState(m_state);
-		CEnemyManager::ResetDeth();
-	}
 
 	//入出力
 	Save(); ImGui::SameLine(); Load();

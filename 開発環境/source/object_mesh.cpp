@@ -318,9 +318,6 @@ void CObject_Mesh::CalcData(void)
 //==========================================
 bool CObject_Mesh::OnMesh(const D3DXVECTOR3 pos)
 {
-	//ローカル変数宣言
-	//int nCntPoint = 0;
-
 	//頂点バッファの呼び出し
 	VERTEX_3D *pVtx;
 
