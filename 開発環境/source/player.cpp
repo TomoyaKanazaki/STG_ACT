@@ -362,7 +362,7 @@ void CPlayer::Explosion(void)
 			//ŽŸ‚ÌƒAƒhƒŒƒX‚ð•Û‘¶
 			CObject *pNext = pObj->GetNext();
 
-			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET) //“G‚Ìê‡
+			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET_ENEMY) //“G‚Ìê‡
 			{
 				//‹ß‚­‚É‚¢‚é‚©‚Ì”»’è
 				D3DXVECTOR3 vecToObj = m_pos - pObj->GetPos();

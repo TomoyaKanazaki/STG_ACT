@@ -89,7 +89,7 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 			CObject *pNext = pObj->GetNext();
 
 			//対象オブジェクトが敵の場合
-			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET)
+			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET_ENEMY)
 			{
 				//判定フラグ
 				bool bIn = true;
@@ -136,14 +136,12 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
 
 					//プレイヤーから弾へのベクトルを算出
-					D3DXVECTOR3 p = pObj->GetPos();
-					D3DXVECTOR3 q = CGameManager::GetPlayer()->GetPos();
 					D3DXVECTOR3 vecToBullet = pObj->GetPos() - CGameManager::GetPlayer()->GetPos();
 					vecToBullet.y = 0.0f;
 					D3DXVec3Normalize(&vecToBullet, &vecToBullet);
 
 					//弾の移動量にする
-					pObj->SetMove(vecToBullet * 100.0f);
+					pObj->SetMove(vecToBullet * 150.0f);
 				}
 			}
 

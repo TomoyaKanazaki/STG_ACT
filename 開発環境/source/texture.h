@@ -24,12 +24,9 @@ public:
 	{
 		EFFECT = 0, //エフェクト
 		NUMBER, //数字
-		TARGET, //ターゲット
-		BULLET, //弾
 		FIELD, //床
 		TITLE, //タイトル
 		RESULT, //リザルト
-		ROCKON, //ロックオン
 		TEXTURE_MAX
 	};
 

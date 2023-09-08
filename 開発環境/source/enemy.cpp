@@ -19,6 +19,8 @@
 #include "enemy_manager.h"
 #include "object_fan.h"
 #include "collision.h"
+#include "manager.h"
+#include "renderer.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -118,9 +120,6 @@ void CEnemy::Uninit(void)
 		m_pMotion = NULL;
 	}
 
-	//パーティクルを呼び出し
-	CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(0.98f, 0.87f, 0.28f, 0.5f), 10, 30, 10, 5);
-
 	//自分自身の破棄
 	Release();
 }
@@ -151,6 +150,9 @@ void CEnemy::Update(void)
 	//落ちたら死ぬ
 	if (m_pos.y < -5000.0f)
 	{
+		//パーティクルを呼び出し
+		CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(0.98f, 0.87f, 0.28f, 0.5f), 10, 30, 10, 5);
+
 		Uninit();
 	}
 
@@ -166,9 +168,6 @@ void CEnemy::Update(void)
 	{
 		//移動
 		Move();
-
-		//敵同士の判定
-		AvertEnemy();
 
 		//プレイヤーを殺す
 		Collision::CollisionPlayer(m_pos, 30.0f);
@@ -186,12 +185,15 @@ void CEnemy::Update(void)
 		m_nCntBullet++;
 
 		//一定時間経過で敵に戻る
-		if (m_nCntBullet >= 60 || (fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f))
+		if (m_nCntBullet >= 30 || (fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f))
 		{
 			m_nCntBullet = 0;
 			this->SetType(CObject::TYPE_ENEMY);
 		}
 	}
+
+	//敵同士の判定
+	AvertEnemy();
 }
 
 //==========================================
@@ -246,34 +248,31 @@ void CEnemy::AvertEnemy(void)
 			//次のアドレスを保存
 			CObject *pNext = pObj->GetNext();
 
-			if (pObj->GetType() != CObject::TYPE_ENEMY) //敵の場合
+			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_ENEMY) && pObj != this) //敵の場合
 			{
-				pObj = pNext;
-				continue;
-			}
+				//現在の敵と自分を結ぶベクトルを取得する
+				D3DXVECTOR3 posObj = pObj->GetPos();
+				D3DXVECTOR3 vecToObj = m_pos - posObj;
 
-			//現在の敵と自分を結ぶベクトルを取得する
-			D3DXVECTOR3 posObj = pObj->GetPos();
-			D3DXVECTOR3 vecToObj = m_pos - posObj;
+				//ベクトルの大きさを算出
+				float fLength = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
 
-			//ベクトルの大きさを算出
-			float fLength = (vecToObj.x * vecToObj.x) + (vecToObj.z * vecToObj.z);
+				//接触範囲内にいた場合
+				if (fLength < mc_fSize * mc_fSize)
+				{
+					//接点座標を求める
+					D3DXVECTOR3 contact = (posObj + m_pos) * 0.5f;
 
-			//接触範囲内にいた場合
-			if (fLength < mc_fSize * mc_fSize)
-			{
-				//接点座標を求める
-				D3DXVECTOR3 contact = (posObj + m_pos) * 0.5f;
+					//ベクトルの角度を求める
+					float rotVector = atan2f(vecToObj.x, vecToObj.z);
 
-				//ベクトルの角度を求める
-				float rotVector = atan2f(vecToObj.x, vecToObj.z);
+					//x,zの補正値を求める
+					D3DXVECTOR2 correction = { sinf(rotVector), cosf(rotVector) };
 
-				//x,zの補正値を求める
-				D3DXVECTOR2 correction = { sinf(rotVector), cosf(rotVector) };
-
-				//座標を補正する
-				m_pos.x = correction.x * (mc_fSize * 0.5f) + contact.x;
-				m_pos.z = correction.y * (mc_fSize * 0.5f) + contact.z;
+					//座標を補正する
+					m_pos.x = correction.x * (mc_fSize * 0.5f) + contact.x;
+					m_pos.z = correction.y * (mc_fSize * 0.5f) + contact.z;
+				}
 			}
 
 			//次のアドレスにずらす
@@ -331,8 +330,8 @@ void CEnemy::Chain(void)
 					D3DXVECTOR3 vecConst = (fDot * 0.5f) * vecToOld;
 
 					//衝突後速度ベクトルの算出
-					m_move = (vecConst + m_move) * 0.5f;
-					pObj->SetMove((vecConst + moveObj) * 0.5f);
+					m_move = (vecConst + m_move);
+					pObj->SetMove(vecConst + moveObj);
 
 					//衝突後位置の算出
 					m_pos = m_pos + (m_move * 3.0f);
@@ -356,6 +355,10 @@ void CEnemy::Move(void)
 
 	//プレイヤーに向かうベクトルを算出
 	D3DXVECTOR3 vecToPlayer = posPlayer - m_pos;
+
+	//プレイヤーの方向を向く
+	float fRot = atan2f(-vecToPlayer.x, -vecToPlayer.z);
+	m_rot.y = fRot;
 
 	//ベクトルを正規化
 	vecToPlayer.y = 0.0f;

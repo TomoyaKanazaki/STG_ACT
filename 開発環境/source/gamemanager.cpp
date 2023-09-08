@@ -20,6 +20,7 @@
 #include "renderer.h"
 #include "enemy.h"
 #include "debugproc.h"
+#include "target.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -28,8 +29,8 @@ CPlayer *CGameManager::m_pPlayer = NULL;
 CObject_Fan *CGameManager::m_pFan = NULL;
 CCamera *CGameManager::m_pCamera = NULL;
 CLight *CGameManager::m_pLight = NULL;
-CTarget *CGameManager::m_pTarget = NULL;
 CEnemyManager *CGameManager::m_pEnemy = NULL;
+CTarget *CGameManager::m_pTarget = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -54,6 +55,10 @@ HRESULT CGameManager::Init(void)
 {
 	//床の生成
 	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.01f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 8, 2000.0f);
+
+	//的の生成
+	//m_pTarget = CTarget::Create(D3DXVECTOR3(500.0f, 500.0f, 500.0f), 0.0f, 2000.0f);
+	//m_pTarget = CTarget::Create(D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DX_PI, 2000.0f);
 
 	//プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 0.1f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));

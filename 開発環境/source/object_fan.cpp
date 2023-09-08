@@ -172,14 +172,6 @@ bool CObject_Fan::OnMesh(const D3DXVECTOR3 pos)
 }
 
 //==========================================
-//  ìñÇΩÇËîªíËèàóù
-//==========================================
-bool CObject_Fan::OnMesh(const D3DXVECTOR3 pos, const D3DXVECTOR3 oldpos, D3DXVECTOR3 * pVecLine, D3DXVECTOR3 * pVecToPos)
-{
-	return false;
-}
-
-//==========================================
 //  É|ÉäÉSÉìÇÃè„Ç…Ç¢ÇÈîªíË
 //==========================================
 bool CObject_Fan::CheckOnMesh(const D3DXVECTOR3 &posJudge, const D3DXVECTOR3 &posStart, const D3DXVECTOR3 &posEnd) const

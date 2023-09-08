@@ -336,3 +336,123 @@ float CObject3D::GetHeight(const D3DXVECTOR3 TargetPos)
 
 	return fHeight;
 }
+
+//==========================================
+//  当たり判定
+//==========================================
+bool CObject3D::Collision(CObject::TYPE type)
+{
+	//ローカル変数宣言
+	bool bHit = false;
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//自分のアドレスを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			if (pObj->GetType() == type)
+			{
+				//頂点バッファの呼び出し
+				VERTEX_3D *pVtx;
+
+				//頂点バッファをロック
+				m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+				//判定に必要なベクトルを算出する
+				D3DXVECTOR3 vecToPos = pObj->GetPos() - D3DXVECTOR3(cosf(m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(m_rot.y) * pVtx[0].pos.z);
+				D3DXVECTOR3 vecToMove = pObj->GetPos() - pObj->GetOldPos();
+				D3DXVECTOR3 vecVtx = D3DXVECTOR3(cosf(m_rot.y) * pVtx[1].pos.x, 0.0f, sinf(m_rot.y) * pVtx[1].pos.z) - D3DXVECTOR3(cosf(m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(m_rot.y) * pVtx[0].pos.z);
+				D3DXVECTOR3 posBase = D3DXVECTOR3(cosf(m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(m_rot.y) * pVtx[0].pos.z);
+
+				//頂点バッファをアンロック
+				m_pVtxBuff->Unlock();
+
+				//交点の計算に必要な値を算出
+				float fPosMove = (vecToPos.z * vecToMove.x) - (vecToPos.x * vecToMove.z);
+				float fVtxMove = (vecVtx.z * vecToMove.x) - (vecVtx.x * vecToMove.z);
+				float fRate = fPosMove / fVtxMove;
+
+				//接触を判定する
+				if (0.0f <= fRate && fRate <= 1.0f)
+				{
+					bHit = true;
+				}
+			}
+
+			//次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
+
+	//値を返す
+	return bHit;
+}
+
+//==========================================
+//  当たり判定
+//==========================================
+bool CObject3D::Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint)
+{
+	//ローカル変数宣言
+	bool bHit = false;
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
+	{
+		//自分のアドレスを取得
+		CObject *pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			//次のアドレスを保存
+			CObject *pNext = pObj->GetNext();
+
+			if (pObj->GetType() == type)
+			{
+				//頂点バッファの呼び出し
+				VERTEX_3D *pVtx;
+
+				//頂点バッファをロック
+				m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+				//判定に必要なベクトルを算出する
+				D3DXVECTOR3 vecToPos = pObj->GetPos() - (m_pos + pVtx[0].pos);
+				D3DXVECTOR3 vecToMove = pObj->GetPos() - pObj->GetOldPos();
+				D3DXVECTOR3 vecVtx = (m_pos + pVtx[1].pos) - (m_pos + pVtx[0].pos);
+				D3DXVECTOR3 posBase = (m_pos + pVtx[0].pos);
+
+				//頂点バッファをアンロック
+				m_pVtxBuff->Unlock();
+
+				//交点の計算に必要な値を算出
+				float fPosMove = (vecToPos.z * vecToMove.x) - (vecToPos.x * vecToMove.z);
+				float fVtxMove = (vecVtx.z * vecToMove.x) - (vecVtx.x * vecToMove.z);
+				float fRate = fPosMove / fVtxMove;
+
+				//接触を判定する
+				if (0.0f <= fRate && fRate <= 1.0f)
+				{
+					bHit = true;
+
+					//対象のオブジェクトを破棄
+					pObj->Uninit();
+				}
+
+				//交点を算出
+				D3DXVECTOR3 pos = posBase + (vecVtx * fRate);
+				pos.y = 0.0f;
+				*pCrossPoint = pos;
+			}
+
+			//次のアドレスにずらす
+			pObj = pNext;
+		}
+	}
+
+	//値を返す
+	return bHit;
+}

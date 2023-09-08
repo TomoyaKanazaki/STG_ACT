@@ -24,7 +24,6 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	bool OnMesh(const D3DXVECTOR3 pos);
-	bool OnMesh(const D3DXVECTOR3 pos, const D3DXVECTOR3 oldpos, D3DXVECTOR3 *pVecLine, D3DXVECTOR3 *pVecToPos);
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
 
 	//ê√ìIÉÅÉìÉoä÷êî

@@ -29,6 +29,12 @@ public:
 	void SwitchBillboard(void) { m_bBillboard = !m_bBillboard; }
 	float GetHeight(const D3DXVECTOR3 TargetPos);
 
+protected:
+
+	//ƒƒ“ƒoŠÖ”
+	bool Collision(CObject::TYPE type);
+	bool Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint);
+
 private:
 
 	//ƒƒ“ƒo•Ï”
