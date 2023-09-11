@@ -21,6 +21,7 @@
 #include "collision.h"
 #include "manager.h"
 #include "renderer.h"
+#include "explosion.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -35,6 +36,7 @@ CEnemy::CEnemy(int nPriority) : CObject(nPriority)
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nNumModel = 0;
 	m_nCntBullet = 0;
+	m_nCombo = 1;
 	m_fSpeed = 0.0f;
 	m_ppModel = NULL;
 	m_pLayer = NULL;
@@ -197,6 +199,8 @@ void CEnemy::Update(void)
 
 	//敵同士の判定
 	AvertEnemy();
+
+	CManager::GetDebugProc()->Print("コンボ数 : %d\n", m_nCombo);
 }
 
 //==========================================
@@ -311,6 +315,9 @@ void CEnemy::Chain(void)
 				//接触範囲内にいた場合
 				if (fLength < mc_fSize * mc_fSize)
 				{
+					//コンボ数を加算
+					m_nCombo++;
+
 					//衝突対象は連鎖しない弾になる
 					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
 

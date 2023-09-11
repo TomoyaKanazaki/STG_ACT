@@ -27,6 +27,8 @@ public:
 		FIELD, //床
 		TITLE, //タイトル
 		RESULT, //リザルト
+		TARGET, //的
+		EXPLOSION, //爆発
 		TEXTURE_MAX
 	};
 

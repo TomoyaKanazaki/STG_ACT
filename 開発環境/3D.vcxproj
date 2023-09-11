@@ -35,6 +35,7 @@
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
     <ClCompile Include="source\enemy_manager.cpp" />
+    <ClCompile Include="source\explosion.cpp" />
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\gamemanager.cpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="source\object2D.cpp" />
     <ClCompile Include="source\object2D_Anim.cpp" />
     <ClCompile Include="source\object3D.cpp" />
+    <ClCompile Include="source\object3D_Anim.cpp" />
     <ClCompile Include="source\object_fan.cpp" />
     <ClCompile Include="source\object_mesh.cpp" />
     <ClCompile Include="source\orbit.cpp" />
@@ -90,6 +92,7 @@
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
     <ClInclude Include="source\enemy_manager.h" />
+    <ClInclude Include="source\explosion.h" />
     <ClInclude Include="source\fade.h" />
     <ClInclude Include="source\field.h" />
     <ClInclude Include="source\gamemanager.h" />
@@ -106,6 +109,7 @@
     <ClInclude Include="source\object2D.h" />
     <ClInclude Include="source\object2D_Anim.h" />
     <ClInclude Include="source\object3D.h" />
+    <ClInclude Include="source\object3D_Anim.h" />
     <ClInclude Include="source\object_fan.h" />
     <ClInclude Include="source\object_mesh.h" />
     <ClInclude Include="source\orbit.h" />

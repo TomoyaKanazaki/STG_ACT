@@ -47,6 +47,9 @@ private:
 	float m_fAngle;
 	bool m_bBillboard;
 
+	//Ã“Iƒƒ“ƒo•Ï”éŒ¾
+	const static D3DXVECTOR3 mc_sizeExplosion; //“G“¯m‚Ì“–‚½‚è”»’è‚Ì”ÍˆÍ
+
 };
 
 #endif

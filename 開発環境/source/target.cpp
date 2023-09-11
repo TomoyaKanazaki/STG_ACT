@@ -10,11 +10,12 @@
 #include "renderer.h"
 #include "particle.h"
 #include "effect.h"
+#include "texture.h"
 
 //==========================================
 //  コンストラクタ
 //==========================================
-CTarget::CTarget()
+CTarget::CTarget(int nPriority) : CObject3D(nPriority)
 {
 	m_fDistance = 0.0f;
 }
@@ -43,8 +44,6 @@ HRESULT CTarget::Init()
 	//初期化
 	CObject3D::Init();
 
-	SetCol(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-
 	return S_OK;
 }
 
@@ -63,7 +62,7 @@ void CTarget::Uninit()
 void CTarget::Update()
 {
 	//角度を更新
-	m_rot.y -= 0.001f;
+	//m_rot.y -= 0.001f;
 
 	//角度の補正
 	if (m_rot.y > D3DX_PI)
@@ -141,6 +140,9 @@ CTarget *CTarget::Create(D3DXVECTOR3 size, float fRot, float fDistance)
 	{
 		pTarget->Init();
 	}
+
+	//テクスチャを割り当て
+	pTarget->BindTexture(CManager::GetTexture()->GetAddress(CTexture::TARGET));
 
 	//ポインタを返す
 	return pTarget;

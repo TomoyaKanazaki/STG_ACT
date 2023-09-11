@@ -7,7 +7,12 @@
 #include "object3D.h"
 #include "manager.h"
 #include "renderer.h"
-#include "effect.h"
+#include "explosion.h"
+
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
+const D3DXVECTOR3 CObject3D::mc_sizeExplosion = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 //==========================================
 //  コンストラクタ
@@ -165,12 +170,6 @@ void CObject3D::Update(void)
 	{
 		pVtx[nCnt].col = m_col;
 	}
-
-	//テクスチャ座標の設定
-	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
@@ -454,6 +453,10 @@ bool CObject3D::Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint)
 						D3DXVECTOR3 CrossPoint = Vtx0 + (vecVtx * fRate);
 						CrossPoint.y = 0.0f;
 						*pCrossPoint = CrossPoint;
+						pObj->SetPos(CrossPoint);
+
+						//爆発を呼び出す
+						CExplosion::Create(CrossPoint, mc_sizeExplosion * (float)pObj->GetCombo(), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 14, 3, false, CObject3D_Anim::TYPE_U);
 
 						//対象のオブジェクトを破棄
 						pObj->Uninit();

@@ -5,7 +5,7 @@
 //
 //==========================================
 
-NUM_TEXTURE = 5
+NUM_TEXTURE = 7
 
 //==========================================
 //  テクスチャファイル名
@@ -15,3 +15,5 @@ TEXTURE_FILENAME = number.png			//[1]数字
 TEXTURE_FILENAME = field.png			//[2]床
 TEXTURE_FILENAME = title.png			//[3]タイトル
 TEXTURE_FILENAME = result.png			//[4]リザルト
+TEXTURE_FILENAME = target.png			//[5]的
+TEXTURE_FILENAME = explosion.png		//[6]爆発

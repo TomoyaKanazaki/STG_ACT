@@ -43,6 +43,7 @@ private:
 	void AvertEnemy(void);
 	void Chain(void);
 	void Move(void);
+	int GetCombo() { return m_nCombo; } //敵のコンボ数の取得
 
 	//モデル情報
 	CModel **m_ppModel; //モデル情報
@@ -53,6 +54,7 @@ private:
 	int m_nNumModel;
 	int m_nLife;
 	int m_nCntBullet;
+	int m_nCombo;
 	float m_fSpeed;
 	bool m_bRand;
 

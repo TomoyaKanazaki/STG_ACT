@@ -91,7 +91,7 @@ void CEnemyManager::Update(void)
 			if (m_nTime % m_pCreater[nCnt].nInterval == 0)
 			{
 				//“G‚ğ¶¬
-				CEnemy::Create(m_pCreater[nCnt].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+				CEnemy::Create(m_pCreater[nCnt].pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 				//¶¬‰ñ”‚ğŒ¸‚ç‚·
 				if (m_pCreater[nCnt].nCount != -1)

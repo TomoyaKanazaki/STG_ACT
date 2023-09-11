@@ -57,12 +57,14 @@ public:
 	D3DXVECTOR3 GetOldPos(void) { return m_oldPos; }
 	D3DXVECTOR3 GetOldRot(void) { return m_oldRot; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
+	TYPE GetType(void) { return m_type; }
 	void SetPos(const D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
 	void SetMove(const D3DXVECTOR3 move) { m_move = move; }
 	void SetSize(const D3DXVECTOR3 size) { m_size = size; }
 	void SetType(TYPE type) { m_type = type; }
-	TYPE GetType(void) { return m_type; }
+
+	virtual int GetCombo() { return NULL; } //敵のコンボ数の取得
 
 	//静的メンバ関数
 	static CObject *GetTop(int nPriority) { return m_apTop[nPriority]; }
