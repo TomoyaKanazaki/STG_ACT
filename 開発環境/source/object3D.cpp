@@ -7,7 +7,7 @@
 #include "object3D.h"
 #include "manager.h"
 #include "renderer.h"
-#include "explosion.h"
+#include "particle.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -456,7 +456,14 @@ bool CObject3D::Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint)
 						pObj->SetPos(CrossPoint);
 
 						//爆発を呼び出す
-						CExplosion::Create(CrossPoint, mc_sizeExplosion * (float)pObj->GetCombo(), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 14, 3, false, CObject3D_Anim::TYPE_U);
+						CParticle::Create
+						(
+							CrossPoint,
+							D3DXVECTOR3(30.0f, 30.0f, 30.0f),
+							mc_sizeExplosion * (float)pObj->GetCombo(),
+							D3DXCOLOR(1.0f, 1.0f - (0.12f * (float)pObj->GetCombo()), 0.0f, 1.0f),
+							30, 30, 30, 3
+						);
 
 						//対象のオブジェクトを破棄
 						pObj->Uninit();

@@ -199,8 +199,6 @@ void CEnemy::Update(void)
 
 	//“G“¯m‚Ì”»’è
 	AvertEnemy();
-
-	CManager::GetDebugProc()->Print("ƒRƒ“ƒ{” : %d\n", m_nCombo);
 }
 
 //==========================================
