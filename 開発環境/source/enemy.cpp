@@ -129,6 +129,9 @@ void CEnemy::Uninit(void)
 //==========================================
 void CEnemy::Update(void)
 {
+	//‘O‰ñ‚ÌÀ•W‚ğ•Û‘¶‚·‚é
+	m_oldPos = m_pos;
+
 	//À‘Ì‚ğˆÚ“®‚·‚é
 	if (m_ppModel != NULL)
 	{

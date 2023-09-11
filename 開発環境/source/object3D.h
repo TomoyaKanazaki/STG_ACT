@@ -32,6 +32,7 @@ public:
 protected:
 
 	//ÉÅÉìÉoä÷êî
+	LPDIRECT3DVERTEXBUFFER9 GetVtx(void) { return m_pVtxBuff; }
 	bool Collision(CObject::TYPE type);
 	bool Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint);
 

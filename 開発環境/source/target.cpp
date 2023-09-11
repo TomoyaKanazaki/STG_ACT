@@ -9,6 +9,7 @@
 #include "debugproc.h"
 #include "renderer.h"
 #include "particle.h"
+#include "effect.h"
 
 //==========================================
 //  コンストラクタ
@@ -31,6 +32,14 @@ CTarget::~CTarget()
 //==========================================
 HRESULT CTarget::Init()
 {
+	//中心との距離から座標を設定する
+	m_pos = D3DXVECTOR3
+	(
+		sinf(m_rot.y) * m_fDistance,
+		0.0f,
+		cosf(m_rot.y) * m_fDistance
+	);
+
 	//初期化
 	CObject3D::Init();
 
@@ -97,8 +106,12 @@ void CTarget::Draw()
 	//ライティングを無効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
+	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
 	//描画
 	CObject3D::Draw();
+
+	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	//ライティングを有効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);

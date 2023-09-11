@@ -7,6 +7,7 @@
 #include "object3D.h"
 #include "manager.h"
 #include "renderer.h"
+#include "effect.h"
 
 //==========================================
 //  コンストラクタ
@@ -364,10 +365,10 @@ bool CObject3D::Collision(CObject::TYPE type)
 				m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 				//判定に必要なベクトルを算出する
-				D3DXVECTOR3 vecToPos = pObj->GetPos() - D3DXVECTOR3(cosf(m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(m_rot.y) * pVtx[0].pos.z);
+				D3DXVECTOR3 vecToPos = pObj->GetPos() - (m_pos + D3DXVECTOR3(cosf(-m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(-m_rot.y) * pVtx[0].pos.z));
 				D3DXVECTOR3 vecToMove = pObj->GetPos() - pObj->GetOldPos();
-				D3DXVECTOR3 vecVtx = D3DXVECTOR3(cosf(m_rot.y) * pVtx[1].pos.x, 0.0f, sinf(m_rot.y) * pVtx[1].pos.z) - D3DXVECTOR3(cosf(m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(m_rot.y) * pVtx[0].pos.z);
-				D3DXVECTOR3 posBase = D3DXVECTOR3(cosf(m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(m_rot.y) * pVtx[0].pos.z);
+				D3DXVECTOR3 vecVtx = (m_pos + D3DXVECTOR3(cosf(m_rot.y) * pVtx[1].pos.x, 0.0f, sinf(m_rot.y) * pVtx[1].pos.z)) - (m_pos + D3DXVECTOR3(cosf(-m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(-m_rot.y) * pVtx[0].pos.z));
+				D3DXVECTOR3 posBase = (m_pos + D3DXVECTOR3(cosf(-m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(-m_rot.y) * pVtx[0].pos.z));
 
 				//頂点バッファをアンロック
 				m_pVtxBuff->Unlock();
@@ -419,33 +420,45 @@ bool CObject3D::Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint)
 				//頂点バッファをロック
 				m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-				//判定に必要なベクトルを算出する
-				D3DXVECTOR3 vecToPos = pObj->GetPos() - (m_pos + pVtx[0].pos);
-				D3DXVECTOR3 vecToMove = pObj->GetPos() - pObj->GetOldPos();
-				D3DXVECTOR3 vecVtx = (m_pos + pVtx[1].pos) - (m_pos + pVtx[0].pos);
-				D3DXVECTOR3 posBase = (m_pos + pVtx[0].pos);
+				//判定に使用する頂点の座標を取得
+				D3DXVECTOR3 Vtx0 = (m_pos + D3DXVECTOR3(cosf(m_rot.y) * pVtx[0].pos.x, 0.0f, sinf(m_rot.y) * pVtx[0].pos.y));
+				D3DXVECTOR3 Vtx3 = (m_pos + D3DXVECTOR3(cosf(m_rot.y) * pVtx[3].pos.x, 0.0f, sinf(m_rot.y) * pVtx[3].pos.y));
 
 				//頂点バッファをアンロック
 				m_pVtxBuff->Unlock();
 
-				//交点の計算に必要な値を算出
-				float fPosMove = (vecToPos.z * vecToMove.x) - (vecToPos.x * vecToMove.z);
-				float fVtxMove = (vecVtx.z * vecToMove.x) - (vecVtx.x * vecToMove.z);
-				float fRate = fPosMove / fVtxMove;
+				//判定対象の前回と今回の座標を取得
+				D3DXVECTOR3 pos = pObj->GetPos();
+				D3DXVECTOR3 posOld = pObj->GetOldPos();
+
+				//判定に必要なベクトルを算出する
+				D3DXVECTOR3 vecToPos = pos - Vtx0; //頂点から今回の座標
+				D3DXVECTOR3 vecToMove = pos - posOld; //前回の座標から今回の座標
+				D3DXVECTOR3 vecVtx = Vtx3 - Vtx0; //左端の頂点から右端の頂点
 
 				//接触を判定する
-				if (0.0f <= fRate && fRate <= 1.0f)
+				if ((Vtx3.z - Vtx0.z) * (pos.x - Vtx0.x) - (Vtx3.x - Vtx0.x) * (pos.z - Vtx0.z) < 0.0f)
 				{
-					bHit = true;
+					//交点の計算に必要な値を算出
+					float fPosMove = (vecToPos.z * vecToMove.x) - (vecToPos.x * vecToMove.z);
+					float fVtxMove = (vecVtx.z * vecToMove.x) - (vecVtx.x * vecToMove.z);
+					float fRate = fPosMove / fVtxMove;
 
-					//対象のオブジェクトを破棄
-					pObj->Uninit();
+					//交点がに頂点間にあった場合
+					if (0.0f <= fRate && fRate <= 1.0f)
+					{
+						//接触フラグを立てる
+						bHit = true;
+
+						//交点を算出
+						D3DXVECTOR3 CrossPoint = Vtx0 + (vecVtx * fRate);
+						CrossPoint.y = 0.0f;
+						*pCrossPoint = CrossPoint;
+
+						//対象のオブジェクトを破棄
+						pObj->Uninit();
+					}
 				}
-
-				//交点を算出
-				D3DXVECTOR3 pos = posBase + (vecVtx * fRate);
-				pos.y = 0.0f;
-				*pCrossPoint = pos;
 			}
 
 			//次のアドレスにずらす
