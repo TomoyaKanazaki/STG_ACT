@@ -22,6 +22,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "explosion.h"
+#include "input.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -192,6 +193,7 @@ void CEnemy::Update(void)
 		//ˆê’èŽžŠÔŒo‰ß‚Å“G‚É–ß‚é
 		if (m_nCntBullet >= 30 || (fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f))
 		{
+			m_nCombo = 0;
 			m_nCntBullet = 0;
 			this->SetType(CObject::TYPE_ENEMY);
 		}

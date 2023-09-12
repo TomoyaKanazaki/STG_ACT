@@ -12,7 +12,7 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-const D3DXVECTOR3 CObject3D::mc_sizeExplosion = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+const D3DXVECTOR3 CObject3D::mc_sizeExplosion = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
 
 //==========================================
 //  コンストラクタ
@@ -459,10 +459,10 @@ bool CObject3D::Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint)
 						CParticle::Create
 						(
 							CrossPoint,
-							D3DXVECTOR3(30.0f, 30.0f, 30.0f),
-							mc_sizeExplosion * (float)pObj->GetCombo(),
+							mc_sizeExplosion * (float)pObj->GetCombo() * 0.5f,
+							mc_sizeExplosion * (float)pObj->GetCombo() * 0.5f,
 							D3DXCOLOR(1.0f, 1.0f - (0.12f * (float)pObj->GetCombo()), 0.0f, 1.0f),
-							30, 30, 30, 3
+							30, 10 * pObj->GetCombo(), 10 * pObj->GetCombo(), 3
 						);
 
 						//対象のオブジェクトを破棄
