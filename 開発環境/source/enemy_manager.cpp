@@ -113,7 +113,7 @@ void CEnemyManager::Update(void)
 			m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
 
 			//ìGÇê∂ê¨
-			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			CEnemy::Create(m_pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		}
 	}
 	

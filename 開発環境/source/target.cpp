@@ -62,7 +62,7 @@ void CTarget::Uninit()
 void CTarget::Update()
 {
 	//Šp“x‚ðXV
-	//m_rot.y -= 0.001f;
+	m_rot.y -= 0.001f;
 
 	//Šp“x‚Ì•â³
 	if (m_rot.y > D3DX_PI)

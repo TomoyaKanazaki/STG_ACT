@@ -12,6 +12,7 @@
 #include "player.h"
 #include "particle.h"
 #include "enemy_manager.h"
+#include "camera.h"
 
 //==========================================
 //  二直線の交点の取得
@@ -136,7 +137,7 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
 
 					//プレイヤーから弾へのベクトルを算出
-					D3DXVECTOR3 vecToBullet = pObj->GetPos() - CGameManager::GetPlayer()->GetPos();
+					D3DXVECTOR3 vecToBullet = CGameManager::GetCamera()->GetPosR() - CGameManager::GetPlayer()->GetPos();
 					vecToBullet.y = 0.0f;
 					D3DXVec3Normalize(&vecToBullet, &vecToBullet);
 

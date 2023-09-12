@@ -23,6 +23,7 @@
 #include "renderer.h"
 #include "explosion.h"
 #include "input.h"
+#include "smoke.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -132,6 +133,11 @@ void CEnemy::Uninit(void)
 //==========================================
 void CEnemy::Update(void)
 {
+	if (CManager::GetKeyboard()->GetPress(DIK_UP))
+	{
+		m_nCombo++;
+	}
+
 	//前回の座標を保存する
 	m_oldPos = m_pos;
 
@@ -183,6 +189,7 @@ void CEnemy::Update(void)
 		//慣性による移動の停止
 		m_move.x += (0.0f - m_move.x) * 0.1f;
 		m_move.z += (0.0f - m_move.z) * 0.1f;
+		CSmoke::Create(m_pos, m_size, D3DXCOLOR(1.0f, 1.0f - (0.12f * m_nCombo), 0.0f, 1.0f), 10);
 
 		//連鎖の判定
 		Chain();
@@ -193,7 +200,6 @@ void CEnemy::Update(void)
 		//一定時間経過で敵に戻る
 		if (m_nCntBullet >= 30 || (fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f))
 		{
-			m_nCombo = 0;
 			m_nCntBullet = 0;
 			this->SetType(CObject::TYPE_ENEMY);
 		}
@@ -321,31 +327,12 @@ void CEnemy::Chain(void)
 					//衝突対象は連鎖しない弾になる
 					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
 
-					//衝突対象の速度を取得
-					D3DXVECTOR3 moveObj = pObj->GetMove();
+					//衝突対象に移動量を押し付ける
+					pObj->SetMove(m_move * 1.5f);
 
-					//衝突対象の移動量と自身の移動量の差分を求める
-					D3DXVECTOR3 vecSab = m_move - moveObj;
-
-					//前回座標
-					D3DXVECTOR3 vecToOld = m_oldPos - posObj;
-
-					//ベクトルを正規化
-					D3DXVec3Normalize(&vecToOld, &vecToOld);
-
-					//ベクトルの内積
-					float fDot = D3DXVec3Dot(&vecSab, &vecToOld);
-
-					//反発定数
-					D3DXVECTOR3 vecConst = (fDot * 0.5f) * vecToOld;
-
-					//衝突後速度ベクトルの算出
-					m_move = (vecConst + m_move);
-					pObj->SetMove(vecConst + moveObj);
-
-					//衝突後位置の算出
-					m_pos = m_pos + (m_move * 3.0f);
-					pObj->SetPos(posObj + (pObj->GetMove() * 3.0f));
+					//自分は敵に戻る
+					this->SetType(CObject::TYPE_ENEMY);
+					m_nCntBullet = 0;
 				}
 			}
 			

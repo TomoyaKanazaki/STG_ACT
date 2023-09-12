@@ -26,6 +26,7 @@ public:
 	void BindTexture(const LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
 	void SetTex(D3DXVECTOR2 min, D3DXVECTOR2 max);
 	void SetCol(const D3DXCOLOR col);
+	void SetAlpha(const float fAlpha);
 	void SwitchBillboard(void) { m_bBillboard = !m_bBillboard; }
 	float GetHeight(const D3DXVECTOR3 TargetPos);
 

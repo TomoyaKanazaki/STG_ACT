@@ -8,6 +8,8 @@
 #include "manager.h"
 #include "renderer.h"
 #include "particle.h"
+#include "gamemanager.h"
+#include "score.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -278,6 +280,25 @@ void CObject3D::SetCol(const D3DXCOLOR col)
 }
 
 //==========================================
+//  不透明度の設定
+//==========================================
+void CObject3D::SetAlpha(const float fAlpha)
+{
+	if (fAlpha > 1.0f)
+	{
+		m_col.a = 1.0f;
+	}
+	else if (fAlpha < 0.0f)
+	{
+		m_col.a = 0.0f;
+	}
+	else
+	{
+		m_col.a = fAlpha;
+	}
+}
+
+//==========================================
 //  高さを取得する処理
 //==========================================
 float CObject3D::GetHeight(const D3DXVECTOR3 TargetPos)
@@ -464,6 +485,9 @@ bool CObject3D::Collision(CObject::TYPE type, D3DXVECTOR3 *pCrossPoint)
 							D3DXCOLOR(1.0f, 1.0f - (0.12f * (float)pObj->GetCombo()), 0.0f, 1.0f),
 							30, 10 * pObj->GetCombo(), 10 * pObj->GetCombo(), 3
 						);
+
+						//スコアを加算
+						CGameManager::GetScore()->Add(100 * pObj->GetCombo());
 
 						//対象のオブジェクトを破棄
 						pObj->Uninit();

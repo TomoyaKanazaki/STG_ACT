@@ -19,6 +19,7 @@ class CLight;
 class CTarget;
 class CEnemyManager;
 class CTarget;
+class CScore;
 
 //==========================================
 //  ゲームマネージャクラス定義
@@ -43,6 +44,7 @@ public:
 	static CLight *GetLight(void) { return m_pLight; }
 	static CEnemyManager *GetEnemyManager(void) { return m_pEnemy; }
 	static CTarget *GetTarget(void) { return m_pTarget; }
+	static CScore *GetScore(void) { return m_pScore; }
 
 private:
 
@@ -55,6 +57,7 @@ private:
 	static CLight *m_pLight;
 	static CEnemyManager *m_pEnemy;
 	static CTarget *m_pTarget;
+	static CScore *m_pScore;
 
 };
 

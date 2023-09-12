@@ -29,6 +29,7 @@ public:
 		RESULT, //ƒŠƒUƒ‹ƒg
 		TARGET, //“I
 		EXPLOSION, //”š”­
+		SMOKE, //‰Œ
 		TEXTURE_MAX
 	};
 
