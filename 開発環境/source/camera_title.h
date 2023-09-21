@@ -1,37 +1,31 @@
 //==========================================
 //
-//  的クラス(target.h)
+//  ゲームカメラクラス(camera.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#ifndef _TARGET_H_
-#define _TARGET_H_
+#ifndef _CAMERA_TITLE_H_
+#define _CAMERA_TITLE_H_
 #include "main.h"
-#include "object3D.h"
+#include "camera.h"
 
 //==========================================
-//  クラス定義
+//  カメラクラスの定義
 //==========================================
-class CTarget : public CObject3D
+class CCameraTitle : public CCamera
 {
 public:
+	CCameraTitle(); //コンストラクタ
+	~CCameraTitle(); //デストラクタ
 
 	//メンバ関数
-	CTarget(int nPriority = 6);
-	~CTarget();
-
 	HRESULT Init(void) override;
-	void Uninit(void) override;
 	void Update(void) override;
-	void Draw(void) override;
-
-	//静的メンバ関数
-	static CTarget *Create(D3DXVECTOR3 size, float fRot, float fDistance);
 
 private:
 
 	//メンバ変数
-	float m_fDistance;
+	float m_fAngle;
 
 };
 

@@ -10,6 +10,12 @@
 #include "scene.h"
 
 //==========================================
+//  前方宣言
+//==========================================
+class CCamera;
+class CLight;
+
+//==========================================
 //  タイトルマネージャクラス定義
 //==========================================
 class CTitleManager : public CScene
@@ -23,6 +29,12 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
+
+private:
+
+	//静的メンバ変数
+	static CCamera *m_pCamera;
+	static CLight *m_pLight;
 
 };
 

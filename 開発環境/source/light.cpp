@@ -55,13 +55,13 @@ HRESULT CLight::Init(void)
 		switch (nCnt)
 		{
 		case 0:
-			vecDir = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
+			vecDir = D3DXVECTOR3(0.34f, -0.87f, 0.35f);
 			break;
 		case 1:
-			vecDir = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
+			vecDir = D3DXVECTOR3(-0.59f, -0.10f, -0.80f);
 			break;
 		case 2:
-			vecDir = CGameManager::GetCamera()->GetPosR() - CGameManager::GetCamera()->GetPosV();
+			vecDir = D3DXVECTOR3(-0.22f, -0.74f, 0.63f);
 		}
 
 		D3DXVec3Normalize(&vecDir, &vecDir); //ƒxƒNƒgƒ‹‚Ì³‹K‰»

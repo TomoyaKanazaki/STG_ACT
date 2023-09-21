@@ -68,16 +68,12 @@ void CSmoke::Update(void)
 	}
 
 	//サイズを小さくする
-	m_size.x -= m_vecDeffSize.x * m_fLifeRatio;
-	m_size.y -= m_vecDeffSize.y * m_fLifeRatio;
-	m_size.z -= m_vecDeffSize.z * m_fLifeRatio;
+	m_size.x += m_vecDeffSize.x * m_fLifeRatio;
+	m_size.y += m_vecDeffSize.y * m_fLifeRatio;
+	m_size.z += m_vecDeffSize.z * m_fLifeRatio;
 
 	//移動量を加算する
 	m_pos += m_move;
-
-	//慣性による移動の停止
-	m_move.x += (0.0f - m_move.x) * 0.3f;
-	m_move.z += (0.0f - m_move.z) * 0.3f;
 
 	//更新
 	CObject3D::Update();
@@ -138,7 +134,7 @@ void CSmoke::Draw(void)
 //==========================================
 //  生成処理
 //==========================================
-CSmoke * CSmoke::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col, int nLife)
+CSmoke *CSmoke::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col, int nLife)
 {
 	//インスタンス生成
 	CSmoke *pSmoke = new CSmoke;
@@ -151,7 +147,8 @@ CSmoke * CSmoke::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col, int nL
 
 	//各種情報を設定する
 	pSmoke->m_pos = pos;
-	pSmoke->m_pos.y = 10.0f;
+	pSmoke->m_pos.y += 10.0f;
+	pSmoke->m_move.y = 10.0f;
 	pSmoke->m_size = size;
 
 	//初期化

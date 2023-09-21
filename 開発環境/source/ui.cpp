@@ -125,6 +125,9 @@ void CUi::Update(void)
 		//初期位置の設定
 		ImGui::DragFloat3(u8"初期位置", m_EnemyData[m_nID].CreateData.pos);
 
+		//タイプの設定
+		ImGui::SliderInt(u8"敵タイプ", &m_EnemyData[m_nID].CreateData.nType, (int)CEnemy::NORMAL, (int)(CEnemy::MAX - 1));
+
 		//生成回数の設定
 		ImGui::Text(u8"[ -1 ]で無限生成");
 		ImGui::DragInt(u8"生成回数", &m_EnemyData[m_nID].CreateData.nCount, 0.05f, -1);

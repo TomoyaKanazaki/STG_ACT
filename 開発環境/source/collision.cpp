@@ -54,9 +54,6 @@ bool Collision::CollisionPlayer(D3DXVECTOR3 pos, float fLange)
 	//距離判定
 	if (fLange * fLange >= fLangePlayer)
 	{
-		//プレイヤーを殺す
-		CGameManager::GetPlayer()->SetDead(true);
-
 		//当たった結果を返して関数を終了
 		return true;
 	}
@@ -90,7 +87,7 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 			CObject *pNext = pObj->GetNext();
 
 			//対象オブジェクトが敵の場合
-			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET_ENEMY)
+			if (pObj->GetType() == CObject::TYPE_NORMAL_ENEMY || pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_BLOCK_ENEMY)
 			{
 				//判定フラグ
 				bool bIn = true;
@@ -130,9 +127,6 @@ void Collision::InSquare(D3DXVECTOR3 *pVtx, float fLength)
 				//内部に存在した場合
 				if (bIn)
 				{
-					//パーティクルを呼び出す
-					CParticle::Create(pObj->GetPos(), D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(25.0f, 25.0f, 25.0f), D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.1f), 100, 30, 20, 1);
-
 					//対象の敵を弾に変更
 					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
 

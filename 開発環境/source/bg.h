@@ -1,24 +1,30 @@
 //==========================================
 //
-//  的クラス(target.h)
+//  背景クラス(bg.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#ifndef _TARGET_H_
-#define _TARGET_H_
+#ifndef _BG_H_
+#define _BG_H_
 #include "main.h"
-#include "object3D.h"
+#include "object.h"
+#include "layer.h"
+
+//==========================================
+//  前方宣言
+//==========================================
+class CModel;
 
 //==========================================
 //  クラス定義
 //==========================================
-class CTarget : public CObject3D
+class CBg : public CObject
 {
 public:
 
 	//メンバ関数
-	CTarget(int nPriority = 6);
-	~CTarget();
+	CBg(int nPriority = 6);
+	~CBg();
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -26,12 +32,13 @@ public:
 	void Draw(void) override;
 
 	//静的メンバ関数
-	static CTarget *Create(D3DXVECTOR3 size, float fRot, float fDistance);
+	static CBg *Create(void);
 
 private:
 
-	//メンバ変数
-	float m_fDistance;
+	//モデル情報
+	CModel **m_ppModel; //モデル情報
+	CLayer::LAYERDATA *m_pLayer; //階層構造情報
 
 };
 

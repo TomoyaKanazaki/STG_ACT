@@ -1,41 +1,29 @@
 //==========================================
 //
-//  ロゴのクラス(logo.h)
+//  雑魚敵クラス(enemy_normal.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#ifndef _LOGO_H_
-#define _LOGO_H_
-#include "object2D.h"
+#ifndef _ENEMY_NORMAL_H_
+#define _ENEMY_NORMAL_H_
+#include "main.h"
+#include "enemy.h"
 
 //==========================================
 //  クラス定義
 //==========================================
-class CLogo : public CObject2D
+class CEnemy_Normal : public CEnemy
 {
 public:
 
-	//種類
-	enum TYPE
-	{
-		TITLE = 0, //タイトル
-		RESULT, //リザルト
-		MAX
-	};
-
-	CLogo(int nPriority = 7); //コンストラクタ
-	~CLogo(); //デストラクタ
+	CEnemy_Normal(int nPriority = 4); //コンストラクタ
+	~CEnemy_Normal(); //デストラクタ
 
 	//メンバ関数
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-
-	//静的メンバ関数
-	static CLogo *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, TYPE type);
-
-private:
 
 };
 

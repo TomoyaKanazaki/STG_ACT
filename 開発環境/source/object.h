@@ -23,10 +23,10 @@ public:
 	{
 		TYPE_NONE = 0, //不使用
 		TYPE_PLAYER, //プレイヤー
-		TYPE_ENEMY, //敵
+		TYPE_NORMAL_ENEMY, //敵
+		TYPE_BLOCK_ENEMY, //止める敵
+		TYPE_PUSH_ENEMY, //弾く敵
 		TYPE_BULLET_ENEMY, //弾の敵
-		TYPE_BOSS, //ボス
-		TYPE_BULLET, //弾
 		TYPE_EXPLOSION, //爆発
 		TYPE_BG, //背景
 		TYPE_EFFECT, //エフェクト

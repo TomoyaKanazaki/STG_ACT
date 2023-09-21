@@ -158,7 +158,10 @@ void CObject::UpdateAll(void)
 			CObject *pNext = pObj->GetNext();
 
 			//現在のオブジェクトを更新
-			pObj->Update();
+			if (!pObj->m_bDeath)
+			{
+				pObj->Update();
+			}
 
 			//アドレスを次のアドレスにずらす
 			pObj = pNext;

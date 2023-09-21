@@ -15,7 +15,7 @@
 class CSmoke : public CObject3D
 {
 public:
-	CSmoke(int nPriority = 1); //コンストラクタ
+	CSmoke(int nPriority = 7); //コンストラクタ
 	~CSmoke(); //デストラクタ
 
 	//メンバ関数

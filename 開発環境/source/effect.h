@@ -15,7 +15,7 @@
 class CEffect : public CObject3D
 {
 public:
-	CEffect(int nPriority = 1); //コンストラクタ
+	CEffect(int nPriority = 6); //コンストラクタ
 	~CEffect(); //デストラクタ
 
 	//メンバ関数

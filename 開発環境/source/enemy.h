@@ -23,27 +23,35 @@ class CEnemy : public CObject
 {
 public:
 
+	//列挙型定義
+	enum ENEMY_TYPE
+	{
+		NORMAL = 0, //のーまる
+		BLOCK, //かべ
+		PUSH, //おしだし
+		MAX
+	};
+
 	CEnemy(int nPriority = 4); //コンストラクタ
 	~CEnemy(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(void) override;
-	void Uninit(void) override;
-	void Update(void) override;
-	void Draw(void) override;
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
 	D3DXVECTOR3 GetMove(void) { return m_move; }
 	void SetLife(const int nDamage) { if (m_nLife > 0) m_nLife -= nDamage; }
 
 	//静的メンバ変数
-	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot);
+	static CEnemy *Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, ENEMY_TYPE type);
 
-private:
+protected:
 
 	//メンバ関数
 	void AvertEnemy(void);
 	void Chain(void);
 	void Move(void);
-	int GetCombo() { return m_nCombo; } //敵のコンボ数の取得
 
 	//モデル情報
 	CModel **m_ppModel; //モデル情報
@@ -51,10 +59,17 @@ private:
 	CMotion *m_pMotion;
 
 	//メンバ変数
-	int m_nNumModel;
-	int m_nLife;
 	int m_nCntBullet;
 	int m_nCombo;
+
+private:
+
+	//メンバ関数
+	int GetCombo() { return m_nCombo; } //敵のコンボ数の取得
+
+	//メンバ変数
+	int m_nNumModel;
+	int m_nLife;
 	float m_fSpeed;
 	bool m_bRand;
 

@@ -362,7 +362,7 @@ void CPlayer::Explosion(void)
 			//ŽŸ‚ÌƒAƒhƒŒƒX‚ð•Û‘¶
 			CObject *pNext = pObj->GetNext();
 
-			if (pObj->GetType() == CObject::TYPE_ENEMY || pObj->GetType() == CObject::TYPE_BULLET_ENEMY) //“G‚Ìê‡
+			if (pObj->GetType() == CObject::TYPE_NORMAL_ENEMY || pObj->GetType() == CObject::TYPE_BULLET_ENEMY) //“G‚Ìê‡
 			{
 				//‹ß‚­‚É‚¢‚é‚©‚Ì”»’è
 				D3DXVECTOR3 vecToObj = m_pos - pObj->GetPos();
@@ -395,7 +395,7 @@ void CPlayer::Swing(void)
 		m_nBladeLife = 10;
 		if (m_orbit == NULL)
 		{
-			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 10);
+			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-250.0f, 0.0f, 0.0f), 10);
 		}
 	}
 	else

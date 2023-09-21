@@ -20,6 +20,7 @@ public:
 	struct CreateData
 	{
 		D3DXVECTOR3 pos; //初期位置
+		int nType; //敵のタイプ
 		int nCount; //生成される回数
 		int nInterval; //生成間隔
 	};

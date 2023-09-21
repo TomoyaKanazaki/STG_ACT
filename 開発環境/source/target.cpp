@@ -105,12 +105,8 @@ void CTarget::Draw()
 	//ライティングを無効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
-	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
 	//描画
 	CObject3D::Draw();
-
-	//pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	//ライティングを有効化
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);

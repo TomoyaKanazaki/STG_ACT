@@ -22,6 +22,8 @@
 #include "debugproc.h"
 #include "target.h"
 #include "score.h"
+#include "bg.h"
+#include "camera_game.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -58,6 +60,9 @@ HRESULT CGameManager::Init(void)
 	//°‚Ì¶¬
 	m_pFan = CObject_Fan::Create(D3DXVECTOR3(0.0f, 0.01f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 8, 2000.0f);
 
+	//”wŒi‚Ì¶¬
+	CBg::Create();
+
 	//“I‚Ì¶¬
 	m_pTarget = CTarget::Create(D3DXVECTOR3(500.0f, 500.0f, 500.0f), D3DX_PI, 2000.0f);
 	m_pTarget = CTarget::Create(D3DXVECTOR3(500.0f, 500.0f, 500.0f), 0.0f, 2000.0f);
@@ -76,7 +81,7 @@ HRESULT CGameManager::Init(void)
 	//ƒJƒƒ‰‚Ì¶¬
 	if (m_pCamera == NULL)
 	{
-		m_pCamera = new CCamera;
+		m_pCamera = new CCameraGame;
 		m_pCamera->Init();
 	}
 

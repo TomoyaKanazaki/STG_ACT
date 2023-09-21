@@ -18,19 +18,22 @@ public:
 	~CCamera(); //デストラクタ
 
 	//メンバ関数
-	HRESULT Init(void);
+	virtual HRESULT Init(void);
 	void Uninit(void);
-	void Update(void);
+	virtual void Update(void);
 	void SetCamera(void);
-	void FirstPerson(void);
-	void ThirdPerson(void);
 	D3DXVECTOR3 GetPosR(void) { return m_posR; }
 	D3DXVECTOR3 GetPosV(void) { return m_posV; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	D3DXMATRIX GetMtxPro(void) { return m_mtxProjection; }
 	D3DXMATRIX CreateViewMatrix(void);
 
-private:
+protected:
+
+#define CAMERA_DISTANCE (500.0f) //視点からプレイヤーの距離
+#define HEIGHT (300.0f) //視点の高さ
+#define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
+#define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
 
 	//メンバ変数
 	D3DXVECTOR3 m_posV; //視点
@@ -42,8 +45,9 @@ private:
 	D3DXVECTOR3 m_diff; //プレイヤー座標との差分
 	float m_fFov; //視野角
 
+private:
+
 	//メンバ関数
-	void Move(void);
 	void Rotate(void);
 
 };

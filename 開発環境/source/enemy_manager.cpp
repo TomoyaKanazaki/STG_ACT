@@ -91,7 +91,7 @@ void CEnemyManager::Update(void)
 			if (m_nTime % m_pCreater[nCnt].nInterval == 0)
 			{
 				//ìGÇê∂ê¨
-				CEnemy::Create(m_pCreater[nCnt].pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+				CEnemy::Create(m_pCreater[nCnt].pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), (CEnemy::ENEMY_TYPE)m_pCreater[nCnt].nType);
 
 				//ê∂ê¨âÒêîÇå∏ÇÁÇ∑
 				if (m_pCreater[nCnt].nCount != -1)
@@ -104,31 +104,24 @@ void CEnemyManager::Update(void)
 
 #ifdef _DEBUG
 	//ê⁄ãﬂÇ∑ÇÈìG
-	if (CManager::GetKeyboard()->GetTrigger(DIK_E))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_1))
 	{
-		for (int nCntEnemy = 0; nCntEnemy < 1; nCntEnemy++)
-		{
-			//ê∂ê¨íÜêSç¿ïWÇê∂ê¨
-			m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
-			m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
-
-			//ìGÇê∂ê¨
-			CEnemy::Create(m_pos, D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		}
+		//ìGÇê∂ê¨
+		CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f), D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::NORMAL);
 	}
-	
-	//éÀåÇÇ∑ÇÈìG
-	if (CManager::GetKeyboard()->GetPress(DIK_Q))
-	{
-		for (int nCntEnemy = 0; nCntEnemy < 3; nCntEnemy++)
-		{
-			//ê∂ê¨íÜêSç¿ïWÇê∂ê¨
-			m_pos = D3DXVECTOR3((float)(rand() % 600 - 300), 0.0f, 0.0f);
-			m_pos = D3DXVECTOR3(m_pos.x, 0.0f, -600.0f);
 
-			//ìGÇê∂ê¨
-			CEnemy::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		}
+	//é~ÇﬂÇÈìG
+	if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+	{
+		//ìGÇê∂ê¨
+		CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, -1500.0f), D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::BLOCK);
+	}
+
+	//íeÇ≠ìG
+	if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+	{
+		//ìGÇê∂ê¨
+		CEnemy::Create(D3DXVECTOR3(1500.0f, 0.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::PUSH);
 	}
 #endif
 }

@@ -15,7 +15,7 @@
 class CField : public CObject3D
 {
 public:
-	CField(int nPriority = 6); //コンストラクタ
+	CField(int nPriority = 5); //コンストラクタ
 	~CField(); //デストラクタ
 
 	//メンバ関数

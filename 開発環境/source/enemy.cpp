@@ -14,15 +14,16 @@
 #include "debugproc.h"
 #include "model.h"
 #include "motion.h"
-#include "motion.h"
 #include "particle.h"
 #include "enemy_manager.h"
 #include "object_fan.h"
 #include "collision.h"
 #include "manager.h"
 #include "renderer.h"
-#include "explosion.h"
 #include "input.h"
+#include "enemy_normal.h"
+#include "enemy_block.h"
+#include "enemy_push.h"
 #include "smoke.h"
 
 //==========================================
@@ -59,41 +60,6 @@ CEnemy::~CEnemy()
 //==========================================
 HRESULT CEnemy::Init(void)
 {
-	//タイプの設定
-	SetType(CObject::TYPE_ENEMY);
-
-	//階層構造情報を生成
-	m_pLayer = CLayer::Set(CLayer::ENEMY_LAYER);
-
-	//モデル用のメモリの確保
-	if (m_ppModel == NULL)
-	{
-		m_ppModel = new CModel*[m_pLayer->nNumModel];
-	}
-
-	//必要なモデルを生成
-	for (int nCnt = 0; nCnt < m_pLayer->nNumModel; nCnt++)
-	{
-		//空にする
-		m_ppModel[nCnt] = NULL;
-
-		//親が存在しない場合
-		if (m_pLayer->pParentID[nCnt] == -1)
-		{
-			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt]);
-		}
-		else
-		{
-			m_ppModel[nCnt] = CModel::Create(m_pLayer->pPos[nCnt], m_pLayer->pRot[nCnt], m_pLayer->pModelID[nCnt], m_ppModel[m_pLayer->pParentID[nCnt]]);
-		}
-	}
-
-	//モーション情報の生成
-	if (m_pMotion == NULL)
-	{
-		m_pMotion = new CMotion;
-	}
-
 	return S_OK;
 }
 
@@ -133,14 +99,6 @@ void CEnemy::Uninit(void)
 //==========================================
 void CEnemy::Update(void)
 {
-	if (CManager::GetKeyboard()->GetPress(DIK_UP))
-	{
-		m_nCombo++;
-	}
-
-	//前回の座標を保存する
-	m_oldPos = m_pos;
-
 	//実体を移動する
 	if (m_ppModel != NULL)
 	{
@@ -155,6 +113,21 @@ void CEnemy::Update(void)
 			}
 		}
 	}
+
+	//床から落ちる
+	if (!CGameManager::GetFan()->OnMesh(m_pos))
+	{
+		m_move.y -= 1.0f;
+	}
+
+	//弾状態に煙を付ける
+	if (this->GetType() == CObject::TYPE_BULLET_ENEMY)
+	{
+		CSmoke::Create(m_pos, m_size * 1.5f, D3DXCOLOR(1.0f, 1.0f - (0.12f * m_nCombo), 0.0f, 1.0f), 10);
+	}
+
+	//前回の座標を保存する
+	m_oldPos = m_pos;
 	
 	//移動量の適用
 	m_pos += m_move;
@@ -166,43 +139,6 @@ void CEnemy::Update(void)
 		CParticle::Create(m_pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(0.98f, 0.87f, 0.28f, 0.5f), 10, 30, 10, 5);
 
 		Uninit();
-	}
-
-	//床から落ちる
-	if (!CGameManager::GetFan()->OnMesh(m_pos))
-	{
-		m_move.y -= 1.0f;
-		return;
-	}
-
-	//移動の処理
-	if (this->GetType() == CObject::TYPE_ENEMY) //プレイヤー追いかけ
-	{
-		//移動
-		Move();
-
-		//プレイヤーを殺す
-		Collision::CollisionPlayer(m_pos, 30.0f);
-	}
-	else
-	{
-		//慣性による移動の停止
-		m_move.x += (0.0f - m_move.x) * 0.1f;
-		m_move.z += (0.0f - m_move.z) * 0.1f;
-		CSmoke::Create(m_pos, m_size, D3DXCOLOR(1.0f, 1.0f - (0.12f * m_nCombo), 0.0f, 1.0f), 10);
-
-		//連鎖の判定
-		Chain();
-
-		//時間のカウント
-		m_nCntBullet++;
-
-		//一定時間経過で敵に戻る
-		if (m_nCntBullet >= 30 || (fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f))
-		{
-			m_nCntBullet = 0;
-			this->SetType(CObject::TYPE_ENEMY);
-		}
 	}
 
 	//敵同士の判定
@@ -220,7 +156,7 @@ void CEnemy::Draw()
 //==========================================
 //  オブジェクト生成処理
 //==========================================
-CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot)
+CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DXVECTOR3 rot, ENEMY_TYPE type)
 {
 	//インスタンス生成
 	CEnemy *pEnemy = NULL;
@@ -228,7 +164,20 @@ CEnemy *CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const D3DX
 	//NULLチェック
 	if (pEnemy == NULL)
 	{
-		pEnemy = new CEnemy;
+		switch (type)
+		{
+		case NORMAL:
+			pEnemy = new CEnemy_Normal;
+			break;
+		case BLOCK:
+			pEnemy = new CEnemy_Block;
+			break;
+		case PUSH:
+			pEnemy = new CEnemy_Push;
+			break;
+		default:
+			return NULL;
+		}
 	}
 
 	//各種情報の保存
@@ -261,7 +210,7 @@ void CEnemy::AvertEnemy(void)
 			//次のアドレスを保存
 			CObject *pNext = pObj->GetNext();
 
-			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_ENEMY) && pObj != this) //敵の場合
+			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_NORMAL_ENEMY) && pObj != this) //敵の場合
 			{
 				//現在の敵と自分を結ぶベクトルを取得する
 				D3DXVECTOR3 posObj = pObj->GetPos();
@@ -309,7 +258,7 @@ void CEnemy::Chain(void)
 			//次のアドレスを保存
 			CObject *pNext = pObj->GetNext();
 
-			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_ENEMY) && pObj != this)
+			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_NORMAL_ENEMY) && pObj != this)
 			{
 				//現在の敵と自分を結ぶベクトルを取得する
 				D3DXVECTOR3 posObj = pObj->GetPos();
@@ -324,14 +273,14 @@ void CEnemy::Chain(void)
 					//コンボ数を加算
 					m_nCombo++;
 
-					//衝突対象は連鎖しない弾になる
+					//衝突対象は弾になる
 					pObj->SetType(CObject::TYPE_BULLET_ENEMY);
 
 					//衝突対象に移動量を押し付ける
 					pObj->SetMove(m_move * 1.5f);
 
 					//自分は敵に戻る
-					this->SetType(CObject::TYPE_ENEMY);
+					this->SetType(CObject::TYPE_NORMAL_ENEMY);
 					m_nCntBullet = 0;
 				}
 			}
