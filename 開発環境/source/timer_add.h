@@ -1,31 +1,34 @@
 //==========================================
 //
-//  タイトルカメラクラス(camera_title.h)
+//  加算するタイマークラス(timer_add.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#ifndef _CAMERA_TITLE_H_
-#define _CAMERA_TITLE_H_
+#ifndef _TIMER_ADD_H_
+#define _TIMER_ADD_H_
 #include "main.h"
-#include "camera.h"
+#include "timer.h"
 
 //==========================================
-//  カメラクラスの定義
+//  クラス定義
 //==========================================
-class CCameraTitle : public CCamera
+class CTimer_Add : public CTime
 {
 public:
-	CCameraTitle(); //コンストラクタ
-	~CCameraTitle(); //デストラクタ
 
 	//メンバ関数
+	CTimer_Add(int nPriority = 6);
+	~CTimer_Add();
+
 	HRESULT Init(void) override;
+	void Uninit(void) override;
 	void Update(void) override;
+	void Draw(void) override;
 
 private:
 
 	//メンバ変数
-	float m_fAngle;
+	int m_nProgress;
 
 };
 

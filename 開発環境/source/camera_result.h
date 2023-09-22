@@ -1,22 +1,22 @@
 //==========================================
 //
-//  タイトルカメラクラス(camera_title.h)
+//  ゲームカメラクラス(camera_result.h)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#ifndef _CAMERA_TITLE_H_
-#define _CAMERA_TITLE_H_
+#ifndef _CAMERA_RESULT_H_
+#define _CAMERA_RESULT_H_
 #include "main.h"
 #include "camera.h"
 
 //==========================================
 //  カメラクラスの定義
 //==========================================
-class CCameraTitle : public CCamera
+class CCameraResult : public CCamera
 {
 public:
-	CCameraTitle(); //コンストラクタ
-	~CCameraTitle(); //デストラクタ
+	CCameraResult(); //コンストラクタ
+	~CCameraResult(); //デストラクタ
 
 	//メンバ関数
 	HRESULT Init(void) override;

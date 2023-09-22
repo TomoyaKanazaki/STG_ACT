@@ -17,7 +17,6 @@
 //==========================================
 //  静的メンバ変数宣言
 //==========================================
-CCamera *CTitleManager::m_pCamera = NULL;
 CLight *CTitleManager::m_pLight = NULL;
 
 //==========================================
@@ -46,13 +45,6 @@ HRESULT CTitleManager::Init(void)
 	//背景の生成
 	CBg::Create();
 
-	//カメラの生成
-	if (m_pCamera == NULL)
-	{
-		m_pCamera = new CCameraTitle;
-		m_pCamera->Init();
-	}
-
 	//ライトの生成
 	if (m_pLight == NULL)
 	{
@@ -68,14 +60,6 @@ HRESULT CTitleManager::Init(void)
 //==========================================
 void CTitleManager::Uninit(void)
 {
-	//カメラの終了、破棄
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Uninit();
-		delete m_pCamera;
-		m_pCamera = NULL;
-	}
-
 	//ライトの終了、破棄
 	if (m_pLight != NULL)
 	{
@@ -95,12 +79,6 @@ void CTitleManager::Update(void)
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::GAME);
 		return;
-	}
-
-	//カメラの更新
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Update();
 	}
 
 	//ライトの更新

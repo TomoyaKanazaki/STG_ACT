@@ -123,11 +123,13 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//敵の生成情報を読み込む
 	CEnemyManager::Load();
 
+#ifdef _DEBUG
 	//デバッグ表示の生成
 	if (m_pDebugProc == NULL)
 	{
 		m_pDebugProc = new CDebugProc;
 	}
+#endif
 
 	//デバッグ表示の初期化
 	if (m_pDebugProc != NULL)

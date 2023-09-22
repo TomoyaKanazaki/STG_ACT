@@ -20,6 +20,7 @@ class CTarget;
 class CEnemyManager;
 class CTarget;
 class CScore;
+class CTime;
 
 //==========================================
 //  ゲームマネージャクラス定義
@@ -58,6 +59,7 @@ private:
 	static CEnemyManager *m_pEnemy;
 	static CTarget *m_pTarget;
 	static CScore *m_pScore;
+	static CTime *m_pTime;
 
 };
 

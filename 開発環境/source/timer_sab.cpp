@@ -1,28 +1,27 @@
 //==========================================
 //
-//  リザルトマネージャ(resultmanager.cpp)
+//  減算するタイマーのクラス(timer_sab.cpp)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#include "resultmanager.h"
+#include "precompile.h"
+#include "timer_sab.h"
 #include "manager.h"
 #include "scenemanager.h"
-#include "input.h"
-#include "logo.h"
-#include "bg.h"
+#include "debugproc.h"
 
 //==========================================
 //  コンストラクタ
 //==========================================
-CResultManager::CResultManager()
+CTimer_Sab::CTimer_Sab(int nPriority) : CTime(nPriority)
 {
-
+	m_nProgress = 0;
 }
 
 //==========================================
 //  デストラクタ
 //==========================================
-CResultManager::~CResultManager()
+CTimer_Sab::~CTimer_Sab()
 {
 
 }
@@ -30,20 +29,18 @@ CResultManager::~CResultManager()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CResultManager::Init(void)
+HRESULT CTimer_Sab::Init(void)
 {
-	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::RESULT);
+	//初期値を代入
+	m_nCurrent = m_nMax;
 
-	//背景の生成
-	CBg::Create();
-
-	return S_OK;
+	return CTime::Init();
 }
 
 //==========================================
 //  終了処理
 //==========================================
-void CResultManager::Uninit(void)
+void CTimer_Sab::Uninit(void)
 {
 
 }
@@ -51,20 +48,29 @@ void CResultManager::Uninit(void)
 //==========================================
 //  更新処理
 //==========================================
-void CResultManager::Update(void)
+void CTimer_Sab::Update(void)
 {
-	//画面遷移テスト
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	//制限時間で遷移する
+	if (m_nCurrent <= 0)
 	{
-		CManager::GetSceneManager()->SetNext(CSceneManager::TITLE);
-		return;
+		CManager::GetSceneManager()->SetNext(CSceneManager::RESULT);
 	}
+
+	//経過時間を加算
+	m_nProgress++;
+
+	//現在時刻を計算
+	m_nCurrent = m_nMax - (m_nProgress / 60);
+
+	CManager::GetDebugProc()->Print("残り時間 : %d\n", m_nCurrent);
+
+	CTime::Update();
 }
 
 //==========================================
 //  描画処理
 //==========================================
-void CResultManager::Draw(void)
+void CTimer_Sab::Draw(void)
 {
 
 }

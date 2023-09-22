@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "camera_game.h"
 #include "camera_title.h"
+#include "camera_result.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -64,6 +65,7 @@ void CSceneManager::Init(SCENE newsecene)
 			break;
 		case RESULT:
 			m_pScene = new CResultManager;
+			m_pCamera = new CCameraResult;
 			break;
 		case RANKING:
 

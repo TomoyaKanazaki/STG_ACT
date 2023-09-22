@@ -24,6 +24,7 @@
 #include "score.h"
 #include "bg.h"
 #include "camera_game.h"
+#include "timer.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -35,6 +36,7 @@ CLight *CGameManager::m_pLight = NULL;
 CEnemyManager *CGameManager::m_pEnemy = NULL;
 CTarget *CGameManager::m_pTarget = NULL;
 CScore *CGameManager::m_pScore = NULL;
+CTime *CGameManager::m_pTime = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -78,6 +80,9 @@ HRESULT CGameManager::Init(void)
 	//スコアの生成
 	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.75f, 40.0f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.25f, 80.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
 
+	//タイマーの生成
+	m_pTime = CTime::Create(D3DXVECTOR3(0.0f, 40.0f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.1f, 80.0f, 0.0f), 5, CTime::SAB);
+
 	//カメラの生成
 	if (m_pCamera == NULL)
 	{
@@ -117,6 +122,14 @@ void CGameManager::Uninit(void)
 		m_pLight->Uninit();
 		delete m_pLight;
 		m_pLight = NULL;
+	}
+
+	//タイムの終了、破棄
+	if (m_pTime != NULL)
+	{
+		m_pTime->Uninit();
+		delete m_pTime;
+		m_pTime = NULL;
 	}
 
 	//BGMの停止

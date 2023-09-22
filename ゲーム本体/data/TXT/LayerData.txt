@@ -5,7 +5,7 @@
 //
 //==========================================
 
-NUM_LAYER = 2
+NUM_LAYER = 5
 
 //==========================================
 //  階層構造の種類
@@ -45,6 +45,38 @@ LAYER_DATA //丸い敵の構造
 	NUM_MODEL 1
 	
 	MODELID		5
+	ParentID	-1
+	POS			0.0 50.0 0.0
+	ROT			0.0 0.0 0.0
+	
+LAYER_DATA //止める敵の構造
+	
+	NUM_MODEL 1
+	
+	MODELID		6
+	ParentID	-1
+	POS			0.0 50.0 0.0
+	ROT			0.0 0.0 0.0
+	
+LAYER_DATA //弾く敵の構造
+	
+	NUM_MODEL 2
+	
+	MODELID		8
+	ParentID	-1
+	POS			0.0 50.0 0.0
+	ROT			0.0 0.0 0.0
+	
+	MODELID		7
+	ParentID	0
+	POS			0.0 0.0 0.0
+	ROT			0.0 0.0 0.0
+	
+LAYER_DATA //背景
+	
+	NUM_MODEL 1
+	
+	MODELID		9
 	ParentID	-1
 	POS			0.0 50.0 0.0
 	ROT			0.0 0.0 0.0
