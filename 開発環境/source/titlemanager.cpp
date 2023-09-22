@@ -12,6 +12,7 @@
 #include "camera.h"
 #include "light.h"
 #include "bg.h"
+#include "camera_title.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -40,7 +41,7 @@ CTitleManager::~CTitleManager()
 //==========================================
 HRESULT CTitleManager::Init(void)
 {
-	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.1f, SCREEN_HEIGHT * 0.1f, 0.0f), CLogo::TITLE);
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::TITLE);
 
 	//背景の生成
 	CBg::Create();
@@ -48,7 +49,7 @@ HRESULT CTitleManager::Init(void)
 	//カメラの生成
 	if (m_pCamera == NULL)
 	{
-		m_pCamera = new CCamera;
+		m_pCamera = new CCameraTitle;
 		m_pCamera->Init();
 	}
 
@@ -94,6 +95,18 @@ void CTitleManager::Update(void)
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::GAME);
 		return;
+	}
+
+	//カメラの更新
+	if (m_pCamera != NULL)
+	{
+		m_pCamera->Update();
+	}
+
+	//ライトの更新
+	if (m_pLight != NULL)
+	{
+		m_pLight->Update();
 	}
 }
 

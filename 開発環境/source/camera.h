@@ -35,6 +35,11 @@ protected:
 #define MAX_ROT (D3DX_PI * 0.99f) //視点の限界角
 #define MIN_ROT (D3DX_PI * 0.01f) //視点の限界角
 
+	//メンバ関数
+	void FirstPerson(void);
+	void ThirdPerson(void);
+	void Move(void);
+
 	//メンバ変数
 	D3DXVECTOR3 m_posV; //視点
 	D3DXVECTOR3 m_posR; //注視点
@@ -44,11 +49,6 @@ protected:
 	D3DXVECTOR3 m_rot; //Xの計算に使用する角度
 	D3DXVECTOR3 m_diff; //プレイヤー座標との差分
 	float m_fFov; //視野角
-
-private:
-
-	//メンバ関数
-	void Rotate(void);
 
 };
 

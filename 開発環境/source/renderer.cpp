@@ -9,6 +9,7 @@
 #include "object.h"
 #include "manager.h"
 #include "scenemanager.h"
+#include "camera.h"
 #include "debugproc.h"
 #include "model.h"
 #include "ui.h"
@@ -197,6 +198,15 @@ void CRenderer::Draw(void)
 	//描画開始
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
+		//カメラの取得
+		CCamera *pCamera = CSceneManager::GetCamera();
+
+		//カメラの設定
+		if (pCamera != NULL)
+		{
+			pCamera->SetCamera();
+		}
+
 		//オブジェクト群の描画
 		CObject::DrawAll();
 

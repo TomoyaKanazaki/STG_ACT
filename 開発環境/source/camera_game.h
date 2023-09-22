@@ -22,13 +22,6 @@ public:
 	HRESULT Init(void) override;
 	void Update(void) override;
 
-private:
-
-	//ƒƒ“ƒoŠÖ”
-	void FirstPerson(void);
-	void ThirdPerson(void);
-	void Move(void);
-
 };
 
 #endif

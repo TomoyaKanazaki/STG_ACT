@@ -13,6 +13,7 @@
 //==========================================
 class CScene;
 class CFade;
+class CCamera;
 
 //==========================================
 //  画面遷移クラス定義
@@ -41,6 +42,8 @@ public:
 	void SetNext(SCENE next);
 
 	//静的メンバ関数
+	static CScene *GetScene(void) { return m_pScene; }
+	static CCamera *GetCamera(void) { return m_pCamera; }
 	static CSceneManager *Create(SCENE scene = TITLE);
 
 private:
@@ -48,8 +51,11 @@ private:
 	//メンバ変数
 	SCENE m_Scene; //現在のゲームモード
 	SCENE m_Next; //次のゲームモード
-	CScene *m_pScene; //シーンのポインタ
 	CFade *m_pFade; //フェードのポインタ
+
+	//静的メンバ変数
+	static CScene *m_pScene; //シーンのポインタ
+	static CCamera *m_pCamera; //カメラのポインタ
 
 };
 

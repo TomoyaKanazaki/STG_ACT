@@ -5,6 +5,9 @@
 //
 //==========================================
 #include "camera_title.h"
+#include "manager.h"
+#include "debugproc.h"
+#include "object_fan.h"
 
 //==========================================
 //  コンストラクタ
@@ -27,6 +30,8 @@ CCameraTitle::~CCameraTitle()
 //==========================================
 HRESULT CCameraTitle::Init(void)
 {
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	return CCamera::Init();
 }
 
@@ -35,18 +40,5 @@ HRESULT CCameraTitle::Init(void)
 //==========================================
 void CCameraTitle::Update(void)
 {
-	//角度を更新
-	m_fAngle += 0.01f;
-
-
-	//角度の補正
-	if (m_fAngle > D3DX_PI)
-	{
-		m_fAngle = -D3DX_PI;
-	}
-	if (m_fAngle < -D3DX_PI)
-	{
-		m_fAngle = D3DX_PI;
-	}
-
+	FirstPerson();
 }

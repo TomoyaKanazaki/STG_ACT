@@ -13,6 +13,15 @@
 #include "object.h"
 #include "manager.h"
 #include "debugproc.h"
+#include "camera.h"
+#include "camera_game.h"
+#include "camera_title.h"
+
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
+CScene *CSceneManager::m_pScene = NULL;
+CCamera *CSceneManager::m_pCamera = NULL;
 
 //==========================================
 //  コンストラクタ
@@ -47,9 +56,11 @@ void CSceneManager::Init(SCENE newsecene)
 		{
 		case TITLE:
 			m_pScene = new CTitleManager;
+			m_pCamera = new CCameraTitle;
 			break;
 		case GAME:
 			m_pScene = new CGameManager;
+			m_pCamera = new CCameraGame;
 			break;
 		case RESULT:
 			m_pScene = new CResultManager;
@@ -94,6 +105,14 @@ void CSceneManager::Uninit(void)
 		delete m_pScene;
 		m_pScene = NULL;
 	}
+
+	//カメラを終了、破棄
+	if (m_pCamera != NULL)
+	{
+		m_pCamera->Uninit();
+		delete m_pCamera;
+		m_pCamera = NULL;
+	}
 }
 
 //==========================================
@@ -105,6 +124,12 @@ void CSceneManager::Update(void)
 	if (m_pScene != NULL)
 	{
 		m_pScene->Update();
+	}
+	
+	//カメラを更新
+	if (m_pCamera != NULL)
+	{
+		m_pCamera->Update();
 	}
 
 	//フェードを更新

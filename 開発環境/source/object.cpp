@@ -11,7 +11,7 @@
 #include "camera.h"
 #include "debugproc.h"
 #include "effect.h"
-#include "gamemanager.h"
+#include "scenemanager.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -198,15 +198,6 @@ void CObject::UpdateAll(void)
 //==========================================
 void CObject::DrawAll(void)
 {
-	//カメラの取得
-	CCamera *pCamera = CGameManager::GetCamera();
-
-	//カメラの設定
-	if (pCamera != NULL)
-	{
-		pCamera->SetCamera();
-	}
-
 	//描画優先順位
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_NUM; nCntPriority++)
 	{
