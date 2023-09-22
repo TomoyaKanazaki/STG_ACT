@@ -1,20 +1,20 @@
 //==========================================
 //
-//  リザルトマネージャ(resultmanager.cpp)
+//  ランキングマネージャ(rankingmanager.cpp)
 //  Author : Tomoya Kanazaki
 //
 //==========================================
-#include "resultmanager.h"
-#include "manager.h"
-#include "scenemanager.h"
-#include "input.h"
+#include "rankingmanager.h"
 #include "logo.h"
 #include "bg.h"
+#include "manager.h"
+#include "input.h"
+#include "scenemanager.h"
 
 //==========================================
 //  コンストラクタ
 //==========================================
-CResultManager::CResultManager()
+CRankingManager::CRankingManager()
 {
 
 }
@@ -22,7 +22,7 @@ CResultManager::CResultManager()
 //==========================================
 //  デストラクタ
 //==========================================
-CResultManager::~CResultManager()
+CRankingManager::~CRankingManager()
 {
 
 }
@@ -30,7 +30,7 @@ CResultManager::~CResultManager()
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CResultManager::Init(void)
+HRESULT CRankingManager::Init(void)
 {
 	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::RESULT);
 
@@ -43,7 +43,7 @@ HRESULT CResultManager::Init(void)
 //==========================================
 //  終了処理
 //==========================================
-void CResultManager::Uninit(void)
+void CRankingManager::Uninit(void)
 {
 
 }
@@ -51,12 +51,12 @@ void CResultManager::Uninit(void)
 //==========================================
 //  更新処理
 //==========================================
-void CResultManager::Update(void)
+void CRankingManager::Update(void)
 {
 	//画面遷移テスト
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
-		CManager::GetSceneManager()->SetNext(CSceneManager::RANKING);
+		CManager::GetSceneManager()->SetNext(CSceneManager::TITLE);
 		return;
 	}
 }
@@ -64,7 +64,7 @@ void CResultManager::Update(void)
 //==========================================
 //  描画処理
 //==========================================
-void CResultManager::Draw(void)
+void CRankingManager::Draw(void)
 {
 
 }

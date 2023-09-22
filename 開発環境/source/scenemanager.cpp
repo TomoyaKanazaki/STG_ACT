@@ -8,6 +8,7 @@
 #include "titlemanager.h"
 #include "gamemanager.h"
 #include "resultmanager.h"
+#include "rankingmanager.h"
 #include "fade.h"
 #include "scene.h"
 #include "object.h"
@@ -68,7 +69,8 @@ void CSceneManager::Init(SCENE newsecene)
 			m_pCamera = new CCameraResult;
 			break;
 		case RANKING:
-
+			m_pScene = new CRankingManager;
+			m_pCamera = new CCameraResult;
 			break;
 		default:
 			break;
