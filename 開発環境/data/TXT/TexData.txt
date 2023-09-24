@@ -5,7 +5,7 @@
 //
 //==========================================
 
-NUM_TEXTURE = 8
+NUM_TEXTURE = 9
 
 //==========================================
 //  テクスチャファイル名
@@ -18,3 +18,4 @@ TEXTURE_FILENAME = result.png			//[4]リザルト
 TEXTURE_FILENAME = target.png			//[5]的
 TEXTURE_FILENAME = explosion.png		//[6]爆発
 TEXTURE_FILENAME = effect002.tga		//[7]煙
+TEXTURE_FILENAME = ranking.png			//[8]ランキング

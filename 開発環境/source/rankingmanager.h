@@ -24,6 +24,11 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
+private:
+
+	//ƒƒ“ƒo•Ï”
+	int m_nCntScene;
+
 };
 
 #endif

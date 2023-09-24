@@ -567,7 +567,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\img_post152_03.jpg";
+    "data\\TEXTURE\\skybox.jpg";
    }
   }
  }

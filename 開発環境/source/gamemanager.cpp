@@ -81,7 +81,7 @@ HRESULT CGameManager::Init(void)
 	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.75f, 40.0f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.25f, 80.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
 
 	//タイマーの生成
-	m_pTime = CTime::Create(D3DXVECTOR3(0.0f, 40.0f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.1f, 80.0f, 0.0f), 5, CTime::SAB);
+	m_pTime = CTime::Create(D3DXVECTOR3(0.0f, 40.0f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.1f, 80.0f, 0.0f), 120, CTime::SAB);
 
 	//カメラの生成
 	if (m_pCamera == NULL)

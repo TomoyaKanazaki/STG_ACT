@@ -12,7 +12,6 @@
 //==========================================
 //  前方宣言
 //==========================================
-class CCamera;
 class CLight;
 
 //==========================================
@@ -32,8 +31,10 @@ public:
 
 private:
 
+	//メンバ変数
+	int m_nCntScene;
+
 	//静的メンバ変数
-	static CCamera *m_pCamera;
 	static CLight *m_pLight;
 
 };

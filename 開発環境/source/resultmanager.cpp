@@ -16,7 +16,7 @@
 //==========================================
 CResultManager::CResultManager()
 {
-
+	m_nCntScene = 0;
 }
 
 //==========================================
@@ -53,8 +53,11 @@ void CResultManager::Uninit(void)
 //==========================================
 void CResultManager::Update(void)
 {
-	//‰æ–Ê‘JˆÚƒeƒXƒg
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	//ƒV[ƒ“Œo‰ßŽžŠÔ‚ð‰ÁŽZ
+	m_nCntScene++;
+
+	//‰æ–Ê‘JˆÚ
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) || m_nCntScene >= 600)
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::RANKING);
 		return;

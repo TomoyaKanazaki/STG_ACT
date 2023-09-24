@@ -16,7 +16,7 @@
 //==========================================
 CRankingManager::CRankingManager()
 {
-
+	m_nCntScene = 0;
 }
 
 //==========================================
@@ -32,7 +32,7 @@ CRankingManager::~CRankingManager()
 //==========================================
 HRESULT CRankingManager::Init(void)
 {
-	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::RESULT);
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::RANKING);
 
 	//”wŒi‚Ì¶¬
 	CBg::Create();
@@ -53,8 +53,11 @@ void CRankingManager::Uninit(void)
 //==========================================
 void CRankingManager::Update(void)
 {
-	//‰æ–Ê‘JˆÚƒeƒXƒg
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	//ƒV[ƒ“‚ÌŒo‰ßŽžŠÔ‚ð‰ÁŽZ
+	m_nCntScene++;
+
+	//‰æ–Ê‘JˆÚ
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) || m_nCntScene >= 600)
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::TITLE);
 		return;

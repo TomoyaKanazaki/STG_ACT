@@ -30,6 +30,7 @@ public:
 		TARGET, //“I
 		EXPLOSION, //”š”­
 		SMOKE, //‰Œ
+		RANKING, //ƒ‰ƒ“ƒLƒ“ƒO
 		TEXTURE_MAX
 	};
 

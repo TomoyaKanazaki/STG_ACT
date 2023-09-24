@@ -24,7 +24,7 @@ CLight *CTitleManager::m_pLight = NULL;
 //==========================================
 CTitleManager::CTitleManager()
 {
-
+	m_nCntScene = 0;
 }
 
 //==========================================
@@ -74,10 +74,18 @@ void CTitleManager::Uninit(void)
 //==========================================
 void CTitleManager::Update(void)
 {
-	//‰æ–Ê‘JˆÚƒeƒXƒg
+	//ƒV[ƒ“Œo‰ßŽžŠÔ‚ð‰ÁŽZ
+	m_nCntScene++;
+
+	//‰æ–Ê‘JˆÚ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::GAME);
+		return;
+	}
+	else if (m_nCntScene >= 600)
+	{
+		CManager::GetSceneManager()->SetNext(CSceneManager::RANKING);
 		return;
 	}
 

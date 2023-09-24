@@ -20,6 +20,7 @@ public:
 	{
 		TITLE = 0, //タイトル
 		RESULT, //リザルト
+		RANKING, //ランキング
 		MAX
 	};
 

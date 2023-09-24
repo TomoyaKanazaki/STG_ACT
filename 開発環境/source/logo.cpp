@@ -90,6 +90,11 @@ CLogo * CLogo::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, TYPE type)
 		pLogo->BindTexture(CManager::GetTexture()->GetAddress(CTexture::RESULT));
 		break;
 
+	case RANKING:
+
+		pLogo->BindTexture(CManager::GetTexture()->GetAddress(CTexture::RANKING));
+		break;
+
 	}
 
 	//‰Šú‰»
