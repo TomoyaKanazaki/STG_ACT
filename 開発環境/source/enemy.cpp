@@ -114,12 +114,6 @@ void CEnemy::Update(void)
 		}
 	}
 
-	//°‚©‚ç—Ž‚¿‚é
-	if (!CGameManager::GetFan()->OnMesh(m_pos))
-	{
-		m_move.y -= 1.0f;
-	}
-
 	//’eó‘Ô‚É‰Œ‚ð•t‚¯‚é
 	if (this->GetType() == CObject::TYPE_BULLET_ENEMY)
 	{

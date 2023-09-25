@@ -10,6 +10,7 @@
 #include "input.h"
 #include "logo.h"
 #include "bg.h"
+#include "debris.h"
 
 //==========================================
 //  コンストラクタ
@@ -32,10 +33,16 @@ CResultManager::~CResultManager()
 //==========================================
 HRESULT CResultManager::Init(void)
 {
-	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::RESULT);
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::RESULT);
 
 	//背景の生成
 	CBg::Create();
+
+	//ごみの生成
+	for (int nCnt = 0; nCnt < 100; nCnt++)
+	{
+		CDebris::Create();
+	}
 
 	return S_OK;
 }

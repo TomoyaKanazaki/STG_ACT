@@ -38,6 +38,7 @@ public:
 		TYPE_TARGET, //目標
 		TYPE_FADE, //フェード
 		TYPE_ROCKON, //ロックオン
+		TYPE_DEBRIS, //スペースデブリ
 		METHOD_MAX
 	}TYPE;
 

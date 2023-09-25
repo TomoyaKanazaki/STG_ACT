@@ -198,7 +198,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 #ifdef _DEBUG
 	if (m_pSceneManager == NULL)
 	{
-		m_pSceneManager = CSceneManager::Create(CSceneManager::GAME);
+		m_pSceneManager = CSceneManager::Create(CSceneManager::TITLE);
 	}
 #else
 	if (m_pSceneManager == NULL)

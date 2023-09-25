@@ -12,6 +12,7 @@
 #include "effect.h"
 #include "manager.h"
 #include "debugproc.h"
+#include "object_fan.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -103,7 +104,7 @@ void CEnemy_Push::Update(void)
 	}
 	if (rotModel.y < -D3DX_PI)
 	{
-		m_rot.y = D3DX_PI;
+		rotModel.y = D3DX_PI;
 	}
 
 	//エフェクトを出す
@@ -115,6 +116,12 @@ void CEnemy_Push::Update(void)
 
 	//角度を適用
 	m_ppModel[1]->SetRot(rotModel);
+
+	//床から落ちる
+	if (!CGameManager::GetFan()->OnMesh(m_pos))
+	{
+		m_move.y -= 1.0f;
+	}
 
 	Target();
 	Push();

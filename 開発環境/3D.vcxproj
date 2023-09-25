@@ -35,6 +35,7 @@
     <ClCompile Include="source\camera_result.cpp" />
     <ClCompile Include="source\camera_title.cpp" />
     <ClCompile Include="source\collision.cpp" />
+    <ClCompile Include="source\debris.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
@@ -72,6 +73,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\ranking.cpp" />
     <ClCompile Include="source\rankingmanager.cpp" />
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\resultmanager.cpp" />
@@ -105,6 +107,7 @@
     <ClInclude Include="source\camera_result.h" />
     <ClInclude Include="source\camera_title.h" />
     <ClInclude Include="source\collision.h" />
+    <ClInclude Include="source\debris.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
@@ -137,6 +140,7 @@
     <ClInclude Include="source\pause.h" />
     <ClInclude Include="source\player.h" />
     <ClInclude Include="source\precompile.h" />
+    <ClInclude Include="source\ranking.h" />
     <ClInclude Include="source\rankingmanager.h" />
     <ClInclude Include="source\renderer.h" />
     <ClInclude Include="source\resultmanager.h" />

@@ -8,6 +8,7 @@
 #include "model.h"
 #include "motion.h"
 #include "gamemanager.h"
+#include "object_fan.h"
 #include "player.h"
 
 //==========================================
@@ -105,6 +106,12 @@ void CEnemy_Block::Update(void)
 
 	//ƒuƒƒbƒN
 	Block();
+
+	//°‚©‚ç—Ž‚¿‚é
+	if (!CGameManager::GetFan()->OnMesh(m_pos))
+	{
+		m_move.y -= 1.0f;
+	}
 
 	CEnemy::Update();
 }

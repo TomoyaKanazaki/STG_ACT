@@ -122,6 +122,12 @@ void CEnemy_Normal::Update(void)
 		}
 	}
 
+	//°‚©‚ç—Ž‚¿‚é
+	if (!CGameManager::GetFan()->OnMesh(m_pos))
+	{
+		m_move.y -= 1.0f;
+	}
+
 	CEnemy::Update();
 }
 
