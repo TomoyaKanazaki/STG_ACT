@@ -191,6 +191,8 @@ void CObject::UpdateAll(void)
 			pObj = pNext;
 		}
 	}
+
+	CManager::GetDebugProc()->Print("オブジェクト数 : %d\n", m_nNumObject);
 }
 
 //==========================================

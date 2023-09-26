@@ -59,6 +59,7 @@ void CSceneManager::Init(SCENE newsecene)
 		case TITLE:
 			m_pScene = new CTitleManager;
 			m_pCamera = new CCameraTitle;
+			m_pCamera->Init();
 			break;
 		case GAME:
 			m_pScene = new CGameManager;
@@ -67,10 +68,12 @@ void CSceneManager::Init(SCENE newsecene)
 		case RESULT:
 			m_pScene = new CResultManager;
 			m_pCamera = new CCameraResult;
+			m_pCamera->Init();
 			break;
 		case RANKING:
 			m_pScene = new CRankingManager;
 			m_pCamera = new CCameraResult;
+			m_pCamera->Init();
 			break;
 		default:
 			break;
@@ -99,9 +102,6 @@ void CSceneManager::Init(SCENE newsecene)
 //==========================================
 void CSceneManager::Uninit(void)
 {
-	//全オブジェクトを破棄
-	CObject::ReleaseAll();
-
 	//シーンを終了、破棄
 	if (m_pScene != NULL)
 	{
@@ -109,6 +109,9 @@ void CSceneManager::Uninit(void)
 		delete m_pScene;
 		m_pScene = NULL;
 	}
+
+	//全オブジェクトを破棄
+	CObject::ReleaseAll();
 
 	//カメラを終了、破棄
 	if (m_pCamera != NULL)

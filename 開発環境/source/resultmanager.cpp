@@ -6,11 +6,15 @@
 //==========================================
 #include "resultmanager.h"
 #include "manager.h"
+#include "debugproc.h"
 #include "scenemanager.h"
 #include "input.h"
 #include "logo.h"
 #include "bg.h"
 #include "debris.h"
+#include "ranking.h"
+#include "rank.h"
+#include "score.h"
 
 //==========================================
 //  コンストラクタ
@@ -18,6 +22,7 @@
 CResultManager::CResultManager()
 {
 	m_nCntScene = 0;
+	m_nRank = 0;
 }
 
 //==========================================
@@ -33,10 +38,24 @@ CResultManager::~CResultManager()
 //==========================================
 HRESULT CResultManager::Init(void)
 {
-	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::RESULT);
+	//RESULTの表示
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.2f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.1f, 0.0f), CLogo::RESULT);
+
+	//今回の順位の表示
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.35f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.1f, 0.0f), CLogo::RANK);
+
+	//スコアの表示
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.7f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.1f, 0.0f), CLogo::RANK);
 
 	//背景の生成
 	CBg::Create();
+
+	//順位の取得
+	m_nRank = CRanking::GetRank();
+	CRank::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.2f, 0.0f), m_nRank);
+
+	//スコアの取得
+	CScore::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.85f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.2f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CScore::GetScore());
 
 	//ごみの生成
 	for (int nCnt = 0; nCnt < 100; nCnt++)
@@ -64,11 +83,13 @@ void CResultManager::Update(void)
 	m_nCntScene++;
 
 	//画面遷移
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) || m_nCntScene >= 600)
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) || m_nCntScene >= 1500)
 	{
-		CManager::GetSceneManager()->SetNext(CSceneManager::RANKING);
+		CManager::GetSceneManager()->SetNext(CSceneManager::TITLE);
 		return;
 	}
+
+	CManager::GetDebugProc()->Print("順位 : %d\n", m_nRank);
 }
 
 //==========================================

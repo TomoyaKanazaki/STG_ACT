@@ -28,6 +28,7 @@ private:
 
 	//ƒƒ“ƒo•Ï”
 	int m_nCntScene;
+	int m_nRank;
 
 };
 

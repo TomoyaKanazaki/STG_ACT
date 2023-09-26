@@ -42,6 +42,7 @@ CTitleManager::~CTitleManager()
 HRESULT CTitleManager::Init(void)
 {
 	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.3f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.2f, 0.0f), CLogo::TITLE);
+	CLogo::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.6f, 0.0f), D3DXVECTOR3(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.15f, 0.0f), CLogo::ENTER);
 
 	//”wŒi‚Ì¶¬
 	CBg::Create();
@@ -82,7 +83,7 @@ void CTitleManager::Uninit(void)
 void CTitleManager::Update(void)
 {
 	//ƒV[ƒ“Œo‰ßŽžŠÔ‚ð‰ÁŽZ
-	m_nCntScene++;
+	//m_nCntScene++;
 
 	//‰æ–Ê‘JˆÚ
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))

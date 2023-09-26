@@ -10,6 +10,11 @@
 #include "debugproc.h"
 
 //==========================================
+//  静的メンバ変数
+//==========================================
+int CScore::m_prevScore = 0;
+
+//==========================================
 //  コンストラクタ
 //==========================================
 CScore::CScore(int nPriority) : CObject(nPriority)
@@ -66,6 +71,7 @@ HRESULT CScore::Init(void)
 //==========================================
 void CScore::Uninit(void)
 {
+	m_prevScore = m_nScore;
 	Release();
 }
 

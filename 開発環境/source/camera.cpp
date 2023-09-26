@@ -53,7 +53,8 @@ void CCamera::Uninit(void)
 //==========================================
 void CCamera::Update(void)
 {
-	//Rotate();
+	CManager::GetDebugProc()->Print("視点 : ( %f, %f, %f )\n", m_posV.x, m_posV.y, m_posV.z);
+	CManager::GetDebugProc()->Print("注視点 : ( %f, %f, %f )\n", m_posR.x, m_posR.y, m_posR.z);
 }
 
 //==========================================
@@ -136,8 +137,8 @@ void CCamera::FirstPerson(void)
 	}
 
 	//角度を更新
-	m_posR.x = m_posV.x - (sinf(m_rot.z) * cosf(m_rot.x)) * CAMERA_DISTANCE;
-	m_posR.y = m_posV.y - cosf(m_rot.z) * CAMERA_DISTANCE;
+	m_posR.x = m_posV.x + (sinf(m_rot.z) * cosf(m_rot.x)) * CAMERA_DISTANCE;
+	m_posR.y = m_posV.y + cosf(m_rot.z) * CAMERA_DISTANCE;
 	m_posR.z = m_posV.z - (sinf(m_rot.z) * sinf(m_rot.x)) * CAMERA_DISTANCE;
 }
 

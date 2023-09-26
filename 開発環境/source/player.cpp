@@ -326,6 +326,7 @@ void CPlayer::Move(void)
 //==========================================
 void CPlayer::Rotate(void)
 {
+	D3DXVECTOR3 rot = CGameManager::GetCamera()->GetRot();
 	m_rot.y = CGameManager::GetCamera()->GetRot().y;
 }
 

@@ -31,6 +31,9 @@ public:
 		EXPLOSION, //爆発
 		SMOKE, //煙
 		RANKING, //ランキング
+		ENTER, //エンター
+		RANK, //今回の順位
+		SCORE, //スコア
 		TEXTURE_MAX
 	};
 

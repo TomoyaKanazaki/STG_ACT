@@ -13,7 +13,8 @@
 //==========================================
 CLogo::CLogo(int nPriority) : CObject2D(nPriority)
 {
-
+	m_fCounter = 0.0f;
+	m_type = MAX;
 }
 
 //==========================================
@@ -29,9 +30,12 @@ CLogo::~CLogo()
 //==========================================
 HRESULT CLogo::Init(void)
 {
-	CObject2D::Init();
-
-	return S_OK;
+	HRESULT h = CObject2D::Init();
+	if (m_type == ENTER)
+	{
+		SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+	}
+	return h;
 }
 
 //==========================================
@@ -47,6 +51,16 @@ void CLogo::Uninit(void)
 //==========================================
 void CLogo::Update(void)
 {
+	//エンターを点滅する
+	if (m_type == ENTER)
+	{
+		m_fCounter += 0.02f;
+		float fAlpha = sinf(m_fCounter) * 0.5f + 0.5f;
+		D3DXCOLOR col = GetCol();
+		col.a = fAlpha;
+		SetCol(col);
+	}
+
 	CObject2D::Update();
 }
 
@@ -76,6 +90,7 @@ CLogo * CLogo::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, TYPE type)
 	//値を割り当てる
 	pLogo->m_pos = pos;
 	pLogo->m_size = size;
+	pLogo->m_type = type;
 
 	//テクスチャを割り当てる
 	switch (type)
@@ -93,6 +108,16 @@ CLogo * CLogo::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, TYPE type)
 	case RANKING:
 
 		pLogo->BindTexture(CManager::GetTexture()->GetAddress(CTexture::RANKING));
+		break;
+
+	case ENTER:
+
+		pLogo->BindTexture(CManager::GetTexture()->GetAddress(CTexture::ENTER));
+		break;
+
+	case RANK:
+
+		pLogo->BindTexture(CManager::GetTexture()->GetAddress(CTexture::RANK));
 		break;
 
 	}

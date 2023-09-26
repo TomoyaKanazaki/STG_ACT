@@ -31,7 +31,7 @@ CCameraResult::~CCameraResult()
 HRESULT CCameraResult::Init(void)
 {
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_posV = D3DXVECTOR3(0.0f, 0.0f, CAMERA_DISTANCE);
 	return CCamera::Init();
 }
 
@@ -41,4 +41,5 @@ HRESULT CCameraResult::Init(void)
 void CCameraResult::Update(void)
 {
 	FirstPerson();
+	CCamera::Update();
 }

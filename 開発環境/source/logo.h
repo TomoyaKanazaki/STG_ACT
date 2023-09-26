@@ -21,6 +21,9 @@ public:
 		TITLE = 0, //タイトル
 		RESULT, //リザルト
 		RANKING, //ランキング
+		ENTER, //エンター
+		RANK, //今回の順位
+		SCORE, //スコア
 		MAX
 	};
 
@@ -37,6 +40,10 @@ public:
 	static CLogo *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, TYPE type);
 
 private:
+
+	//メンバ変数
+	TYPE m_type;
+	float m_fCounter;
 
 };
 

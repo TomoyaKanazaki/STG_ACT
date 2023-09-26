@@ -25,6 +25,7 @@
 #include "bg.h"
 #include "camera_game.h"
 #include "timer.h"
+#include "ranking.h"
 
 //==========================================
 //  静的メンバ変数宣言
@@ -86,7 +87,7 @@ HRESULT CGameManager::Init(void)
 	//カメラの生成
 	if (m_pCamera == NULL)
 	{
-		m_pCamera = new CCameraGame;
+		m_pCamera = CSceneManager::GetCamera();
 		m_pCamera->Init();
 	}
 
@@ -98,7 +99,7 @@ HRESULT CGameManager::Init(void)
 	}
 
 	//BGMの再生
-	//CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
+	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM001);
 
 	return S_OK;
 }
@@ -108,13 +109,8 @@ HRESULT CGameManager::Init(void)
 //==========================================
 void CGameManager::Uninit(void)
 {
-	//カメラの終了、破棄
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Uninit();
-		delete m_pCamera;
-		m_pCamera = NULL;
-	}
+	//スコアを記録する
+	CRanking::Save(m_pScore->SendScore());
 
 	//ライトの終了、破棄
 	if (m_pLight != NULL)
@@ -123,6 +119,8 @@ void CGameManager::Uninit(void)
 		delete m_pLight;
 		m_pLight = NULL;
 	}
+
+	m_pCamera = NULL;
 
 	//タイムの終了、破棄
 	if (m_pTime != NULL)
@@ -149,12 +147,6 @@ void CGameManager::Update(void)
 		return;
 	}
 #endif
-
-	//カメラの更新
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Update();
-	}
 
 	//ライトの更新
 	if (m_pLight != NULL)

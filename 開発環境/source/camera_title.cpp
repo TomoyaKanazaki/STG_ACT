@@ -31,7 +31,8 @@ CCameraTitle::~CCameraTitle()
 HRESULT CCameraTitle::Init(void)
 {
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_posV = D3DXVECTOR3(0.0f, 0.0f, CAMERA_DISTANCE);
+	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	return CCamera::Init();
 }
 
@@ -41,4 +42,5 @@ HRESULT CCameraTitle::Init(void)
 void CCameraTitle::Update(void)
 {
 	FirstPerson();
+	CCamera::Update();
 }

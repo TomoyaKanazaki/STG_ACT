@@ -35,9 +35,11 @@ public:
 	void Draw(void) override;
 	void Add(const int nAdd);
 	void AddScale(const float fScale) { m_fScale += fScale; }
+	int SendScore(void) {return m_nScore; }
 
 	//静的メンバ関数
 	static CScore *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nScoreDeff);
+	static int GetScore(void) { return m_prevScore; }
 
 private:
 	
@@ -50,6 +52,9 @@ private:
 	//メンバ関数
 	void CalcScore(void);
 	D3DXVECTOR3 CalcPos(int nCnt);
+
+	//静的メンバ変数
+	static int m_prevScore;
 
 };
 
