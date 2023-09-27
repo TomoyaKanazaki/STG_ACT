@@ -15,6 +15,7 @@
 #include "ranking.h"
 #include "rank.h"
 #include "score.h"
+#include "sound.h"
 
 //==========================================
 //  コンストラクタ
@@ -63,6 +64,9 @@ HRESULT CResultManager::Init(void)
 		CDebris::Create();
 	}
 
+	//BGMの再生
+	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM000);
+
 	return S_OK;
 }
 
@@ -71,7 +75,8 @@ HRESULT CResultManager::Init(void)
 //==========================================
 void CResultManager::Uninit(void)
 {
-
+	//BGMの停止
+	CManager::GetSound()->Stop();
 }
 
 //==========================================
@@ -86,6 +91,7 @@ void CResultManager::Update(void)
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) || m_nCntScene >= 1500)
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::TITLE);
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_ENTER);
 		return;
 	}
 

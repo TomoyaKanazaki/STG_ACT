@@ -14,6 +14,7 @@
 #include "bg.h"
 #include "camera_title.h"
 #include "debris.h"
+#include "sound.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -60,6 +61,9 @@ HRESULT CTitleManager::Init(void)
 		CDebris::Create();
 	}
 
+	//BGM‚ÌÄ¶
+	CManager::GetSound()->Play(CSound::SOUND_LABEL_BGM000);
+
 	return S_OK;
 }
 
@@ -75,6 +79,9 @@ void CTitleManager::Uninit(void)
 		delete m_pLight;
 		m_pLight = NULL;
 	}
+
+	//BGM‚Ì’âŽ~
+	CManager::GetSound()->Stop();
 }
 
 //==========================================
@@ -86,9 +93,10 @@ void CTitleManager::Update(void)
 	//m_nCntScene++;
 
 	//‰æ–Ê‘JˆÚ
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN) || CManager::GetMouse()->GetTrigger(CMouse::BUTTON_LEFT))
 	{
 		CManager::GetSceneManager()->SetNext(CSceneManager::GAME);
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_ENTER);
 		return;
 	}
 	else if (m_nCntScene >= 900)

@@ -13,6 +13,7 @@
 #include "particle.h"
 #include "enemy_manager.h"
 #include "camera.h"
+#include "sound.h"
 
 //==========================================
 //  “ñ’¼ü‚ÌŒğ“_‚Ìæ“¾
@@ -54,6 +55,8 @@ bool Collision::CollisionPlayer(D3DXVECTOR3 pos, float fLange)
 	//‹——£”»’è
 	if (fLange * fLange >= fLangePlayer)
 	{
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_PRESS);
+
 		//“–‚½‚Á‚½Œ‹‰Ê‚ğ•Ô‚µ‚ÄŠÖ”‚ğI—¹
 		return true;
 	}

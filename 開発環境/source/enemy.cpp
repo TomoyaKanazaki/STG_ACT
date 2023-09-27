@@ -204,7 +204,7 @@ void CEnemy::AvertEnemy(void)
 			//ŽŸ‚ÌƒAƒhƒŒƒX‚ð•Û‘¶
 			CObject *pNext = pObj->GetNext();
 
-			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_NORMAL_ENEMY) && pObj != this) //“G‚Ìê‡
+			if ((pObj->GetType() == CObject::TYPE_BULLET_ENEMY || pObj->GetType() == CObject::TYPE_NORMAL_ENEMY || pObj->GetType() == CObject::TYPE_BLOCK_ENEMY) && pObj != this) //“G‚Ìê‡
 			{
 				//Œ»Ý‚Ì“G‚ÆŽ©•ª‚ðŒ‹‚ÔƒxƒNƒgƒ‹‚ðŽæ“¾‚·‚é
 				D3DXVECTOR3 posObj = pObj->GetPos();
@@ -276,6 +276,8 @@ void CEnemy::Chain(void)
 					//Ž©•ª‚Í“G‚É–ß‚é
 					this->SetType(CObject::TYPE_NORMAL_ENEMY);
 					m_nCntBullet = 0;
+
+					CManager::GetSound()->Play(CSound::SOUND_LABEL_BLOCK);
 				}
 			}
 			

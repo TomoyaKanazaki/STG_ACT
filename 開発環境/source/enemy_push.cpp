@@ -13,6 +13,7 @@
 #include "manager.h"
 #include "debugproc.h"
 #include "object_fan.h"
+#include "sound.h"
 
 //==========================================
 //  Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -152,6 +153,8 @@ void CEnemy_Push::Push(void)
 	//ÚG”»’è
 	if (mc_fPush * mc_fPush >= fLength)
 	{
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_PUSH);
+
 		CGameManager::GetPlayer()->SetMove(vecToPlayer * 0.5f);
 	}
 }

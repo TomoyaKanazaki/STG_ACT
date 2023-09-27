@@ -11,6 +11,7 @@
 #include "particle.h"
 #include "effect.h"
 #include "texture.h"
+#include "sound.h"
 
 //==========================================
 //  コンストラクタ
@@ -86,6 +87,8 @@ void CTarget::Update()
 	D3DXVECTOR3 pos;
 	if (CObject3D::Collision(CObject::TYPE_BULLET_ENEMY, &pos))
 	{
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_EXPLOSION);
+
 		//パーティクルを呼び出し
 		CParticle::Create(pos, D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f), D3DXCOLOR(0.98f, 0.87f, 0.28f, 0.5f), 10, 30, 10, 5);
 	}

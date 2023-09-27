@@ -13,10 +13,13 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 {
 	{ "data/BGM/BGM_00.wav", -1 }, //BGM0
 	{ "data/BGM/BGM_01.wav", -1 }, //BGM1
-	{ "data/SE/Shot_00.wav", 0 }, //弾発射音
-	{ "data/SE/GameStart.wav", 0 }, //ゲームスタート音
-	{ "data/SE/EnemyPop.wav", 0 }, //敵出現音
-	{ "data/SE/PlayerExplosion.wav", 0 }, //プレイヤー爆発音
+	{ "data/SE/attack.wav", 0 }, //BGM1
+	{ "data/SE/block.wav", 0 }, //BGM1
+	{ "data/SE/dead.wav", 0 }, //BGM1
+	{ "data/SE/enter.wav", 0 }, //BGM1
+	{ "data/SE/explosion.wav", 0 }, //BGM1
+	{ "data/SE/press.wav", 0 }, //BGM1
+	{ "data/SE/push.wav", 0 }, //BGM1
 };
 
 //==========================================

@@ -183,6 +183,7 @@ void CPlayer::Update(void)
 	//Ž€–S”»’è
 	if (m_pos.y < -1000.0f)
 	{
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_DEAD);
 		m_nLife--;
 		m_bDead = true;
 		if (m_orbit != NULL)
@@ -398,6 +399,7 @@ void CPlayer::Swing(void)
 		{
 			m_orbit = COrbit::Create(m_ppModel[4], D3DXCOLOR(0.0f, 1.0f, 0.1f, 0.7f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-250.0f, 0.0f, 0.0f), 10);
 		}
+		CManager::GetSound()->Play(CSound::SOUND_LABEL_ATTACK);
 	}
 	else
 	{
