@@ -12,7 +12,7 @@ NUM_TEXTURE = 12
 //==========================================
 TEXTURE_FILENAME = effect.jpg			//[0]エフェクト
 TEXTURE_FILENAME = number.png			//[1]数字
-TEXTURE_FILENAME = field.png			//[2]床
+TEXTURE_FILENAME = field.jpg			//[2]床
 TEXTURE_FILENAME = title.png			//[3]タイトル
 TEXTURE_FILENAME = result.png			//[4]リザルト
 TEXTURE_FILENAME = target.png			//[5]的
